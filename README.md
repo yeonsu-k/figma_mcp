@@ -104,19 +104,6 @@ yarn dev
 
 개발 서버가 `http://localhost:3000`에서 실행됩니다.
 
-### 환경 변수 설정
-
-루트 디렉토리에 `.env` 파일을 생성하고 다음 변수를 설정하세요:
-
-```env
-# API 설정
-API_SECRET=your-api-secret-key
-API_BASE=http://localhost:3001/api
-
-# 애플리케이션 설정
-NUXT_PUBLIC_APP_NAME=CyberGuard
-```
-
 ## 📱 페이지 구성
 
 ### 로그인 페이지 (`/login`)
@@ -189,25 +176,6 @@ npm run preview
 ### 정적 사이트 생성
 ```bash
 npm run generate
-```
-
-### 배포 옵션
-- **Vercel**: 원클릭 배포 지원
-- **Netlify**: JAMstack 최적화
-- **AWS**: S3 + CloudFront
-- **Docker**: 컨테이너 기반 배포
-
-## 🧪 테스트 및 품질 관리
-
-```bash
-# 린트 검사
-npm run lint
-
-# 린트 자동 수정
-npm run lint:fix
-
-# 타입 체크
-npm run type-check
 ```
 
 ## 📝 라이선스
