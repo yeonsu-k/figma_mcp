@@ -1,6 +1,25 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss";
+
+/* Design Tokens import */
+@import './design-tokens.css';
+@import './theme-tokens.css';
+
+/* Tailwind v4 Theme Configuration */
+@theme {
+  --color-cyber-50: #eff6ff;
+  --color-cyber-100: #dbeafe;
+  --color-cyber-500: #3b82f6;
+  --color-cyber-600: #2563eb;
+  --color-cyber-700: #1d4ed8;
+  --color-cyber-800: #1e40af;
+  --color-cyber-900: #1e3a8a;
+  
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+}
 
 /* Base styles */
 @layer base {
@@ -73,7 +92,7 @@
 
   /* Card styles */
   .card {
-    @apply bg-white rounded-lg shadow-cyber border border-slate-200;
+    @apply bg-white rounded-lg border border-slate-200;
   }
 
   .card-body {

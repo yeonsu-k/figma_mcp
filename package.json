@@ -1,15 +1,7 @@
 {
-  "name": "cyberguard-admin",
+  "name": "figma_mcp",
   "private": true,
-  "version": "1.0.0",
-  "description": "CyberGuard 관리자 페이지",
-  "keywords": [
-    "nuxt",
-    "vue",
-    "admin",
-    "dashboard",
-    "cybersecurity"
-  ],
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -18,30 +10,26 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "type-check": "nuxt typecheck"
+    "type-check": "nuxt typecheck",
+    "tokens:build": "style-dictionary build",
+    "tokens:watch": "style-dictionary build --watch"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxt/eslint-config": "^0.2.0",
-    "@nuxtjs/tailwindcss": "^6.8.4",
-    "@tailwindcss/forms": "^0.5.7",
-    "@tailwindcss/typography": "^0.5.10",
-    "@types/node": "^20.10.5",
     "eslint": "^8.56.0",
+    "@types/node": "^20.10.6",
     "nuxt": "^3.8.0",
-    "typescript": "^5.3.3"
+    "style-dictionary": "^4.0.1",
+    "@tailwindcss/vite": "^4.1.6",
+    "tailwindcss": "^4.1.6"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
     "@heroicons/vue": "^2.0.18",
     "@pinia/nuxt": "^0.5.1",
-    "@vueuse/core": "^10.7.0",
     "@vueuse/nuxt": "^10.7.0",
     "pinia": "^2.1.7",
     "vue-toastification": "^2.0.0-rc.5"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
   }
 }

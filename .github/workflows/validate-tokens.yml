@@ -1,0 +1,87 @@
+name: Validate Design Tokens
+
+on:
+  pull_request:
+    paths:
+      - 'tokens/**'
+    branches:
+      - main
+
+jobs:
+  validate-tokens:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Validate JSON syntax
+        run: |
+          echo "🔍 Validating JSON syntax..."
+          find tokens -name "*.json" -exec node -c "JSON.parse(require('fs').readFileSync('{}', 'utf8'))" \;
+          echo "✅ JSON syntax validation passed"
+          
+      - name: Test token build
+        run: |
+          echo "🔨 Testing token build..."
+          npm run tokens:build
+          echo "✅ Token build test passed"
+          
+      - name: Check required token properties
+        run: |
+          echo "🔍 Checking required token properties..."
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            
+            function validateTokens(obj, filePath = '') {
+              for (const [key, value] of Object.entries(obj)) {
+                if (typeof value === 'object' && value !== null) {
+                  if (value.value !== undefined) {
+                    // 토큰 객체인 경우
+                    if (!value.type) {
+                      throw new Error(\`Token \${filePath}.\${key} is missing 'type' property\`);
+                    }
+                    if (!value.value) {
+                      throw new Error(\`Token \${filePath}.\${key} is missing 'value' property\`);
+                    }
+                  } else {
+                    // 중첩 객체인 경우
+                    validateTokens(value, filePath ? \`\${filePath}.\${key}\` : key);
+                  }
+                }
+              }
+            }
+            
+            const tokenFiles = fs.readdirSync('tokens').filter(file => file.endsWith('.json'));
+            
+            for (const file of tokenFiles) {
+              const filePath = path.join('tokens', file);
+              const tokens = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+              console.log(\`Validating \${file}...\`);
+              validateTokens(tokens, file);
+            }
+            
+            console.log('✅ All tokens have required properties');
+          "
+          
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ Design tokens validation passed! The tokens are ready to be built and deployed.'
+            })

@@ -1,8 +1,9 @@
+import tailwindcss from '@tailwindcss/vite'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
-    '@nuxtjs/tailwindcss',
     '@pinia/nuxt'
   ],
   css: [
@@ -34,6 +35,9 @@ export default defineNuxtConfig({
       ]
     }
   },
+  vite: {
+    plugins: [tailwindcss()],
+  },
   runtimeConfig: {
     // Private keys (only available on server-side)
     apiSecret: process.env.API_SECRET,
@@ -43,8 +47,4 @@ export default defineNuxtConfig({
       appName: 'CyberGuard'
     }
   },
-  tailwindcss: {
-    cssPath: '~/assets/css/main.css',
-    configPath: 'tailwind.config.js'
-  }
 })
