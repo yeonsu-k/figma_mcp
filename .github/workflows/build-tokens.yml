@@ -13,53 +13,107 @@ on:
       - main
   workflow_dispatch:
 
+# 워크플로우 권한 명시적 설정
+permissions:
+  contents: write
+  actions: read
+  security-events: write
+
 jobs:
   build-tokens:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: 📋 Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
           
-      - name: Setup Node.js
+      - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
           
-      - name: Install dependencies
-        run: npm install
+      - name: 🔍 Debug - List files
+        run: |
+          echo "=== Repository structure ==="
+          ls -la
+          echo "=== Tokens directory ==="
+          ls -la tokens/ || echo "tokens directory not found"
+          echo "=== Package.json scripts ==="
+          cat package.json | grep -A 10 '"scripts"'
+          
+      - name: 📥 Install dependencies
+        run: |
+          echo "Installing dependencies..."
+          npm install
+          echo "Dependencies installed successfully"
         
-      - name: Build design tokens
-        run: npm run tokens:build
-        
-      - name: Check for changes
+      - name: 🎨 Build design tokens
+        run: |
+          echo "Building design tokens..."
+          npm run tokens:build
+          echo "Token build completed"
+          
+      - name: 🔍 Debug - Check generated files
+        run: |
+          echo "=== Checking generated files ==="
+          ls -la assets/css/ || echo "assets/css directory not found"
+          ls -la composables/ || echo "composables directory not found"
+          echo "=== Git status ==="
+          git status
+          echo "=== Git diff ==="
+          git diff --name-only
+          
+      - name: ✅ Check for changes
         id: verify-changed-files
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected:"
+            git status --porcelain
           else
             echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
           fi
           
-      - name: Commit and push changes
+      - name: 📝 Commit and push changes
         if: steps.verify-changed-files.outputs.changed == 'true'
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          echo "Configuring git..."
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          echo "Adding files..."
           git add -A
-          git commit -m "🎨 Update design tokens [skip ci]"
+          
+          echo "Committing changes..."
+          git commit -m "🎨 Update design tokens [skip ci]" || exit 1
+          
+          echo "Pushing changes..."
           git push
           
-      - name: Create artifact
+      - name: 📦 Create artifact
         if: steps.verify-changed-files.outputs.changed == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: design-tokens
+          name: design-tokens-${{ github.sha }}
           path: |
             assets/css/design-tokens.css
             assets/css/theme-tokens.css
             composables/useDesignTokens.ts
           retention-days: 30
+          
+      - name: 💬 Comment on PR (if applicable)
+        if: github.event_name == 'pull_request' && steps.verify-changed-files.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🎨 Design tokens have been updated! The following files were generated:\n\n- `assets/css/design-tokens.css`\n- `assets/css/theme-tokens.css`\n- `composables/useDesignTokens.ts`\n\nYou can download the generated files from the workflow artifacts.'
+            })

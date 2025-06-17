@@ -2,20 +2,13 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
-  modules: [
-    '@pinia/nuxt'
-  ],
-  css: [
-    '~/assets/css/main.css'
-  ],
   app: {
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
-      title: 'CyberGuard 관리자',
+      title: 'Design Tokens Showcase - Figma MCP',
       meta: [
-        { name: 'description', content: 'CyberGuard 사이버 보안 관리 시스템' }
+        { name: 'description', content: 'Figma Tokens Studio + GitHub Actions + Style Dictionary + Tailwind CSS v4 통합 테스트' }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -38,13 +31,25 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+
+  css: [
+    '~/assets/css/main.css',
+    '~/assets/css/design-tokens.css',
+    '~/assets/css/theme-tokens.css',
+  ],
+
+  devtools: { enabled: true },
+  modules: [
+    '@pinia/nuxt'
+  ],
+
   runtimeConfig: {
     // Private keys (only available on server-side)
     apiSecret: process.env.API_SECRET,
     // Public keys (exposed to client-side)
     public: {
       apiBase: process.env.API_BASE || 'http://localhost:3001/api',
-      appName: 'CyberGuard'
+      appName: 'Design Tokens Showcase'
     }
-  },
+  }
 })

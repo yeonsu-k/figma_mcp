@@ -1,0 +1,70 @@
+name: Manual Token Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      debug_mode:
+        description: 'Enable debug mode'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  test-tokens:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📋 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: 🔍 Debug Information
+        if: inputs.debug_mode
+        run: |
+          echo "=== Environment ==="
+          node --version
+          npm --version
+          echo "=== Current directory ==="
+          pwd
+          ls -la
+          echo "=== Tokens directory ==="
+          ls -la tokens/ || echo "❌ tokens directory not found"
+          echo "=== Package.json ==="
+          cat package.json
+          echo "=== Style Dictionary Config ==="
+          cat style-dictionary.config.js || echo "❌ style-dictionary.config.js not found"
+          
+      - name: 📥 Install dependencies
+        run: npm install
+        
+      - name: 🎨 Test token build
+        run: |
+          echo "Testing token build..."
+          npm run tokens:build || echo "❌ Token build failed"
+          
+      - name: 📝 Check results
+        run: |
+          echo "=== Build results ==="
+          echo "Assets directory:"
+          ls -la assets/ || echo "❌ assets directory not found"
+          echo "CSS files:"
+          ls -la assets/css/ || echo "❌ assets/css directory not found"
+          echo "Composables:"
+          ls -la composables/ || echo "❌ composables directory not found"
+          
+          echo "=== File contents preview ==="
+          echo "--- design-tokens.css ---"
+          head -10 assets/css/design-tokens.css || echo "❌ design-tokens.css not found"
+          echo "--- theme-tokens.css ---"
+          head -10 assets/css/theme-tokens.css || echo "❌ theme-tokens.css not found"
