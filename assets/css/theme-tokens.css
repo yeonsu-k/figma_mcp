@@ -13,17 +13,15 @@
   --global-slate-800: #1e293b;
   --global-slate-900: #0f172a;
   --global-slate-950: #020617;
-  --global-sky-50: #f0f9ff;
-  --global-sky-100: #e0f2fe;
-  --global-sky-200: #bae6fd;
-  --global-sky-300: #7dd3fc;
-  --global-sky-400: #38bdf8;
-  --global-sky-500: #0ea5e9;
-  --global-sky-600: #0284c7;
-  --global-sky-700: #0369a1;
-  --global-sky-800: #075985;
-  --global-sky-900: #0c4a6e;
-  --global-sky-950: #082f49;
-  --global-colors-primary: #3b82f6;
-  --global-colors-secondary: #6b7280;
+  --global-Mandy-50: #fef2f3;
+  --global-Mandy-100: #fde6e7;
+  --global-Mandy-200: #fbd0d5;
+  --global-Mandy-300: #f7aab2;
+  --global-Mandy-400: #f27a8a;
+  --global-Mandy-500: #ea546c;
+  --global-Mandy-600: #d5294d;
+  --global-Mandy-700: #b31d3f;
+  --global-Mandy-800: #961b3c;
+  --global-Mandy-900: #811a39;
+  --global-Mandy-950: #48091a;
 }
