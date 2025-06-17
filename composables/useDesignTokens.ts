@@ -4,6 +4,11 @@
 
 export const GlobalBlack: string;
 export const GlobalWhite: string;
+export const GlobalMlbb50: string;
+export const GlobalMlbb100: string;
+export const GlobalMlbb200: string;
+export const GlobalMlbb300: string;
+export const GlobalMlbb400: string;
 export const GlobalSlate50: string;
 export const GlobalSlate100: string;
 export const GlobalSlate200: string;

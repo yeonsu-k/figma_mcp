@@ -21,8 +21,7 @@ StyleDictionary.registerFormat({
   format: ({ dictionary }) => {
     const header = `/* Tailwind v4 Theme Tokens - Auto-generated */\n`
     const themeTokens = dictionary.allTokens.map(token => {
-      const themeName = `--${token.path.join('-')}`
-      return `  ${themeName}: ${token.value};`
+      return `  --${token.name}: ${token.value};`
     }).join('\n')
     
     return `${header}@theme {\n${themeTokens}\n}`

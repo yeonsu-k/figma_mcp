@@ -59,16 +59,25 @@
             <div v-for="(colorGroup, groupName) in colorPalettes" :key="groupName" class="mb-8">
               <h3 class="text-lg font-medium mb-4">{{ formatColorGroupName(groupName) }}</h3>
               <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2">
-                <div v-for="(colorData, shadeName) in colorGroup" :key="shadeName" 
-                     class="text-center">
+                <div v-for="(colorData, shadeName) in colorGroup" :key="shadeName" class="text-center">
                   <div 
                     class="w-full h-16 md:h-20 rounded-lg mb-2 shadow-sm cursor-pointer hover:scale-105 transition-transform"
                     :style="{ backgroundColor: colorData.value }"
                     :title="`${groupName}-${shadeName}: ${colorData.value}`"
                     @click="copyToClipboard(colorData.value)"
-                  ></div>
+                  />
                   <p class="text-xs font-medium text-gray-700">{{ shadeName }}</p>
                   <p class="text-xs text-gray-500 font-mono">{{ colorData.value }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-8">
+              <h3 class="text-lg font-medium mb-4"> Test Color </h3>
+              <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2">
+                <div class="text-center">
+                  <div class="w-full h-16 md:h-20 rounded-lg mb-2 bg-mlbb-100 shadow-sm cursor-pointer hover:scale-105 transition-transform" />
+                  <p class="text-xs font-medium text-gray-700">Slate</p>
                 </div>
               </div>
             </div>
@@ -83,14 +92,13 @@
             <h2 class="text-2xl font-semibold mb-6">🎯 Single Colors</h2>
             
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              <div v-for="(colorData, colorName) in singleColors" :key="colorName" 
-                   class="text-center">
+              <div v-for="(colorData, colorName) in singleColors" :key="colorName" class="text-center">
                 <div 
                   class="w-full h-20 rounded-lg mb-2 shadow-sm cursor-pointer hover:scale-105 transition-transform"
                   :style="{ backgroundColor: colorData.value }"
                   :title="`${colorName}: ${colorData.value}`"
                   @click="copyToClipboard(colorData.value)"
-                ></div>
+                /> 
                 <p class="text-sm font-medium text-gray-700 capitalize">{{ formatColorGroupName(colorName) }}</p>
                 <p class="text-xs text-gray-500 font-mono">{{ colorData.value }}</p>
               </div>

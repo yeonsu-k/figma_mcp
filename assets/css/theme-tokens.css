@@ -1,21 +1,21 @@
 /* Tailwind v4 Theme Tokens - Auto-generated */
 @theme {
-  --global-black: #000000;
-  --global-white: #ffffff;
-  --global-slate-50: #f8fafc;
-  --global-slate-100: #f1f5f9;
-  --global-slate-200: #e2e8f0;
-  --global-slate-300: #cbd5e1;
-  --global-slate-400: #94a3b8;
-  --global-slate-500: #64748b;
-  --global-slate-600: #475569;
-  --global-slate-700: #334155;
-  --global-slate-800: #1e293b;
-  --global-slate-900: #0f172a;
-  --global-slate-950: #020617;
-  --global-xs: 4;
-  --global-sm: 8;
-  --global-md: 16;
-  --global-lg: 24;
-  --global-xl: 32;
+  --global-black: #000000;
+  --global-white: #ffffff;
+  --global-slate-50: #f8fafc;
+  --global-slate-100: #f1f5f9;
+  --global-slate-200: #e2e8f0;
+  --global-slate-300: #cbd5e1;
+  --global-slate-400: #94a3b8;
+  --global-slate-500: #64748b;
+  --global-slate-600: #475569;
+  --global-slate-700: #334155;
+  --global-slate-800: #1e293b;
+  --global-slate-900: #0f172a;
+  --global-slate-950: #020617;
+  --global-xs: 4;
+  --global-sm: 8;
+  --global-md: 16;
+  --global-lg: 24;
+  --global-xl: 32;
 }
