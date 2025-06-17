@@ -8,13 +8,9 @@
             <h1 class="text-3xl font-bold text-gray-900">Design Tokens Showcase</h1>
             <p class="text-gray-600 mt-1">Figma Tokens Studio + Style Dictionary 통합 테스트</p>
           </div>
-          <!-- <div class="flex items-center gap-4">
-            <button @click="toggleDarkMode" class="btn-outline flex items-center">
-              <SunIcon v-if="isDarkMode" class="w-4 h-4 mr-2" />
-              <MoonIcon v-else class="w-4 h-4 mr-2" />
-              {{ isDarkMode ? '라이트 모드' : '다크 모드' }}
-            </button>
-          </div> -->
+          <div v-if="loadingError" class="text-red-500 text-sm">
+            ⚠️ {{ loadingError }}
+          </div>
         </div>
       </div>
     </header>
@@ -53,93 +49,88 @@
         </div>
       </section>
 
-      <!-- Colors Section -->
-      <section class="mb-8">
+      <!-- Color Palettes Section -->
+      <section v-if="Object.keys(colorPalettes).length > 0" class="mb-8">
         <div class="card">
           <div class="card-body">
-            <h2 class="text-2xl font-semibold mb-6">🎨 Color Tokens</h2>
+            <h2 class="text-2xl font-semibold mb-6">🎨 Color Palettes</h2>
             
-            <!-- Dynamic Color Groups -->
-            <div v-for="(colorGroup, groupName) in colorTokens" :key="groupName" class="mb-8">
-              <h3 class="text-lg font-medium mb-4 capitalize">{{ formatColorGroupName(groupName) }}</h3>
-              <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <!-- Dynamic Color Palettes -->
+            <div v-for="(colorGroup, groupName) in colorPalettes" :key="groupName" class="mb-8">
+              <h3 class="text-lg font-medium mb-4">{{ formatColorGroupName(groupName) }}</h3>
+              <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2">
                 <div v-for="(colorData, shadeName) in colorGroup" :key="shadeName" 
                      class="text-center">
                   <div 
-                    class="w-full h-20 rounded-lg mb-2 shadow-sm border"
+                    class="w-full h-16 md:h-20 rounded-lg mb-2 shadow-sm cursor-pointer hover:scale-105 transition-transform"
                     :style="{ backgroundColor: colorData.value }"
+                    :title="`${groupName}-${shadeName}: ${colorData.value}`"
+                    @click="copyToClipboard(colorData.value)"
                   ></div>
-                  <p class="text-sm font-medium">{{ groupName }}-{{ shadeName }}</p>
+                  <p class="text-xs font-medium text-gray-700">{{ shadeName }}</p>
                   <p class="text-xs text-gray-500 font-mono">{{ colorData.value }}</p>
                 </div>
               </div>
             </div>
-
-            <!-- Fallback for empty tokens -->
-            <div v-if="Object.keys(colorTokens).length === 0" class="text-center py-8">
-              <p class="text-gray-500">
-                색상 토큰을 로드할 수 없습니다. 
-                <code class="bg-gray-100 px-2 py-1 rounded text-sm">npm run tokens:build</code>를 실행해주세요.
-              </p>
-            </div>
           </div>
         </div>
       </section>
 
-      <!-- Spacing Section -->
-      <section class="mb-8">
+      <!-- Single Colors Section -->
+      <section v-if="Object.keys(singleColors).length > 0" class="mb-8">
         <div class="card">
           <div class="card-body">
-            <h2 class="text-2xl font-semibold mb-6">📏 Spacing Tokens</h2>
-            <div class="space-y-4">
-              <div v-for="size in ['xs', 'sm', 'md', 'lg', 'xl']" :key="size" 
-                   class="flex items-center">
-                <div class="w-20 text-sm font-medium">{{ size }}</div>
+            <h2 class="text-2xl font-semibold mb-6">🎯 Single Colors</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              <div v-for="(colorData, colorName) in singleColors" :key="colorName" 
+                   class="text-center">
                 <div 
-                  class="bg-blue-200 h-8 rounded"
-                  :style="{ width: `var(--spacing-${size})` }"
+                  class="w-full h-20 rounded-lg mb-2 shadow-sm cursor-pointer hover:scale-105 transition-transform"
+                  :style="{ backgroundColor: colorData.value }"
+                  :title="`${colorName}: ${colorData.value}`"
+                  @click="copyToClipboard(colorData.value)"
                 ></div>
-                <div class="ml-4 text-sm text-gray-600 font-mono">
-                  {{ getTokenValue(`spacing-${size}`) }}
-                </div>
+                <p class="text-sm font-medium text-gray-700 capitalize">{{ formatColorGroupName(colorName) }}</p>
+                <p class="text-xs text-gray-500 font-mono">{{ colorData.value }}</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Typography Section -->
-      <section class="mb-8">
+      <!-- Other Tokens Section -->
+      <section v-if="Object.keys(otherTokens).length > 0" class="mb-8">
         <div class="card">
           <div class="card-body">
-            <h2 class="text-2xl font-semibold mb-6">📝 Typography Showcase</h2>
-            <div class="space-y-6">
-              <div>
-                <h1 class="text-4xl font-bold text-primary-600 mb-2">
-                  Heading 1 - Design System
-                </h1>
-                <p class="text-gray-600">primary-600 색상을 사용한 대제목</p>
+            <h2 class="text-2xl font-semibold mb-6">📋 Other Tokens</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div v-for="(tokenData, tokenName) in otherTokens" :key="tokenName" 
+                   class="p-4 bg-gray-50 rounded-lg border">
+                <p class="text-sm font-medium text-gray-700 mb-1">{{ tokenName }}</p>
+                <p class="text-xs text-gray-500 font-mono">{{ tokenData.value || JSON.stringify(tokenData) }}</p>
+                <p class="text-xs text-blue-600 mt-1">{{ tokenData.type || 'unknown' }}</p>
               </div>
-              
-              <div>
-                <h2 class="text-2xl font-semibold text-gray-900 mb-2">
-                  Heading 2 - Section Title
-                </h2>
-                <p class="text-gray-600">섹션 제목용 스타일</p>
-              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              <div>
-                <p class="text-base text-gray-800 leading-relaxed">
-                  본문 텍스트입니다. 이 텍스트는 기본 색상과 간격을 사용하여 
-                  디자인 토큰이 올바르게 적용되는지 확인할 수 있습니다.
-                </p>
-              </div>
-
-              <div>
-                <p class="text-sm text-gray-500">
-                  작은 텍스트와 보조 정보를 위한 스타일입니다.
-                </p>
-              </div>
+      <!-- Fallback for empty tokens -->
+      <section v-if="Object.keys(colorPalettes).length === 0 && Object.keys(singleColors).length === 0" class="mb-8">
+        <div class="card">
+          <div class="card-body text-center py-12">
+            <div class="text-gray-400 mb-4">
+              <SwatchIcon class="w-16 h-16 mx-auto" />
+            </div>
+            <h3 class="text-lg font-medium text-gray-700 mb-2">토큰을 로드할 수 없습니다</h3>
+            <p class="text-gray-500 mb-4">
+              디자인 토큰을 빌드하거나 새로고침해주세요.
+            </p>
+            <div class="space-y-2 text-sm text-gray-600">
+              <p><code class="bg-gray-100 px-2 py-1 rounded">npm run tokens:build</code></p>
+              <p>또는 아래 새로고침 버튼을 클릭하세요.</p>
             </div>
           </div>
         </div>
@@ -176,10 +167,11 @@
               <div>
                 <h3 class="font-medium mb-3">현재 상태</h3>
                 <ul class="space-y-2 text-sm">
-                  <li>색상 그룹: <span class="font-mono bg-blue-50 px-2 py-1 rounded">{{ Object.keys(colorTokens).length }}개</span></li>
-                  <li>총 색상: <span class="font-mono bg-green-50 px-2 py-1 rounded">{{ getTotalColorsCount() }}개</span></li>
+                  <li>색상 팔레트: <span class="font-mono bg-blue-50 px-2 py-1 rounded">{{ Object.keys(colorPalettes).length }}개</span></li>
+                  <li>단일 색상: <span class="font-mono bg-green-50 px-2 py-1 rounded">{{ Object.keys(singleColors).length }}개</span></li>
+                  <li>총 색상: <span class="font-mono bg-purple-50 px-2 py-1 rounded">{{ getTotalColorsCount() }}개</span></li>
+                  <li>기타 토큰: <span class="font-mono bg-orange-50 px-2 py-1 rounded">{{ Object.keys(otherTokens).length }}개</span></li>
                   <li>마지막 새로고침: <span class="font-mono bg-gray-50 px-2 py-1 rounded">{{ lastUpdated }}</span></li>
-                  <li>자동 감지: <span class="text-green-600 font-medium">활성화됨</span></li>
                 </ul>
               </div>
             </div>
@@ -223,90 +215,90 @@
         </div>
       </div>
     </footer>
+
+    <!-- Toast notification -->
+    <div 
+      v-if="showToast" 
+      class="fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity"
+      :class="{ 'opacity-0': !showToast }"
+    >
+      색상이 클립보드에 복사되었습니다!
+    </div>
   </div>
 </template>
 
 <script setup>
 import { 
   ArrowPathIcon, 
-  SunIcon, 
-  MoonIcon, 
   CheckCircleIcon, 
   CodeBracketIcon, 
   SwatchIcon 
 } from '@heroicons/vue/24/outline'
 
 // Reactive data
-const isDarkMode = ref(false)
 const lastUpdated = ref(new Date().toLocaleString('ko-KR'))
-const colorTokens = ref({})
+const colorPalettes = ref({})
+const singleColors = ref({})
+const otherTokens = ref({})
+const statistics = ref({})
 const isRefreshing = ref(false)
+const loadingError = ref('')
+const showToast = ref(false)
 
 /**
- * 색상 토큰을 동적로 로드하는 함수
+ * 토큰을 동적으로 로드하는 함수
  * @returns {Promise<void>}
  */
-const loadColorTokens = async () => {
+const loadTokens = async () => {
   try {
+    loadingError.value = ''
+    
     // API에서 토큰 정보 가져오기
     const response = await $fetch('/api/tokens', { 
       method: 'GET'
     })
 
-    // API 응답에서 색상 토큰 추출
-    if (response.success && response.data && response.data.colors) {
-      colorTokens.value = response.data.colors
-      console.log('색상 토큰 로드 완료:', Object.keys(colorTokens.value).length, '개 그룹')
+    if (response.success && response.data) {
+      // 색상 팔레트
+      const { single, ...palettes } = response.data.colors
+      colorPalettes.value = palettes
+      
+      // 단일 색상
+      singleColors.value = single || {}
+      
+      // 기타 토큰들
+      otherTokens.value = response.data.other || {}
+      
+      // 통계
+      statistics.value = response.data.statistics || {}
+      
+      console.log('토큰 로드 완료:', {
+        팔레트: Object.keys(colorPalettes.value).length,
+        단일색상: Object.keys(singleColors.value).length,
+        기타: Object.keys(otherTokens.value).length
+      })
+    } else {
+      throw new Error(response.error?.message || '응답 형식이 올바르지 않습니다')
     }
   } catch (error) {
-    console.warn('색상 토큰 로드 실패, 기본값 사용:', error)
+    const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류'
+    loadingError.value = errorMessage
+    console.error('토큰 로드 실패:', errorMessage)
     
-    // API 실패 시 로컬 파일에서 직접 로드 시도
-    try {
-      const response = await fetch('/tokens/global.json')
-      const tokens = await response.json()
-      
-      if (tokens && tokens.colors) {
-        // 색상 토큰만 필터링
-        const filteredColors = {}
-        for (const [groupName, group] of Object.entries(tokens.colors)) {
-          if (typeof group === 'object' && group !== null) {
-            filteredColors[groupName] = {}
-            
-            for (const [shadeName, shade] of Object.entries(group)) {
-              if (shade && typeof shade === 'object' && shade.type === 'color') {
-                filteredColors[groupName][shadeName] = {
-                  value: shade.value,
-                  type: shade.type
-                }
-              }
-            }
-          }
-        }
-        
-        colorTokens.value = filteredColors
-        console.log('로컬 파일에서 색상 토큰 로드 완료')
-      }
-    } catch (localError) {
-      console.warn('로컬 파일 로드도 실패, 기본 색상 사용:', localError)
-      
-      // 모든 방법이 실패하면 기본 색상 토큰 설정
-      colorTokens.value = {
-        primary: {
-          '50': { value: '#eff6ff', type: 'color' },
-          '100': { value: '#dbeafe', type: 'color' },
-          '500': { value: '#3b82f6', type: 'color' },
-          '600': { value: '#2563eb', type: 'color' },
-          '900': { value: '#1e3a8a', type: 'color' }
-        },
-        gray: {
-          '50': { value: '#f9fafb', type: 'color' },
-          '100': { value: '#f3f4f6', type: 'color' },
-          '500': { value: '#6b7280', type: 'color' },
-          '900': { value: '#111827', type: 'color' }
-        }
+    // 기본값 설정
+    colorPalettes.value = {
+      slate: {
+        '50': { value: '#f8fafc', type: 'color' },
+        '500': { value: '#64748b', type: 'color' },
+        '900': { value: '#0f172a', type: 'color' }
       }
     }
+    singleColors.value = {
+      black: { value: '#000000', type: 'color' },
+      white: { value: '#ffffff', type: 'color' }
+    }
+    otherTokens.value = {}
+    statistics.value = {}
   }
 }
 
@@ -316,9 +308,19 @@ const loadColorTokens = async () => {
  * @returns {string} 포맷된 그룹명
  */
 const formatColorGroupName = (groupName) => {
-  return groupName
-    .replace(/([A-Z])/g, ' $1') // camelCase를 띄어쓰기로 변환
-    .replace(/^./, str => str.toUpperCase()) // 첫 글자 대문자
+  // 특별한 이름들 매핑
+  const nameMap = {
+    'slate': 'Slate Gray',
+    'sky': 'Sky Blue',
+    'primary': 'Primary',
+    'secondary': 'Secondary',
+    'black': 'Black',
+    'white': 'White'
+  }
+  
+  return nameMap[groupName.toLowerCase()] || groupName
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, str => str.toUpperCase())
     .trim()
 }
 
@@ -327,10 +329,12 @@ const formatColorGroupName = (groupName) => {
  * @returns {number} 총 색상 개수
  */
 const getTotalColorsCount = () => {
-  return Object.values(colorTokens.value).reduce(
+  const paletteCount = Object.values(colorPalettes.value).reduce(
     (total, group) => total + Object.keys(group).length, 
     0
   )
+  const singleCount = Object.keys(singleColors.value).length
+  return paletteCount + singleCount
 }
 
 /**
@@ -340,10 +344,9 @@ const getTotalColorsCount = () => {
 const refreshTokens = async () => {
   isRefreshing.value = true
   try {
-    await loadColorTokens()
+    await loadTokens()
     lastUpdated.value = new Date().toLocaleString('ko-KR')
     
-    // 성공 알림 (선택적)
     console.log('토큰 새로고침 완료')
   } catch (error) {
     console.error('토큰 새로고침 실패:', error)
@@ -352,33 +355,26 @@ const refreshTokens = async () => {
   }
 }
 
-const toggleDarkMode = () => {
-  isDarkMode.value = !isDarkMode.value
-  document.documentElement.classList.toggle('dark', isDarkMode.value)
-}
-
-const getTokenValue = (tokenName) => {
-  // CSS 변수 값 가져오기
-  if (typeof window !== 'undefined') {
-    const value = getComputedStyle(document.documentElement)
-      .getPropertyValue(`--${tokenName}`)
-      .trim()
-    return value || 'undefined'
+/**
+ * 클립보드에 색상 복사
+ * @param {string} colorValue - 복사할 색상값
+ */
+const copyToClipboard = async (colorValue) => {
+  try {
+    await navigator.clipboard.writeText(colorValue)
+    showToast.value = true
+    setTimeout(() => {
+      showToast.value = false
+    }, 2000)
+  } catch (error) {
+    console.error('클립보드 복사 실패:', error)
   }
-  return 'undefined'
 }
 
 // Lifecycle
 onMounted(async () => {
-  // 색상 토큰 로드
-  await loadColorTokens()
-  
-  // 다크 모드 초기 설정
-  const savedDarkMode = localStorage.getItem('darkMode')
-  if (savedDarkMode === 'true') {
-    isDarkMode.value = true
-    document.documentElement.classList.add('dark')
-  }
+  // 토큰 로드
+  await loadTokens()
 })
 
 // Head metadata
