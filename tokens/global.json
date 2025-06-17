@@ -53,52 +53,6 @@
         "value": "#020617",
         "type": "color"
       }
-    },
-    "Mandy": {
-      "50": {
-        "value": "#fef2f3",
-        "type": "color"
-      },
-      "100": {
-        "value": "#fde6e7",
-        "type": "color"
-      },
-      "200": {
-        "value": "#fbd0d5",
-        "type": "color"
-      },
-      "300": {
-        "value": "#f7aab2",
-        "type": "color"
-      },
-      "400": {
-        "value": "#f27a8a",
-        "type": "color"
-      },
-      "500": {
-        "value": "#ea546c",
-        "type": "color"
-      },
-      "600": {
-        "value": "#d5294d",
-        "type": "color"
-      },
-      "700": {
-        "value": "#b31d3f",
-        "type": "color"
-      },
-      "800": {
-        "value": "#961b3c",
-        "type": "color"
-      },
-      "900": {
-        "value": "#811a39",
-        "type": "color"
-      },
-      "950": {
-        "value": "#48091a",
-        "type": "color"
-      }
     }
   },
   "$themes": [],
