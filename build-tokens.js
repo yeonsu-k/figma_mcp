@@ -12,6 +12,7 @@ try {
   await sd.buildAllPlatforms()
   
   console.log('✅ Design tokens built successfully!')
+  console.log('🎨 Tokens converted to TailwindCSS v4 format with proper namespaces')
   
   // API 데이터 생성 (GitHub Pages용)
   console.log('📡 Generating static API data...')
