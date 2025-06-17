@@ -25,3 +25,4 @@ export const GlobalSm: string;
 export const GlobalMd: string;
 export const GlobalLg: string;
 export const GlobalXl: string;
+export const GlobalPretendard: string;
