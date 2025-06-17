@@ -1,0 +1,1 @@
+import{X as o,K as i,q as e}from"./jBMoUXDr.js";const s=o((t,r)=>{const{isAuthenticated:a}=i();if(!a&&t.path!=="/login")return e("/login");if(a&&t.path==="/login")return e("/dashboard")});export{s as default};
