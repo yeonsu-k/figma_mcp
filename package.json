@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare",
     "tokens:build": "node build-tokens.js",
     "tokens:watch": "nodemon --watch tokens --ext json --exec \"node build-tokens.js\"",
-    "tokens:clean": "rm -f assets/css/design-tokens.css assets/css/theme-tokens.css composables/useDesignTokens.ts",
+    "tokens:clean": "rm -f assets/css/design-tokens.css assets/css/theme-tokens.css composables/useDesignTokens.ts public/api/tokens.json",
     "deploy:build": "npm run tokens:build && npm run generate",
     "deploy:preview": "npm run deploy:build && npm run preview"
   },

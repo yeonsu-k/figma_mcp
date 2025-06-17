@@ -58,16 +58,19 @@ jobs:
           echo "=== Generated files check ==="
           ls -la assets/css/ || echo "❌ assets/css not found"
           ls -la composables/ || echo "❌ composables not found"
+          ls -la public/api/ || echo "❌ public/api not found"
           echo "=== File contents preview ==="
           echo "--- design-tokens.css (first 10 lines) ---"
           head -10 assets/css/design-tokens.css || echo "❌ File not found"
           echo "--- theme-tokens.css (first 5 lines) ---" 
           head -5 assets/css/theme-tokens.css || echo "❌ File not found"
+          echo "--- tokens.json (preview) ---"
+          head -20 public/api/tokens.json || echo "❌ File not found"
         
       - name: ✅ Check for changes
         id: changes
         run: |
-          git add assets/css/ composables/ || true
+          git add assets/css/ composables/ public/api/ || true
           if [ -n "$(git status --porcelain)" ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "✅ Token changes detected:"
@@ -93,6 +96,7 @@ jobs:
           - assets/css/design-tokens.css
           - assets/css/theme-tokens.css  
           - composables/useDesignTokens.ts
+          - public/api/tokens.json (GitHub Pages API)
           
           [skip ci]" || exit 1
           

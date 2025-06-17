@@ -247,23 +247,36 @@ const showToast = ref(false)
 
 /**
  * 토큰을 동적으로 로드하는 함수
+ * GitHub Pages 호환성을 위해 정적 JSON 파일 사용
  * @returns {Promise<void>}
  */
 const loadTokens = async () => {
   try {
     loadingError.value = ''
     
-    // API에서 토큰 정보 가져오기
-    const response = await $fetch('/api/tokens', { 
-      method: 'GET'
-    })
+    // 우선 API 엔드포인트 시도 (로컬 개발용)
+    let response
+    try {
+      response = await $fetch('/api/tokens', { method: 'GET' })
+      console.log('📡 API 엔드포인트에서 토큰 로드 성공')
+    } catch (apiError) {
+      console.log('📄 API 엔드포인트 실패, 정적 파일 사용 중...')
+      
+      // API 실패 시 정적 JSON 파일 사용 (GitHub Pages용)
+      const staticResponse = await fetch('/figma_mcp/api/tokens.json')
+      if (!staticResponse.ok) {
+        throw new Error(`정적 파일 로드 실패: ${staticResponse.status}`)
+      }
+      response = await staticResponse.json()
+      console.log('📄 정적 JSON 파일에서 토큰 로드 성공')
+    }
 
     if (response.success && response.data) {
-      // 색상 팔레트
+      // 색상 팔레트 (slate, sky 등)
       const { single, ...palettes } = response.data.colors
       colorPalettes.value = palettes
       
-      // 단일 색상
+      // 단일 색상 (black, white, primary, secondary)
       singleColors.value = single || {}
       
       // 기타 토큰들
@@ -272,10 +285,11 @@ const loadTokens = async () => {
       // 통계
       statistics.value = response.data.statistics || {}
       
-      console.log('토큰 로드 완료:', {
+      console.log('🎨 토큰 로드 완료:', {
         팔레트: Object.keys(colorPalettes.value).length,
         단일색상: Object.keys(singleColors.value).length,
-        기타: Object.keys(otherTokens.value).length
+        기타: Object.keys(otherTokens.value).length,
+        소스: response.data.statistics?.buildTime ? '정적 파일' : 'API 엔드포인트'
       })
     } else {
       throw new Error(response.error?.message || '응답 형식이 올바르지 않습니다')
@@ -283,7 +297,7 @@ const loadTokens = async () => {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류'
     loadingError.value = errorMessage
-    console.error('토큰 로드 실패:', errorMessage)
+    console.error('🚨 토큰 로드 실패:', errorMessage)
     
     // 기본값 설정
     colorPalettes.value = {
