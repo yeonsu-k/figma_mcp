@@ -55,23 +55,23 @@
       }
     },
     "xs": {
-      "value": "4px",
+      "value": "4",
       "type": "spacing"
     },
     "sm": {
-      "value": "8px",
+      "value": "8",
       "type": "spacing"
     },
     "md": {
-      "value": "16px",
+      "value": "16",
       "type": "spacing"
     },
     "lg": {
-      "value": "24px",
+      "value": "24",
       "type": "spacing"
     },
     "xl": {
-      "value": "32px",
+      "value": "32",
       "type": "spacing"
     }
   },
