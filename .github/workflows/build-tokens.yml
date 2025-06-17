@@ -5,41 +5,103 @@ on:
     paths: ['tokens/**']
     branches: [main, figma_style]
   workflow_dispatch:
+    inputs:
+      force_build:
+        description: 'Force rebuild tokens'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: 📋 Checkout repository
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
           
-      - uses: actions/setup-node@v4
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
           
-      - run: npm install
-      
-      - name: Build tokens
-        run: npm run tokens:build
-        
-      - name: Check for changes
-        id: changes
+      - name: 🔍 Check trigger
         run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-          else
-            echo "changed=false" >> $GITHUB_OUTPUT
+          echo "=== Build Design Tokens Triggered ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "Changed files:"
+            git diff --name-only HEAD~1 HEAD | grep "tokens/" || echo "No token files changed"
           fi
           
-      - name: Commit changes
+      - name: 📥 Install dependencies
+        run: |
+          echo "Installing dependencies..."
+          npm install
+          
+      - name: 🎨 Build design tokens
+        run: |
+          echo "Building design tokens from tokens/global.json..."
+          npm run tokens:build
+          echo "✅ Token build completed"
+        
+      - name: 🔍 Check generated files
+        run: |
+          echo "=== Generated files check ==="
+          ls -la assets/css/ || echo "❌ assets/css not found"
+          ls -la composables/ || echo "❌ composables not found"
+          echo "=== File contents preview ==="
+          echo "--- design-tokens.css (first 10 lines) ---"
+          head -10 assets/css/design-tokens.css || echo "❌ File not found"
+          echo "--- theme-tokens.css (first 5 lines) ---" 
+          head -5 assets/css/theme-tokens.css || echo "❌ File not found"
+        
+      - name: ✅ Check for changes
+        id: changes
+        run: |
+          git add assets/css/ composables/ || true
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "✅ Token changes detected:"
+            git status --porcelain
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No changes detected"
+          fi
+          
+      - name: 📝 Commit and push changes
         if: steps.changes.outputs.changed == 'true'
         run: |
+          echo "Configuring git..."
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add assets/css/ composables/
-          git commit -m "🎨 Auto-update tokens [skip ci]"
+          
+          echo "Committing generated token files..."
+          git commit -m "🎨 Auto-update design tokens
+
+          Generated from tokens/global.json via Style Dictionary
+          
+          Files updated:
+          - assets/css/design-tokens.css
+          - assets/css/theme-tokens.css  
+          - composables/useDesignTokens.ts
+          
+          [skip ci]" || exit 1
+          
+          echo "Pushing changes..."
           git push
+          
+      - name: 🚀 Trigger deployment
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          echo "🎯 Design tokens updated successfully!"
+          echo "📍 Changes committed to ${{ github.ref_name }} branch"
+          echo "🔄 Deployment workflow will be triggered automatically"
