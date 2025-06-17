@@ -13,9 +13,9 @@
   --global-slate-800: #1e293b;
   --global-slate-900: #0f172a;
   --global-slate-950: #020617;
-  --global-xs: 4px;
-  --global-sm: 8px;
-  --global-md: 16px;
-  --global-lg: 24px;
-  --global-xl: 32px;
+  --global-xs: 4;
+  --global-sm: 8;
+  --global-md: 16;
+  --global-lg: 24;
+  --global-xl: 32;
 }
