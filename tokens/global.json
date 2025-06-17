@@ -8,7 +8,7 @@
       "value": "#ffffff",
       "type": "color"
     },
-    "mlbb" : {
+    "mlbb": {
       "50": {
         "value": "#5F494E",
         "type": "color"
@@ -95,6 +95,10 @@
     "xl": {
       "value": "32",
       "type": "spacing"
+    },
+    "Pretendard": {
+      "value": "Pretendard Variable",
+      "type": "fontFamilies"
     }
   },
   "$themes": [],
