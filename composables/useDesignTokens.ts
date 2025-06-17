@@ -15,3 +15,8 @@ export const GlobalSlate700: string;
 export const GlobalSlate800: string;
 export const GlobalSlate900: string;
 export const GlobalSlate950: string;
+export const GlobalXs: string;
+export const GlobalSm: string;
+export const GlobalMd: string;
+export const GlobalLg: string;
+export const GlobalXl: string;
