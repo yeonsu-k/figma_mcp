@@ -59,36 +59,28 @@
           <div class="card-body">
             <h2 class="text-2xl font-semibold mb-6">🎨 Color Tokens</h2>
             
-            <!-- Primary Colors -->
-            <div class="mb-6">
-              <h3 class="text-lg font-medium mb-3">Primary Colors</h3>
-              <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div v-for="shade in [50, 100, 500, 600, 900]" :key="shade" 
+            <!-- Dynamic Color Groups -->
+            <div v-for="(colorGroup, groupName) in colorTokens" :key="groupName" class="mb-8">
+              <h3 class="text-lg font-medium mb-4 capitalize">{{ formatColorGroupName(groupName) }}</h3>
+              <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div v-for="(colorData, shadeName) in colorGroup" :key="shadeName" 
                      class="text-center">
                   <div 
-                    :class="`w-full h-20 rounded-lg mb-2 shadow-sm`"
-                    :style="{ backgroundColor: `var(--colors-primary-${shade})` }"
+                    class="w-full h-20 rounded-lg mb-2 shadow-sm border"
+                    :style="{ backgroundColor: colorData.value }"
                   ></div>
-                  <p class="text-sm font-medium">primary-{{ shade }}</p>
-                  <p class="text-xs text-gray-500 font-mono">{{ getTokenValue(`colors-primary-${shade}`) }}</p>
+                  <p class="text-sm font-medium">{{ groupName }}-{{ shadeName }}</p>
+                  <p class="text-xs text-gray-500 font-mono">{{ colorData.value }}</p>
                 </div>
               </div>
             </div>
 
-            <!-- Gray Colors -->
-            <div class="mb-6">
-              <h3 class="text-lg font-medium mb-3">Gray Colors</h3>
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div v-for="shade in [50, 100, 500, 900]" :key="shade" 
-                     class="text-center">
-                  <div 
-                    :class="`w-full h-20 rounded-lg mb-2 shadow-sm`"
-                    :style="{ backgroundColor: `var(--colors-gray-${shade})` }"
-                  ></div>
-                  <p class="text-sm font-medium">gray-{{ shade }}</p>
-                  <p class="text-xs text-gray-500 font-mono">{{ getTokenValue(`colors-gray-${shade}`) }}</p>
-                </div>
-              </div>
+            <!-- Fallback for empty tokens -->
+            <div v-if="Object.keys(colorTokens).length === 0" class="text-center py-8">
+              <p class="text-gray-500">
+                색상 토큰을 로드할 수 없습니다. 
+                <code class="bg-gray-100 px-2 py-1 rounded text-sm">npm run tokens:build</code>를 실행해주세요.
+              </p>
             </div>
           </div>
         </div>
@@ -157,7 +149,20 @@
       <section class="mb-8">
         <div class="card">
           <div class="card-body">
-            <h2 class="text-2xl font-semibold mb-6">ℹ️ 토큰 정보</h2>
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-2xl font-semibold">ℹ️ 토큰 정보</h2>
+              <button 
+                @click="refreshTokens" 
+                :disabled="isRefreshing"
+                class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <ArrowPathIcon 
+                  :class="['w-4 h-4 mr-2', { 'animate-spin': isRefreshing }]" 
+                />
+                {{ isRefreshing ? '새로고침 중...' : '토큰 새로고침' }}
+              </button>
+            </div>
+            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 class="font-medium mb-3">파일 위치</h3>
@@ -169,14 +174,39 @@
                 </ul>
               </div>
               <div>
-                <h3 class="font-medium mb-3">워크플로우</h3>
+                <h3 class="font-medium mb-3">현재 상태</h3>
                 <ul class="space-y-2 text-sm">
-                  <li>1. Figma에서 토큰 수정</li>
-                  <li>2. Tokens Studio로 GitHub 푸시</li>
-                  <li>3. GitHub Actions 자동 실행</li>
-                  <li>4. Style Dictionary 빌드</li>
-                  <li>5. 웹사이트 자동 업데이트</li>
+                  <li>색상 그룹: <span class="font-mono bg-blue-50 px-2 py-1 rounded">{{ Object.keys(colorTokens).length }}개</span></li>
+                  <li>총 색상: <span class="font-mono bg-green-50 px-2 py-1 rounded">{{ getTotalColorsCount() }}개</span></li>
+                  <li>마지막 새로고침: <span class="font-mono bg-gray-50 px-2 py-1 rounded">{{ lastUpdated }}</span></li>
+                  <li>자동 감지: <span class="text-green-600 font-medium">활성화됨</span></li>
                 </ul>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-6 border-t">
+              <h3 class="font-medium mb-3">워크플로우</h3>
+              <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                <div class="text-center p-3 bg-blue-50 rounded-lg">
+                  <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">1</div>
+                  <p class="text-xs font-medium">Figma에서 토큰 수정</p>
+                </div>
+                <div class="text-center p-3 bg-green-50 rounded-lg">
+                  <div class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">2</div>
+                  <p class="text-xs font-medium">Tokens Studio 푸시</p>
+                </div>
+                <div class="text-center p-3 bg-purple-50 rounded-lg">
+                  <div class="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">3</div>
+                  <p class="text-xs font-medium">GitHub Actions 실행</p>
+                </div>
+                <div class="text-center p-3 bg-orange-50 rounded-lg">
+                  <div class="w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">4</div>
+                  <p class="text-xs font-medium">Style Dictionary 빌드</p>
+                </div>
+                <div class="text-center p-3 bg-indigo-50 rounded-lg">
+                  <div class="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">5</div>
+                  <p class="text-xs font-medium">웹사이트 자동 업데이트</p>
+                </div>
               </div>
             </div>
           </div>
@@ -209,7 +239,118 @@ import {
 // Reactive data
 const isDarkMode = ref(false)
 const lastUpdated = ref(new Date().toLocaleString('ko-KR'))
-const tokens = ref({})
+const colorTokens = ref({})
+const isRefreshing = ref(false)
+
+/**
+ * 색상 토큰을 동적로 로드하는 함수
+ * @returns {Promise<void>}
+ */
+const loadColorTokens = async () => {
+  try {
+    // API에서 토큰 정보 가져오기
+    const response = await $fetch('/api/tokens', { 
+      method: 'GET'
+    })
+
+    // API 응답에서 색상 토큰 추출
+    if (response.success && response.data && response.data.colors) {
+      colorTokens.value = response.data.colors
+      console.log('색상 토큰 로드 완료:', Object.keys(colorTokens.value).length, '개 그룹')
+    }
+  } catch (error) {
+    console.warn('색상 토큰 로드 실패, 기본값 사용:', error)
+    
+    // API 실패 시 로컬 파일에서 직접 로드 시도
+    try {
+      const response = await fetch('/tokens/global.json')
+      const tokens = await response.json()
+      
+      if (tokens && tokens.colors) {
+        // 색상 토큰만 필터링
+        const filteredColors = {}
+        for (const [groupName, group] of Object.entries(tokens.colors)) {
+          if (typeof group === 'object' && group !== null) {
+            filteredColors[groupName] = {}
+            
+            for (const [shadeName, shade] of Object.entries(group)) {
+              if (shade && typeof shade === 'object' && shade.type === 'color') {
+                filteredColors[groupName][shadeName] = {
+                  value: shade.value,
+                  type: shade.type
+                }
+              }
+            }
+          }
+        }
+        
+        colorTokens.value = filteredColors
+        console.log('로컬 파일에서 색상 토큰 로드 완료')
+      }
+    } catch (localError) {
+      console.warn('로컬 파일 로드도 실패, 기본 색상 사용:', localError)
+      
+      // 모든 방법이 실패하면 기본 색상 토큰 설정
+      colorTokens.value = {
+        primary: {
+          '50': { value: '#eff6ff', type: 'color' },
+          '100': { value: '#dbeafe', type: 'color' },
+          '500': { value: '#3b82f6', type: 'color' },
+          '600': { value: '#2563eb', type: 'color' },
+          '900': { value: '#1e3a8a', type: 'color' }
+        },
+        gray: {
+          '50': { value: '#f9fafb', type: 'color' },
+          '100': { value: '#f3f4f6', type: 'color' },
+          '500': { value: '#6b7280', type: 'color' },
+          '900': { value: '#111827', type: 'color' }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * 색상 그룹명을 사용자 친화적으로 포맷팅
+ * @param {string} groupName - 원본 그룹명
+ * @returns {string} 포맷된 그룹명
+ */
+const formatColorGroupName = (groupName) => {
+  return groupName
+    .replace(/([A-Z])/g, ' $1') // camelCase를 띄어쓰기로 변환
+    .replace(/^./, str => str.toUpperCase()) // 첫 글자 대문자
+    .trim()
+}
+
+/**
+ * 전체 색상 개수를 계산하는 함수
+ * @returns {number} 총 색상 개수
+ */
+const getTotalColorsCount = () => {
+  return Object.values(colorTokens.value).reduce(
+    (total, group) => total + Object.keys(group).length, 
+    0
+  )
+}
+
+/**
+ * 토큰을 새로고침하는 함수
+ * @returns {Promise<void>}
+ */
+const refreshTokens = async () => {
+  isRefreshing.value = true
+  try {
+    await loadColorTokens()
+    lastUpdated.value = new Date().toLocaleString('ko-KR')
+    
+    // 성공 알림 (선택적)
+    console.log('토큰 새로고침 완료')
+  } catch (error) {
+    console.error('토큰 새로고침 실패:', error)
+  } finally {
+    isRefreshing.value = false
+  }
+}
 
 const toggleDarkMode = () => {
   isDarkMode.value = !isDarkMode.value
@@ -228,7 +369,10 @@ const getTokenValue = (tokenName) => {
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
+  // 색상 토큰 로드
+  await loadColorTokens()
+  
   // 다크 모드 초기 설정
   const savedDarkMode = localStorage.getItem('darkMode')
   if (savedDarkMode === 'true') {

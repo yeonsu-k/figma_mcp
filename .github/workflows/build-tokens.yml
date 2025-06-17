@@ -6,7 +6,7 @@ on:
       - 'tokens/**'
     branches:
       - main
-      - figma_style  # figma_style 브랜치도 토큰 빌드 대상에 추가
+      - figma_style
   pull_request:
     paths:
       - 'tokens/**'
@@ -15,7 +15,6 @@ on:
       - figma_style
   workflow_dispatch:
 
-# 워크플로우 권한 명시적 설정
 permissions:
   contents: write
   actions: read
@@ -29,7 +28,6 @@ jobs:
       - name: 📋 Checkout repository
         uses: actions/checkout@v4
         with:
-          # GitHub Token 또는 Personal Access Token 사용
           token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
           
@@ -37,22 +35,30 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          # npm 캐시 제거하여 Tailwind v4 설치 문제 방지
+          # cache: 'npm'
           
-      - name: 🔍 Debug - Repository info
+      - name: 🔍 Debug - Environment info
         run: |
+          echo "=== Node and npm versions ==="
+          node --version
+          npm --version
           echo "=== Current branch ==="
           git branch --show-current
-          echo "=== Repository structure ==="
-          ls -la
-          echo "=== Tokens directory ==="
-          ls -la tokens/ || echo "tokens directory not found"
+          echo "=== Package.json ==="
+          cat package.json
           
       - name: 📥 Install dependencies
         run: |
-          echo "Installing dependencies..."
-          npm install
+          echo "Installing dependencies with Tailwind CSS v4..."
+          npm install --verbose
           echo "Dependencies installed successfully"
+        
+      - name: 🔍 Debug - Verify Tailwind installation
+        run: |
+          echo "=== Checking Tailwind installation ==="
+          ls -la node_modules/@tailwindcss/ || echo "Tailwind not found"
+          npm list @tailwindcss/vite tailwindcss || echo "Tailwind packages not found"
         
       - name: 🎨 Build design tokens
         run: |
@@ -62,13 +68,11 @@ jobs:
           
       - name: 🔍 Debug - Check generated files
         run: |
-          echo "=== Checking generated files ==="
+          echo "=== Generated files ==="
           ls -la assets/css/ || echo "assets/css directory not found"
           ls -la composables/ || echo "composables directory not found"
           echo "=== Git status ==="
           git status
-          echo "=== Git diff ==="
-          git diff --name-only
           
       - name: ✅ Check for changes
         id: verify-changed-files
@@ -95,37 +99,7 @@ jobs:
           git add composables/useDesignTokens.ts || echo "useDesignTokens.ts not found"
           
           echo "Committing changes..."
-          git commit -m "🎨 Update design tokens [skip ci]
-
-          Branch: $(git branch --show-current)
-          Generated files:
-          - assets/css/design-tokens.css
-          - assets/css/theme-tokens.css  
-          - composables/useDesignTokens.ts" || exit 1
+          git commit -m "🎨 Update design tokens [skip ci]" || exit 1
           
           echo "Pushing changes..."
           git push
-          
-      - name: 📦 Create artifact
-        if: steps.verify-changed-files.outputs.changed == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: design-tokens-${{ github.sha }}
-          path: |
-            assets/css/design-tokens.css
-            assets/css/theme-tokens.css
-            composables/useDesignTokens.ts
-          retention-days: 30
-          
-      - name: 💬 Comment on PR (if applicable)
-        if: github.event_name == 'pull_request' && steps.verify-changed-files.outputs.changed == 'true'
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🎨 Design tokens have been updated! The following files were generated:\n\n- `assets/css/design-tokens.css`\n- `assets/css/theme-tokens.css`\n- `composables/useDesignTokens.ts`\n\nYou can download the generated files from the workflow artifacts.'
-            })

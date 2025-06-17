@@ -1,6 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
@@ -10,17 +9,17 @@ export default defineNuxtConfig({
     '~/assets/css/main.css'
   ],
   
+  // Tailwind CSS v4 필수 설정
+  vite: {
+    plugins: [tailwindcss()],
+  },
+  
   // GitHub Pages 배포를 위한 설정
   nitro: {
     prerender: {
       routes: ['/']
     }
   },
-
-  vite: {
-    plugins: [tailwindcss()],
-  },
-
   
   // GitHub Pages의 baseURL 설정 (레포지토리 이름)
   app: {
