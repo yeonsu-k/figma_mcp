@@ -10,22 +10,21 @@
     "postinstall": "nuxt prepare",
     "tokens:build": "node build-tokens.js",
     "tokens:watch": "nodemon --watch tokens --ext json --exec \"node build-tokens.js\"",
-    "tokens:clean": "rm -f assets/css/design-tokens.css assets/css/theme-tokens.css composables/useDesignTokens.ts"
+    "tokens:clean": "rm -f assets/css/design-tokens.css assets/css/theme-tokens.css composables/useDesignTokens.ts",
+    "deploy:build": "npm run tokens:build && npm run generate",
+    "deploy:preview": "npm run deploy:build && npm run preview"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
-    "@nuxt/eslint-config": "^0.2.0",
-    "eslint": "^8.56.0",
     "@types/node": "^20.10.6",
-    "nodemon": "^3.0.2",
     "nuxt": "^3.8.0",
     "style-dictionary": "^4.0.1",
-    "@tailwindcss/vite": "^4.1.6",
-    "tailwindcss": "^4.1.6"
+    "tailwindcss": "^4.0.0",
+    "nodemon": "^3.0.2"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
-    "@heroicons/vue": "^2.2.0",
+    "@heroicons/vue": "^2.0.18",
     "@pinia/nuxt": "^0.5.1",
     "@vueuse/nuxt": "^10.7.0",
     "pinia": "^2.1.7",
