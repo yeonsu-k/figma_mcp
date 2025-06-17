@@ -2,104 +2,44 @@ name: Build Design Tokens
 
 on:
   push:
-    paths:
-      - 'tokens/**'
-    branches:
-      - main
-      - figma_style
-  pull_request:
-    paths:
-      - 'tokens/**'
-    branches:
-      - main
-      - figma_style
+    paths: ['tokens/**']
+    branches: [main, figma_style]
   workflow_dispatch:
 
 permissions:
   contents: write
-  actions: read
-  security-events: write
 
 jobs:
-  build-tokens:
+  build:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: 📋 Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          # npm 캐시 제거하여 Tailwind v4 설치 문제 방지
-          # cache: 'npm'
           
-      - name: 🔍 Debug - Environment info
-        run: |
-          echo "=== Node and npm versions ==="
-          node --version
-          npm --version
-          echo "=== Current branch ==="
-          git branch --show-current
-          echo "=== Package.json ==="
-          cat package.json
-          
-      - name: 📥 Install dependencies
-        run: |
-          echo "Installing dependencies with Tailwind CSS v4..."
-          npm install --verbose
-          echo "Dependencies installed successfully"
+      - run: npm install
+      
+      - name: Build tokens
+        run: npm run tokens:build
         
-      - name: 🔍 Debug - Verify Tailwind installation
-        run: |
-          echo "=== Checking Tailwind installation ==="
-          ls -la node_modules/@tailwindcss/ || echo "Tailwind not found"
-          npm list @tailwindcss/vite tailwindcss || echo "Tailwind packages not found"
-        
-      - name: 🎨 Build design tokens
-        run: |
-          echo "Building design tokens..."
-          npm run tokens:build
-          echo "Token build completed"
-          
-      - name: 🔍 Debug - Check generated files
-        run: |
-          echo "=== Generated files ==="
-          ls -la assets/css/ || echo "assets/css directory not found"
-          ls -la composables/ || echo "composables directory not found"
-          echo "=== Git status ==="
-          git status
-          
-      - name: ✅ Check for changes
-        id: verify-changed-files
+      - name: Check for changes
+        id: changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
-            echo "Changes detected:"
-            git status --porcelain
           else
             echo "changed=false" >> $GITHUB_OUTPUT
-            echo "No changes detected"
           fi
           
-      - name: 📝 Commit and push changes
-        if: steps.verify-changed-files.outputs.changed == 'true'
+      - name: Commit changes
+        if: steps.changes.outputs.changed == 'true'
         run: |
-          echo "Configuring git..."
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          
-          echo "Adding files..."
-          git add assets/css/design-tokens.css || echo "design-tokens.css not found"
-          git add assets/css/theme-tokens.css || echo "theme-tokens.css not found"
-          git add composables/useDesignTokens.ts || echo "useDesignTokens.ts not found"
-          
-          echo "Committing changes..."
-          git commit -m "🎨 Update design tokens [skip ci]" || exit 1
-          
-          echo "Pushing changes..."
+          git add assets/css/ composables/
+          git commit -m "🎨 Auto-update tokens [skip ci]"
           git push
