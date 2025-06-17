@@ -1,42 +1,12 @@
 {
   "colors": {
-    "primary": {
-      "50": {
-        "value": "#eff6ff",
-        "type": "color"
-      },
-      "100": {
-        "value": "#dbeafe",
-        "type": "color"
-      },
-      "500": {
+    "colors": {
+      "primary": {
         "value": "#3b82f6",
         "type": "color"
       },
-      "600": {
-        "value": "#2563eb",
-        "type": "color"
-      },
-      "900": {
-        "value": "#1e3a8a",
-        "type": "color"
-      }
-    },
-    "gray": {
-      "50": {
-        "value": "#f9fafb",
-        "type": "color"
-      },
-      "100": {
-        "value": "#f3f4f6",
-        "type": "color"
-      },
-      "500": {
+      "secondary": {
         "value": "#6b7280",
-        "type": "color"
-      },
-      "900": {
-        "value": "#111827",
         "type": "color"
       }
     }
@@ -62,5 +32,12 @@
       "value": "32px",
       "type": "spacing"
     }
+  },
+  "$themes": [],
+  "$metadata": {
+    "tokenSetOrder": [
+      "colors",
+      "spacing"
+    ]
   }
 }
