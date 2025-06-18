@@ -1,13 +1,5 @@
 {
   "\bglobal": {
-    "black": {
-      "value": "#000000",
-      "type": "color"
-    },
-    "white": {
-      "value": "#ffffff",
-      "type": "color"
-    },
     "mlbb": {
       "50": {
         "value": "#5F494E",
@@ -27,52 +19,6 @@
       },
       "400": {
         "value": "#89A8AE",
-        "type": "color"
-      }
-    },
-    "slate": {
-      "50": {
-        "value": "#f8fafc",
-        "type": "color"
-      },
-      "100": {
-        "value": "#f1f5f9",
-        "type": "color"
-      },
-      "200": {
-        "value": "#e2e8f0",
-        "type": "color"
-      },
-      "300": {
-        "value": "#cbd5e1",
-        "type": "color"
-      },
-      "400": {
-        "value": "#94a3b8",
-        "type": "color"
-      },
-      "500": {
-        "value": "#64748b",
-        "type": "color"
-      },
-      "600": {
-        "value": "#475569",
-        "type": "color"
-      },
-      "700": {
-        "value": "#334155",
-        "type": "color"
-      },
-      "800": {
-        "value": "#1e293b",
-        "type": "color"
-      },
-      "900": {
-        "value": "#0f172a",
-        "type": "color"
-      },
-      "950": {
-        "value": "#020617",
         "type": "color"
       }
     },
@@ -99,6 +45,51 @@
     "Pretendard": {
       "value": "Pretendard Variable",
       "type": "fontFamilies"
+    },
+    "spring": {
+      "100": {
+        "value": "#ffbfc0",
+        "type": "color"
+      },
+      "200": {
+        "value": "#FFDCDC",
+        "type": "color"
+      },
+      "300": {
+        "value": "#FFF2EB",
+        "type": "color"
+      },
+      "400": {
+        "value": "#FFE8CD",
+        "type": "color"
+      },
+      "500": {
+        "value": "#FFD6BA",
+        "type": "color",
+        "description": "FFD6BA"
+      }
+    },
+    "ocene": {
+      "100": {
+        "value": "#3674B5",
+        "type": "color"
+      },
+      "200": {
+        "value": "#578FCA",
+        "type": "color"
+      },
+      "300": {
+        "value": "#abdcff",
+        "type": "color"
+      },
+      "400": {
+        "value": "#DAE0E4",
+        "type": "color"
+      },
+      "500": {
+        "value": "#CCC1B8",
+        "type": "color"
+      }
     }
   },
   "$themes": [],
