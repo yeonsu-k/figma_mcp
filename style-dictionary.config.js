@@ -25,25 +25,22 @@ StyleDictionary.registerFormat({
         const hasUnit = /\d+(px|rem|em|%|vh|vw)/.test(value);
         processedValue = hasUnit ? value : `${value}px`;
       } else {
-        // 기타 토큰들의 네임스페이스 처리
-        if (token.name.startsWith('global-')) {
-          // 토큰 타입에 따른 네임스페이스 매핑
-          const typeToNamespace = {
-            'borderRadius': 'radius',
-            'borderWidth': 'border-width',
-            'boxShadow': 'shadow',
-            'opacity': 'opacity',
-            'fontSize': 'text',
-            'fontWeight': 'font-weight',
-            'lineHeight': 'leading',
-            'letterSpacing': 'tracking',
-            'fontFamily': 'font',
-            'fontFamilies': 'font'
-          };
-          
-          const namespace = typeToNamespace[token.type] || token.type;
-          namespacedName = token.name.replace(/^global-/, `${namespace}-`);
-        }
+        // 토큰 타입에 따른 네임스페이스 매핑
+        const typeToNamespace = {
+          'borderRadius': 'radius',
+          'borderWidth': 'border-width',
+          'boxShadow': 'shadow',
+          'opacity': 'opacity',
+          'fontSize': 'text',
+          'fontWeight': 'font-weight',
+          'lineHeight': 'leading',
+          'letterSpacing': 'tracking',
+          'fontFamily': 'font',
+          'fontFamilies': 'font'
+        };
+        
+        const namespace = typeToNamespace[token.type] || token.type;
+        namespacedName = token.name.replace(/^global-/, `${namespace}-`);
       }
       
       return `  --${namespacedName}: ${processedValue};`
