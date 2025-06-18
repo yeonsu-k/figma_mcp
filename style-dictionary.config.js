@@ -2,20 +2,7 @@ import StyleDictionary from 'style-dictionary'
 
 console.log('📋 Loading Style Dictionary configuration...')
 
-// CSS Variables 포맷 등록
-StyleDictionary.registerFormat({
-  name: 'css/variables',
-  format: ({ dictionary }) => {
-    const header = `/**\n * Do not edit directly, this file was auto-generated.\n */\n\n`
-    const variables = dictionary.allTokens.map(token => 
-      `  --${token.name}: ${token.value};`
-    ).join('\n')
-    
-    return `${header}:root {\n${variables}\n}`
-  }
-})
-
-// Tailwind v4 @theme 포맷 등록
+// Tailwind v4 @theme 포맷 등록 (유일하게 필요한 포맷)
 StyleDictionary.registerFormat({
   name: 'tailwind/v4-theme',
   format: ({ dictionary }) => {
@@ -50,7 +37,8 @@ StyleDictionary.registerFormat({
             'fontWeight': 'font-weight',
             'lineHeight': 'leading',
             'letterSpacing': 'tracking',
-            'fontFamily': 'font'
+            'fontFamily': 'font',
+            'fontFamilies': 'font'
           };
           
           const namespace = typeToNamespace[token.type] || token.type;
@@ -65,154 +53,10 @@ StyleDictionary.registerFormat({
   }
 })
 
-// TypeScript 포맷 등록
-StyleDictionary.registerFormat({
-  name: 'typescript/es6-declarations',
-  format: ({ dictionary }) => {
-    const header = `// Design Tokens - Auto-generated\n// Do not edit directly\n\n`
-    
-    const interfaceContent = dictionary.allTokens.map(token => 
-      `  '${token.name}': string`
-    ).join('\n')
-    
-    const tokenContent = dictionary.allTokens.map(token => 
-      `  '${token.name}': '${token.value}'`
-    ).join(',\n')
-    
-    // 동적으로 색상 토큰 분석
-    const analyzeColorTokens = () => {
-      const colorTokens = {}
-      const singleColors = {}
-      
-      dictionary.allTokens.forEach(token => {
-        if (token.type === 'color') {
-          const pathParts = token.path
-          
-          if (pathParts.length >= 3) {
-            // 팔레트 색상 (예: global.slate.50)
-            const groupName = pathParts[1] // slate, sky 등
-            const shadeName = pathParts[2] // 50, 100, 500 등
-            
-            if (!colorTokens[groupName]) {
-              colorTokens[groupName] = {}
-            }
-            colorTokens[groupName][shadeName] = {
-              token: token.name,
-              value: token.value
-            }
-          } else if (pathParts.length === 2 || (pathParts.length === 3 && pathParts[1] === 'colors')) {
-            // 단일 색상 (예: global.black, global.colors.primary)
-            const colorName = pathParts[pathParts.length - 1]
-            singleColors[colorName] = {
-              token: token.name,
-              value: token.value
-            }
-          }
-        }
-      })
-      
-      return { colorTokens, singleColors }
-    }
-    
-    const composableContent = `export const useDesignTokens = () => {
-  const getCSSToken = (tokenName: string): string => {
-    if (typeof window !== 'undefined') {
-      const value = getComputedStyle(document.documentElement)
-        .getPropertyValue(\`--\${tokenName}\`)
-        .trim()
-      return value || tokens[tokenName as keyof DesignTokens] || 'undefined'
-    }
-    return tokens[tokenName as keyof DesignTokens] || 'undefined'
-  }
-  
-  // 동적으로 색상 토큰 분석
-  const getColorTokensByType = () => {
-    const colorPalettes = {}
-    const singleColors = {}
-    
-    Object.entries(tokens).forEach(([tokenName, value]) => {
-      if (tokenName.startsWith('global')) {
-        // 토큰 이름에서 경로 추출 (예: GlobalSlate50 → ["Global", "Slate", "50"])
-        const parts = tokenName.replace('global', '').match(/[A-Z][a-z]*|\d+/g) || []
-        
-        if (parts.length >= 2) {
-          const lastPart = parts[parts.length - 1]
-          const isNumericShade = /^\d+$/.test(lastPart)
-          
-          if (isNumericShade && parts.length >= 2) {
-            // 팔레트 색상 (예: GlobalSlate50 → slate.50)
-            const colorGroup = parts[0].toLowerCase()
-            const shade = lastPart
-            
-            if (!colorPalettes[colorGroup]) {
-              colorPalettes[colorGroup] = {}
-            }
-            colorPalettes[colorGroup][shade] = {
-              token: tokenName,
-              value: value as string
-            }
-          } else {
-            // 단일 색상 처리
-            let colorName
-            if (parts.includes('Colors')) {
-              // GlobalColorsPrimary → primary
-              colorName = parts[parts.indexOf('Colors') + 1]?.toLowerCase() || parts.join('').toLowerCase()
-            } else {
-              // GlobalBlack → black
-              colorName = parts.join('').toLowerCase()
-            }
-            
-            singleColors[colorName] = {
-              token: tokenName,
-              value: value as string
-            }
-          }
-        }
-      }
-    })
-    
-    return { colorPalettes, singleColors }
-  }
-  
-  // 간격 토큰들 (향후 확장 가능)
-  const getSpacingTokens = () => {
-    const spacingTokens = {}
-    Object.entries(tokens).forEach(([tokenName, value]) => {
-      if (tokenName.includes('spacing') || tokenName.includes('Spacing')) {
-        const spacingName = tokenName.replace(/.*spacing/i, '').toLowerCase()
-        spacingTokens[spacingName] = {
-          token: tokenName,
-          value: value as string
-        }
-      }
-    })
-    return spacingTokens
-  }
-  
-  return {
-    tokens,
-    getCSSToken,
-    getColorTokensByType,
-    getSpacingTokens
-  }
-}`
-    
-    return `${header}export interface DesignTokens {\n${interfaceContent}\n}\n\nexport const tokens: DesignTokens = {\n${tokenContent}\n}\n\n${composableContent}`
-  }
-})
-
-// Style Dictionary 설정 내보내기
+// Style Dictionary 설정 - TailwindCSS v4만 지원
 const config = {
   source: ['tokens/**/*.json'],
   platforms: {
-    css: {
-      transformGroup: 'css',
-      buildPath: 'assets/css/',
-      files: [{
-        destination: 'design-tokens.css',
-        format: 'css/variables'
-      }]
-    },
     tailwind: {
       transformGroup: 'css',
       buildPath: 'assets/css/',
@@ -220,17 +64,9 @@ const config = {
         destination: 'theme-tokens.css',
         format: 'tailwind/v4-theme'
       }]
-    },
-    js: {
-      transformGroup: 'js',
-      buildPath: 'composables/',
-      files: [{
-        destination: 'useDesignTokens.ts',
-        format: 'typescript/es6-declarations'
-      }]
     }
   }
 }
 
-console.log('✅ Style Dictionary configuration loaded successfully')
+console.log('✅ Style Dictionary configuration loaded successfully (TailwindCSS v4 only)')
 export default config

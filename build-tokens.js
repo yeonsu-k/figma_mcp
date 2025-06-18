@@ -140,16 +140,12 @@ try {
   console.log(`   - Other tokens: ${statistics.totalOtherTokens}`)
   
   console.log('\n📁 Generated files:')
-  console.log('   - assets/css/design-tokens.css')
   console.log('   - assets/css/theme-tokens.css')
-  console.log('   - composables/useDesignTokens.ts')
   console.log('   - public/api/tokens.json')
   
   // 생성된 파일 통계
   const files = [
-    'assets/css/design-tokens.css',
     'assets/css/theme-tokens.css',
-    'composables/useDesignTokens.ts',
     'public/api/tokens.json'
   ]
   

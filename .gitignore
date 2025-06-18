@@ -24,9 +24,7 @@ logs
 !.env.example
 
 # Design Tokens (생성된 파일들은 커밋하되, 로컬 테스트 파일은 제외)
-# assets/css/design-tokens.css
 # assets/css/theme-tokens.css
-# composables/useDesignTokens.ts
 
 # Backup files
 *.backup

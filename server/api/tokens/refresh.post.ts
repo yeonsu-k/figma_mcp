@@ -14,9 +14,7 @@ export default defineEventHandler(async (event) => {
       timestamp: new Date().toISOString(),
       message: '토큰이 성공적으로 새로고침되었습니다',
       files_updated: [
-        'assets/css/design-tokens.css',
-        'assets/css/theme-tokens.css', 
-        'composables/useDesignTokens.ts'
+        'assets/css/theme-tokens.css'
       ]
     }
     
