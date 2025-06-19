@@ -1,5 +1,5 @@
 {
-  "Colors/Mode 1": {
+  "global": {
     "spring": {
       "100": {
         "value": "#ffbfc0",
@@ -94,35 +94,32 @@
     "Pretendard": {
       "value": "Pretendard Variable",
       "type": "fontFamilies"
-    }
-  },
-  "spacing/spacing": {
+    },
     "xs": {
-      "value": "4px",
-      "type": "dimension"
+      "value": 4,
+      "type": "spacing"
     },
     "sm": {
-      "value": "8px",
-      "type": "dimension"
+      "value": 8,
+      "type": "spacing"
     },
     "md": {
-      "value": "16px",
-      "type": "dimension"
+      "value": 16,
+      "type": "spacing"
     },
     "lg": {
-      "value": "24px",
-      "type": "dimension"
+      "value": 24,
+      "type": "spacing"
     },
     "xl": {
-      "value": "32px",
-      "type": "dimension"
+      "value": 32,
+      "type": "spacing"
     }
   },
   "$themes": [],
   "$metadata": {
     "tokenSetOrder": [
-      "Colors/Mode 1",
-      "spacing/spacing"
+      "global"
     ]
   }
 }
