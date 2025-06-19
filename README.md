@@ -5,7 +5,7 @@
 이 프로젝트는 Figma의 Tokens Studio 플러그인에서 생성된 디자인 토큰을 TailwindCSS와 통합하는 자동화된 워크플로우를 갖추고 있습니다.
 
 1. **디자인 토큰 생성**: Figma에서 Tokens Studio 플러그인으로 디자인 토큰을 생성
-2. **토큰 변환**: token-transformer와 sd-tailwindcss-transformer를 사용하여 토큰을 TailwindCSS 설정으로 변환
+2. **토큰 변환**: token-transformer를 사용하여 토큰을 TailwindCSS 설정으로 변환
 3. **CSS 생성**: 디자인 토큰을 기반으로 CSS 변수 생성
 4. **TailwindCSS 통합**: 생성된 테마 설정을 TailwindCSS와 통합
 
@@ -60,7 +60,6 @@ npm run tokens:clean
 - **Nuxt DevTools**: 개발 생산성 향상
 - **TypeScript Type Checking**: 컴파일 타임 에러 체크
 - **Style Dictionary**: 디자인 토큰 관리
-- **sd-tailwindcss-transformer**: 디자인 토큰을 TailwindCSS 설정으로 변환
 
 ## 📁 프로젝트 구조
 

@@ -90,6 +90,21 @@
                 </div>
               </div>
             </div>
+
+            <!-- Test Color -->
+            <div class="mb-8">
+              <h3 class="text-lg font-medium mb-4">Test Color</h3>
+              <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2">
+                <div class="text-center">
+                  <div 
+                    class="w-full h-16 md:h-20 rounded-lg mb-2 shadow-sm cursor-pointer hover:scale-105 transition-transform bg-shiraz-500"
+                  />
+                  <p class="text-xs font-medium text-slate-700">500</p>
+                  <p class="text-xs font-medium text-slate-700">bg-shiraz-500</p>
+                  <p class="text-xs text-slate-500 font-mono">#eb4859</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
