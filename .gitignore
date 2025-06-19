@@ -27,4 +27,5 @@ logs
 # assets/css/theme-tokens.css
 
 # Backup files
+backup/*
 *.backup

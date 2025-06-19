@@ -2,10 +2,6 @@
 @import "tailwindcss";
 
 /* Design Tokens import */
-@import './theme-tokens.css';
-
-/* New Design Tokens import (sd-transforms) */
-/* design-tokens.css 파일은 transform-tokens.js 실행 후 생성됩니다 */
 @import './design-tokens.css';
 
 /* Tailwind v4 Theme Configuration */
