@@ -137,28 +137,32 @@
         "value": "#480917",
         "type": "color"
       }
+    },
+    "Pretendard": {
+      "value": "Pretendard Variable",
+      "type": "fontFamilies"
     }
   },
   "spacing/spacing": {
     "xs": {
-      "value": 4,
-      "type": "number"
+      "value": "4px",
+      "type": "dimension"
     },
     "sm": {
-      "value": 8,
-      "type": "number"
+      "value": "8px",
+      "type": "dimension"
     },
     "md": {
-      "value": 16,
-      "type": "number"
+      "value": "16px",
+      "type": "dimension"
     },
     "lg": {
-      "value": 24,
-      "type": "number"
+      "value": "24px",
+      "type": "dimension"
     },
     "xl": {
-      "value": 32,
-      "type": "number"
+      "value": "32px",
+      "type": "dimension"
     }
   },
   "$themes": [],
