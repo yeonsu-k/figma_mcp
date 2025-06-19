@@ -338,8 +338,10 @@ const loadTokens = async () => {
     } catch (apiError) {
       console.log('📄 API 엔드포인트 실패, 정적 파일 사용 중...')
       
-      // API 실패 시 정적 JSON 파일 사용 (GitHub Pages용)
-      const staticResponse = await fetch('/figma_mcp/api/tokens.json')
+    // API 실패 시 정적 JSON 파일 사용 (GitHub Pages용)
+      const { $config } = useNuxtApp()
+      const baseURL = $config.public.baseURL || '/figma_mcp'
+      const staticResponse = await fetch(`${baseURL}/api/tokens.json`)
       if (!staticResponse.ok) {
         throw new Error(`정적 파일 로드 실패: ${staticResponse.status}`)
       }

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import StyleDictionary from 'style-dictionary';
 import { register } from '@tokens-studio/sd-transforms';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { execSync } from 'child_process';
 
@@ -68,7 +68,7 @@ StyleDictionary.registerTransform({
     // token.path 배열을 사용하여 전체 경로를 kebab-case로 변환
     const pathSegments = token.path.map(segment => 
       segment
-        .replace(/\s+/g, '-')        // 공백을 하이펰으로
+        .replace(/\s+/g, '-')        // 공백을 하이펀으로
         .replace(/[A-Z]/g, (match, offset) => 
           offset > 0 ? '-' + match.toLowerCase() : match.toLowerCase()  // camelCase를 kebab-case로
         )
@@ -145,6 +145,153 @@ try {
 } catch (error) {
   console.error('❌ CSS variables build failed:', error);
   process.exit(1);
+}
+
+// 3. API용 정적 JSON 파일 생성 (GitHub Pages 호환)
+try {
+  console.log('🔄 Generating static API JSON files...');
+  
+  // public/api 디렉토리 생성
+  const apiDir = resolve(process.cwd(), 'public/api');
+  if (!existsSync(apiDir)) {
+    mkdirSync(apiDir, { recursive: true });
+  }
+  
+  // tokens/global.json 파일 읽기
+  const tokensPath = resolve(process.cwd(), 'tokens/global.json');
+  const tokensContent = readFileSync(tokensPath, 'utf-8');
+  const tokensData = JSON.parse(tokensContent);
+  
+  // 토큰 분석 함수 (server/api/tokens.get.ts와 동일)
+  const analyzeTokens = (data) => {
+    const colorPalettes = {};
+    const singleColors = {};
+    const otherTokens = {};
+
+    const isNumericShade = (key) => {
+      return /^\d+$/.test(key);
+    };
+
+    const isPalette = (obj) => {
+      const keys = Object.keys(obj);
+      return keys.length > 1 && 
+             keys.every(key => isNumericShade(key)) && 
+             keys.every(key => obj[key]?.type === 'color' && obj[key]?.value);
+    };
+
+    const processTokens = (obj, path = []) => {
+      for (const [key, value] of Object.entries(obj)) {
+        if (value && typeof value === 'object') {
+          if (value.type === 'color' && value.value) {
+            if (path.length === 2 && isNumericShade(key)) {
+              const groupName = path[1];
+              const shadeName = key;
+              
+              if (!colorPalettes[groupName]) {
+                colorPalettes[groupName] = {};
+              }
+              colorPalettes[groupName][shadeName] = {
+                value: value.value,
+                type: value.type
+              };
+            } else if (path.length === 2 && path[1] === 'colors') {
+              const colorName = key;
+              singleColors[colorName] = {
+                value: value.value,
+                type: value.type
+              };
+            } else if (path.length === 1) {
+              const colorName = key;
+              singleColors[colorName] = {
+                value: value.value,
+                type: value.type
+              };
+            }
+          } else if (!value.type && !value.value) {
+            if (path.length === 1 && isPalette(value)) {
+              processTokens(value, [...path, key]);
+            } else {
+              processTokens(value, [...path, key]);
+            }
+          } else {
+            const tokenPath = [...path, key].join('.');
+            otherTokens[tokenPath] = value;
+          }
+        }
+      }
+    };
+
+    if (data['global'] || data['\bglobal']) {
+      processTokens(data['global'] || data['\bglobal'], ['global']);
+    } else {
+      processTokens(data);
+    }
+
+    return {
+      colorPalettes,
+      singleColors,
+      otherTokens
+    };
+  };
+  
+  const analyzedTokens = analyzeTokens(tokensData);
+  
+  // 통계 정보 생성
+  const statistics = {
+    totalColorPalettes: Object.keys(analyzedTokens.colorPalettes).length,
+    totalSingleColors: Object.keys(analyzedTokens.singleColors).length,
+    totalColors: Object.values(analyzedTokens.colorPalettes).reduce(
+      (total, palette) => total + Object.keys(palette).length, 
+      0
+    ) + Object.keys(analyzedTokens.singleColors).length,
+    totalOtherTokens: Object.keys(analyzedTokens.otherTokens).length,
+    lastModified: new Date().toISOString()
+  };
+  
+  // API 응답 형태로 데이터 구성
+  const apiResponse = {
+    success: true,
+    data: {
+      colors: {
+        ...analyzedTokens.colorPalettes,
+        single: analyzedTokens.singleColors
+      },
+      other: analyzedTokens.otherTokens,
+      statistics,
+      raw: tokensData
+    }
+  };
+  
+  // 정적 API 파일들 생성
+  writeFileSync(
+    resolve(apiDir, 'tokens.json'),
+    JSON.stringify(apiResponse, null, 2)
+  );
+  
+  // 개별 엔드포인트들도 생성
+  writeFileSync(
+    resolve(apiDir, 'tokens-colors.json'),
+    JSON.stringify({
+      success: true,
+      data: apiResponse.data.colors
+    }, null, 2)
+  );
+  
+  writeFileSync(
+    resolve(apiDir, 'tokens-statistics.json'),
+    JSON.stringify({
+      success: true,
+      data: statistics
+    }, null, 2)
+  );
+  
+  console.log('✅ Static API JSON files generated!');
+  console.log(`   📁 public/api/tokens.json`);
+  console.log(`   📁 public/api/tokens-colors.json`);
+  console.log(`   📁 public/api/tokens-statistics.json`);
+  
+} catch (error) {
+  console.error('❌ Static API generation failed:', error);
 }
 
 // 4. main.css 파일 업데이트

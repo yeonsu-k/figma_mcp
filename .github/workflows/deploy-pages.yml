@@ -46,6 +46,15 @@ jobs:
             echo "Warning: design-tokens.css not found"
             touch assets/css/design-tokens.css
           fi
+          if [ ! -f "public/api/tokens.json" ]; then
+            echo "Warning: tokens.json not found"
+            mkdir -p public/api
+            echo '{"success":false,"error":{"message":"tokens not built"}}' > public/api/tokens.json
+          fi
+          echo "Listing public directory:"
+          ls -la public/
+          echo "Listing public/api directory:"
+          ls -la public/api/ || echo "public/api directory not found"
       
       - name: Generate static site
         run: npm run generate

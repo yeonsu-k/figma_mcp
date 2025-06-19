@@ -65,7 +65,8 @@ export default defineNuxtConfig({
     // Public keys (exposed to client-side)
     public: {
       apiBase: process.env.API_BASE || 'https://yeonsu-k.github.io/figma_mcp/api',
-      appName: 'Design Tokens Showcase'
+      appName: 'Design Tokens Showcase',
+      baseURL: '/figma_mcp'
     }
   }
 })
