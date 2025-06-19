@@ -92,7 +92,7 @@
             </div>
 
             <!-- Test Color -->
-            <div class="mb-8">
+            <!-- <div class="mb-8">
               <h3 class="text-lg font-medium mb-4">Test Color</h3>
               <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2">
                 <div class="text-center">
@@ -104,7 +104,7 @@
                   <p class="text-xs text-slate-500 font-mono">#eb4859</p>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </section>
