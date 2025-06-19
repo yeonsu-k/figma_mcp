@@ -1,3 +1,33 @@
+## 🎨 디자인 토큰 워크플로우
+
+### Tokens Studio + TailwindCSS 파이프라인
+
+이 프로젝트는 Figma의 Tokens Studio 플러그인에서 생성된 디자인 토큰을 TailwindCSS와 통합하는 자동화된 워크플로우를 갖추고 있습니다.
+
+1. **디자인 토큰 생성**: Figma에서 Tokens Studio 플러그인으로 디자인 토큰을 생성
+2. **토큰 변환**: token-transformer와 sd-tailwindcss-transformer를 사용하여 토큰을 TailwindCSS 설정으로 변환
+3. **CSS 생성**: 디자인 토큰을 기반으로 CSS 변수 생성
+4. **TailwindCSS 통합**: 생성된 테마 설정을 TailwindCSS와 통합
+
+### 토큰 빌드 및 워치 명령어
+
+```bash
+# 디자인 토큰 빌드
+npm run tokens:build
+
+# 토큰 변경사항 감지 및 자동 빌드
+npm run tokens:watch
+
+# 생성된 파일 정리
+npm run tokens:clean
+```
+
+### 생성되는 파일
+
+- `assets/css/design-tokens.css`: CSS 변수로 변환된 디자인 토큰
+- `tailwind.theme.js`: TailwindCSS 테마 설정
+- `public/api/tokens.json`: API용 토큰 데이터
+
 # MCP 테스트 대시보드
 
 **MCP 테스트 대시보드**는 사이버 보안 관리를 위한 모던한 관리자 대시보드입니다. Nuxt.js 3과 Vue 3를 기반으로 구축된 반응형 웹 애플리케이션입니다.
@@ -29,6 +59,8 @@
 - **ESLint**: 코드 품질 관리
 - **Nuxt DevTools**: 개발 생산성 향상
 - **TypeScript Type Checking**: 컴파일 타임 에러 체크
+- **Style Dictionary**: 디자인 토큰 관리
+- **sd-tailwindcss-transformer**: 디자인 토큰을 TailwindCSS 설정으로 변환
 
 ## 📁 프로젝트 구조
 
