@@ -1,4 +1,33 @@
-/* 이 파일은 transform-tokens.js 실행 시 자동으로 대체됩니다. */
-:root {
-  /* 임시 공간 */
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+@theme {
+  --color-spring-100: #ffbfc0;
+  --color-spring-200: #FFDCDC;
+  --color-spring-300: #FFF2EB;
+  --color-spring-400: #FFE8CD;
+  --color-spring-500: #FFD6BA; /** FFD6BA */
+  --color-ocene-100: #3674B5;
+  --color-ocene-200: #578FCA;
+  --color-ocene-300: #abdcff;
+  --color-ocene-400: #DAE0E4;
+  --color-ocene-500: #CCC1B8;
+  --color-shiraz-50: #fef2f2;
+  --color-shiraz-100: #fee5e5;
+  --color-shiraz-200: #fccfd2;
+  --color-shiraz-300: #f9a8ad;
+  --color-shiraz-400: #f47882;
+  --color-shiraz-500: #eb4859;
+  --color-shiraz-600: #d72742;
+  --color-shiraz-700: #b51b36;
+  --color-shiraz-800: #9e1a36;
+  --color-shiraz-900: #821932;
+  --color-shiraz-950: #480917;
+  --font-pretendard: Pretendard Variable;
+  --spacing-xs: 4;
+  --spacing-sm: 8;
+  --spacing-md: 16;
+  --spacing-lg: 24;
+  --spacing-xl: 32;
 }

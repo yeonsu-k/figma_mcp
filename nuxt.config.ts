@@ -17,9 +17,19 @@ export default defineNuxtConfig({
   // GitHub Pages 배포를 위한 설정
   nitro: {
     prerender: {
-      routes: ['/']
+      routes: ['/'],
+      // 정적 파일들을 포함하도록 설정
+      crawlLinks: true
+    },
+    // SPA 모드를 위한 설정 (404 페이지 처리)
+    routeRules: {
+      '/': { prerender: true },
+      '/**': { ssr: false }
     }
   },
+  
+  // SPA 모드 설정 (GitHub Pages에서 동적 라우팅 지원)
+  ssr: false,
   
   // GitHub Pages의 baseURL 설정 (레포지토리 이름)
   app: {

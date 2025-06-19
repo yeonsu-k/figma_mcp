@@ -1,0 +1,123 @@
+{
+  "spring": {
+    "100": {
+      "value": "#ffbfc0",
+      "type": "color"
+    },
+    "200": {
+      "value": "#FFDCDC",
+      "type": "color"
+    },
+    "300": {
+      "value": "#FFF2EB",
+      "type": "color"
+    },
+    "400": {
+      "value": "#FFE8CD",
+      "type": "color"
+    },
+    "500": {
+      "value": "#FFD6BA",
+      "type": "color",
+      "description": "FFD6BA"
+    }
+  },
+  "ocene": {
+    "100": {
+      "value": "#3674B5",
+      "type": "color"
+    },
+    "200": {
+      "value": "#578FCA",
+      "type": "color"
+    },
+    "300": {
+      "value": "#abdcff",
+      "type": "color"
+    },
+    "400": {
+      "value": "#DAE0E4",
+      "type": "color"
+    },
+    "500": {
+      "value": "#CCC1B8",
+      "type": "color"
+    }
+  },
+  "Shiraz": {
+    "50": {
+      "value": "#fef2f2",
+      "type": "color"
+    },
+    "100": {
+      "value": "#fee5e5",
+      "type": "color"
+    },
+    "200": {
+      "value": "#fccfd2",
+      "type": "color"
+    },
+    "300": {
+      "value": "#f9a8ad",
+      "type": "color"
+    },
+    "400": {
+      "value": "#f47882",
+      "type": "color"
+    },
+    "500": {
+      "value": "#eb4859",
+      "type": "color"
+    },
+    "600": {
+      "value": "#d72742",
+      "type": "color"
+    },
+    "700": {
+      "value": "#b51b36",
+      "type": "color"
+    },
+    "800": {
+      "value": "#9e1a36",
+      "type": "color"
+    },
+    "900": {
+      "value": "#821932",
+      "type": "color"
+    },
+    "950": {
+      "value": "#480917",
+      "type": "color"
+    }
+  },
+  "Pretendard": {
+    "value": "Pretendard Variable",
+    "type": "fontFamilies"
+  },
+  "xs": {
+    "value": 4,
+    "type": "spacing"
+  },
+  "sm": {
+    "value": 8,
+    "type": "spacing"
+  },
+  "md": {
+    "value": 16,
+    "type": "spacing"
+  },
+  "lg": {
+    "value": 24,
+    "type": "spacing"
+  },
+  "xl": {
+    "value": 32,
+    "type": "spacing"
+  },
+  "tokenSetOrder": {
+    "0": {
+      "value": "global",
+      "type": "other"
+    }
+  }
+}
