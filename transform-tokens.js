@@ -38,16 +38,11 @@ StyleDictionary.registerTransform({
       case 'lineHeights':
         prefix = 'leading';
         break;
-      case 'sizing':
       case 'spacing':
-      case 'dimension':
         prefix = 'spacing';
         break;
       case 'borderRadius':
         prefix = 'radius';
-        break;
-      case 'borderWidth':
-        prefix = 'border';
         break;
       case 'boxShadow':
         prefix = 'shadow';
@@ -93,6 +88,96 @@ try {
   process.exit(1);
 }
 
+// CSS 커스텀 포맷 등록 - 레이어별 분리 지원
+StyleDictionary.registerFormat({
+  name: 'css/layered-variables',
+  format: function({dictionary, options}) {
+    const themeVariables = [];
+    const baseStyles = [];
+    const componentStyles = [];
+    
+    dictionary.allTokens.forEach(token => {
+      const name = token.name;
+      const value = token.value;
+      const type = token.type;
+      
+      // Typography 타입은 @layer base에 token-name으로 정의
+      if (type === 'typography') {
+        const fontWeight = value.fontWeight ? 
+          (typeof value.fontWeight === 'string' ? value.fontWeight.toLowerCase() : value.fontWeight) : 
+          'normal';
+        
+        baseStyles.push(
+          `  ${name} {`,
+          `    font-family: ${value.fontFamily || 'inherit'};`,
+          `    font-weight: ${fontWeight};`,
+          `    font-size: ${value.fontSize || 'inherit'};`,
+          `    line-height: ${value.lineHeight || 'inherit'};`,
+          `  }`
+        );
+      }
+      // Border와 Asset 타입은 @layer components에 정의
+      else if (type === 'border') {
+        componentStyles.push(
+          `  .border-${name} {`,
+          `    border-color: ${value.color || 'currentColor'};`,
+          `    border-width: ${value.width || '1px'};`,
+          `    border-style: ${value.style || 'solid'};`,
+          `  }`
+        );
+      }
+      else if (type === 'asset') {
+        componentStyles.push(
+          `  .img-${name} {`,
+          `    background-image: url('${value}');`,
+          `    background-repeat: no-repeat;`,
+          `  }`
+        );
+      }
+      // 나머지 타입들은 @theme에 CSS 변수로 정의
+      else {
+        let cssValue;
+        if (typeof value === 'object') {
+          cssValue = JSON.stringify(value);
+        } else {
+          cssValue = value;
+        }
+        
+        if (token.comment) {
+          themeVariables.push(`  --${name}: ${cssValue}; /** ${token.comment} */`);
+        } else {
+          themeVariables.push(`  --${name}: ${cssValue};`);
+        }
+      }
+    });
+    
+    let output = '/**\n * Do not edit directly, this file was auto-generated.\n */\n\n';
+    
+    // @theme 섹션
+    if (themeVariables.length > 0) {
+      output += '@theme {\n';
+      output += themeVariables.join('\n');
+      output += '\n}\n\n';
+    }
+    
+    // @layer base 섹션  
+    if (baseStyles.length > 0) {
+      output += '@layer base {\n';
+      output += baseStyles.join('\n');
+      output += '\n}\n\n';
+    }
+    
+    // @layer components 섹션
+    if (componentStyles.length > 0) {
+      output += '@layer components {\n';
+      output += componentStyles.join('\n');
+      output += '\n}\n';
+    }
+    
+    return output;
+  }
+});
+
 // 2. TailwindCSS v4 호환 CSS 변수 생성 (Reddit 가이드 기반)
 try {
   console.log('🔄 Building TailwindCSS v4 compatible CSS variables...');
@@ -119,7 +204,7 @@ try {
         files: [
           {
             destination: 'design-tokens.css',
-            format: 'css/variables',
+            format: 'css/layered-variables',  // 커스텀 포맷 사용
             filter: function(token) {
               // tokenSetOrder와 같은 메타데이터 토큰 제외
               return token.name !== 'tokenSetOrder' && 
@@ -127,7 +212,6 @@ try {
                      token.type !== 'other';
             },
             options: {
-              selector: '@theme',
               outputReferences: true,  
             },
           },
@@ -268,27 +352,8 @@ try {
     JSON.stringify(apiResponse, null, 2)
   );
   
-  // 개별 엔드포인트들도 생성
-  writeFileSync(
-    resolve(apiDir, 'tokens-colors.json'),
-    JSON.stringify({
-      success: true,
-      data: apiResponse.data.colors
-    }, null, 2)
-  );
-  
-  writeFileSync(
-    resolve(apiDir, 'tokens-statistics.json'),
-    JSON.stringify({
-      success: true,
-      data: statistics
-    }, null, 2)
-  );
-  
   console.log('✅ Static API JSON files generated!');
   console.log(`   📁 public/api/tokens.json`);
-  console.log(`   📁 public/api/tokens-colors.json`);
-  console.log(`   📁 public/api/tokens-statistics.json`);
   
 } catch (error) {
   console.error('❌ Static API generation failed:', error);

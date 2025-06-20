@@ -158,6 +158,19 @@
             <div v-if="getFontTokens().length > 0" class="mb-8">
               <h3 class="text-lg font-medium mb-4">Typography</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="p-4 border border-slate-200 rounded-lg font-mono">
+                  <div class="mb-4">
+                    <p class="text-2xl font-normal mb-2">ABC abc 123</p>
+                    <p class="text-lg font-medium mb-1">가나다 한글 테스트</p>
+                    <p class="text-sm text-slate-600">The quick brown fox jumps</p>
+                  </div>
+                  <div class="pt-3 border-t border-slate-100">
+                    <p class="text-sm font-medium text-slate-700 capitalize">Space Mono</p>
+                    <p class="text-xs font-medium text-violet-600">font-mono</p>
+                    <p class="text-xs text-slate-500 font-mono">Space Mono Variable</p>
+                  </div>
+                </div>
+
                 <div v-for="token in getFontTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
                   <!-- 폰트 미리보기 -->
                   <div 
@@ -186,7 +199,7 @@
                 <div v-for="token in getOtherNonVisualTokens()" :key="token.name" 
                      class="p-4 bg-slate-50 rounded-lg border">
                   <p class="text-sm font-medium text-slate-700 mb-1">{{ token.name }}</p>
-                  <p class="text-xs text-slate-500 font-mono">{{ token.value }}</p>
+                  <p class="text-xs text-slate-500 font-mono wrap-anywhere">{{ token.value }}</p>
                   <p class="text-xs text-blue-600 mt-1">{{ token.type }}</p>
                 </div>
               </div>
@@ -400,17 +413,7 @@ const loadTokens = async () => {
  * @returns {string} 포맷된 그룹명
  */
 const formatColorGroupName = (groupName) => {
-  // 특별한 이름들 매핑
-  const nameMap = {
-    'slate': 'Slate',
-    'sky': 'Sky Blue',
-    'primary': 'Primary',
-    'secondary': 'Secondary',
-    'black': 'Black',
-    'white': 'White'
-  }
-  
-  return nameMap[groupName.toLowerCase()] || groupName
+  return groupName
     .replace(/([A-Z])/g, ' $1')
     .replace(/^./, str => str.toUpperCase())
     .trim()
