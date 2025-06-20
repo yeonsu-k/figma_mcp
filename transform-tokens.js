@@ -1,14 +1,88 @@
 #!/usr/bin/env node
 import StyleDictionary from 'style-dictionary';
 import { register } from '@tokens-studio/sd-transforms';
-import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync, existsSync, mkdirSync, writeFileSync, readdirSync } from 'fs';
+import { resolve, join } from 'path';
 import { execSync } from 'child_process';
 
 console.log('🎨 Building design tokens for TailwindCSS v4 compatibility...');
 
 // Tokens Studio transforms 등록
 register(StyleDictionary);
+
+// 유틸리티 함수들
+/**
+ * tokens 디렉토리에서 첫 번째 JSON 파일을 찾는 함수
+ * @returns {string} 토큰 파일 경로
+ */
+const findTokenFile = () => {
+  const tokensDir = resolve(process.cwd(), 'tokens');
+  
+  if (!existsSync(tokensDir)) {
+    throw new Error('tokens 디렉토리를 찾을 수 없습니다.');
+  }
+  
+  const files = readdirSync(tokensDir).filter(file => file.endsWith('.json'));
+  
+  if (files.length === 0) {
+    throw new Error('tokens 디렉토리에 JSON 파일이 없습니다.');
+  }
+  
+  // 첫 번째 JSON 파일 반환
+  const tokenFile = join(tokensDir, files[0]);
+  console.log(`📄 Using token file: ${files[0]}`);
+  return tokenFile;
+};
+
+/**
+ * 토큰 데이터에서 첫 번째 Token Set을 찾는 함수
+ * @param {object} data - 토큰 데이터
+ * @returns {object} { tokenSetName, tokenSetData }
+ */
+const getFirstTokenSet = (data) => {
+  // 1. $metadata에서 tokenSetOrder 확인
+  if (data.$metadata?.tokenSetOrder?.[0]) {
+    const tokenSetName = data.$metadata.tokenSetOrder[0];
+    return {
+      tokenSetName,
+      tokenSetData: data[tokenSetName]
+    };
+  }
+  
+  // 2. 'global' 키 확인 (하위 호환성)
+  if (data.global) {
+    return {
+      tokenSetName: 'global',
+      tokenSetData: data.global
+    };
+  }
+  
+  // 3. $로 시작하지 않는 첫 번째 키 사용
+  const firstKey = Object.keys(data).find(key => !key.startsWith('$'));
+  if (firstKey) {
+    return {
+      tokenSetName: firstKey,
+      tokenSetData: data[firstKey]
+    };
+  }
+  
+  // 4. fallback: 전체 데이터 사용
+  return {
+    tokenSetName: 'default',
+    tokenSetData: data
+  };
+};
+
+/**
+ * 토큰 이름에서 Token Set prefix를 제거하는 함수
+ * @param {string} tokenName - 토큰 이름
+ * @param {string} tokenSetName - Token Set 이름
+ * @returns {string} prefix가 제거된 토큰 이름
+ */
+const removeTokenSetPrefix = (tokenName, tokenSetName) => {
+  const prefix = `${tokenSetName}.`;
+  return tokenName.startsWith(prefix) ? tokenName.replace(prefix, '') : tokenName;
+};
 
 // TailwindCSS v4 호환을 위한 커스텀 name transform 등록
 StyleDictionary.registerTransform({
@@ -80,8 +154,12 @@ StyleDictionary.registerTransform({
 try {
   console.log('🔄 Running token-transformer...');
   
+  // 동적으로 토큰 파일 찾기
+  const inputTokenFile = findTokenFile();
+  const outputTokenFile = 'tokens/transformed.json';
+  
   // 모든 토큰 세트 포함하여 변환
-  execSync('npx token-transformer tokens/global.json tokens/transformed.json', { stdio: 'inherit' });
+  execSync(`npx token-transformer "${inputTokenFile}" "${outputTokenFile}"`, { stdio: 'inherit' });
   console.log('✅ Token transformation complete');
 } catch (error) {
   console.error('❌ Token transformation failed:', error);
@@ -241,12 +319,16 @@ try {
     mkdirSync(apiDir, { recursive: true });
   }
   
-  // tokens/global.json 파일 읽기
-  const tokensPath = resolve(process.cwd(), 'tokens/global.json');
+  // 동적으로 토큰 파일 찾기 및 읽기
+  const tokensPath = findTokenFile();
   const tokensContent = readFileSync(tokensPath, 'utf-8');
   const tokensData = JSON.parse(tokensContent);
   
-  // 토큰 분석 함수 (server/api/tokens.get.ts와 동일)
+  // 첫 번째 Token Set 정보 가져오기
+  const { tokenSetName, tokenSetData } = getFirstTokenSet(tokensData);
+  console.log(`📋 Using Token Set: "${tokenSetName}"`);
+  
+  // 토큰 분석 함수 (server/api/tokens.get.ts와 동일하지만 동적 Token Set 지원)
   const analyzeTokens = (data) => {
     const colorPalettes = {};
     const singleColors = {};
@@ -263,7 +345,7 @@ try {
              keys.every(key => obj[key]?.type === 'color' && obj[key]?.value);
     };
 
-    const processTokens = (obj, path = []) => {
+    const processTokens = (obj, path = [], currentTokenSetName = tokenSetName) => {
       for (const [key, value] of Object.entries(obj)) {
         if (value && typeof value === 'object') {
           if (value.type === 'color' && value.value) {
@@ -293,9 +375,9 @@ try {
             }
           } else if (!value.type && !value.value) {
             if (path.length === 1 && isPalette(value)) {
-              processTokens(value, [...path, key]);
+              processTokens(value, [...path, key], currentTokenSetName);
             } else {
-              processTokens(value, [...path, key]);
+              processTokens(value, [...path, key], currentTokenSetName);
             }
           } else {
             const tokenPath = [...path, key].join('.');
@@ -305,9 +387,11 @@ try {
       }
     };
 
-    if (data['global'] || data['\bglobal']) {
-      processTokens(data['global'] || data['\bglobal'], ['global']);
+    // 동적으로 첫 번째 Token Set 처리
+    if (tokenSetData) {
+      processTokens(tokenSetData, [tokenSetName]);
     } else {
+      // fallback: 전체 데이터 처리
       processTokens(data);
     }
 
@@ -329,7 +413,8 @@ try {
       0
     ) + Object.keys(analyzedTokens.singleColors).length,
     totalOtherTokens: Object.keys(analyzedTokens.otherTokens).length,
-    lastModified: new Date().toISOString()
+    lastModified: new Date().toISOString(),
+    tokenSetName: tokenSetName
   };
   
   // API 응답 형태로 데이터 구성

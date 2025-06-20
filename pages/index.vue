@@ -578,6 +578,24 @@ const getSingleColorStyle = (colorName) => {
  */
 
 /**
+ * Token Set prefix를 동적으로 제거하는 함수
+ * @param {string} tokenName - 토큰 이름
+ * @returns {string} prefix가 제거된 토큰 이름
+ */
+const removeTokenSetPrefix = (tokenName) => {
+  // statistics에서 tokenSetName 가져오기
+  const tokenSetName = statistics.value?.tokenSetName;
+  if (tokenSetName && tokenName.startsWith(`${tokenSetName}.`)) {
+    return tokenName.replace(`${tokenSetName}.`, '');
+  }
+  // 하위 호환성을 위해 'global.' prefix도 확인
+  if (tokenName.startsWith('global.')) {
+    return tokenName.replace('global.', '');
+  }
+  return tokenName;
+};
+
+/**
  * Spacing 토큰들을 추출하는 함수
  * @returns {Array} spacing 토큰 배열
  */
@@ -587,7 +605,7 @@ const getSpacingTokens = () => {
   Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
     if (tokenData.type === 'spacing') {
       spacingTokens.push({
-        name: tokenName.replace('global.', ''),
+        name: removeTokenSetPrefix(tokenName),
         value: `${tokenData.value}px`,
         type: tokenData.type,
         rawValue: tokenData.value
@@ -609,7 +627,7 @@ const getFontTokens = () => {
   Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
     if (tokenData.type === 'fontFamilies' || tokenData.type === 'fontFamily') {
       fontTokens.push({
-        name: tokenName.replace('global.', ''),
+        name: removeTokenSetPrefix(tokenName),
         value: tokenData.value,
         type: tokenData.type
       })
@@ -629,7 +647,7 @@ const getAssetTokens = () => {
   Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
     if (tokenData.type === 'asset') {
       assetTokens.push({
-        name: tokenName.replace('global.', ''),
+        name: removeTokenSetPrefix(tokenName),
         value: tokenData.value,
         type: tokenData.type
       })
@@ -649,7 +667,7 @@ const getBorderTokens = () => {
   Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
     if (tokenData.type === 'border') {
       borderTokens.push({
-        name: tokenName.replace('global.', ''),
+        name: removeTokenSetPrefix(tokenName),
         value: tokenData.value,
         type: tokenData.type
       })
@@ -669,7 +687,7 @@ const getTypographyTokens = () => {
   Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
     if (tokenData.type === 'typography') {
       typographyTokens.push({
-        name: tokenName.replace('global.', ''),
+        name: removeTokenSetPrefix(tokenName),
         value: tokenData.value,
         type: tokenData.type
       })
@@ -691,7 +709,7 @@ const getOtherNonVisualTokens = () => {
     // 이미 시각화된 타입들을 제외한 나머지 토큰들
     if (!visualizedTypes.includes(tokenData.type)) {
       otherNonVisualTokens.push({
-        name: tokenName.replace('global.', ''),
+        name: removeTokenSetPrefix(tokenName),
         value: tokenData.value || JSON.stringify(tokenData),
         type: tokenData.type || 'unknown'
       })
