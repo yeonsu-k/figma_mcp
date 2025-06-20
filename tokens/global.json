@@ -96,31 +96,43 @@
       "type": "fontFamilies"
     },
     "xs": {
-      "value": 4,
+      "value": "4",
       "type": "spacing"
     },
     "sm": {
-      "value": 8,
+      "value": "8",
       "type": "spacing"
     },
     "md": {
-      "value": 16,
+      "value": "16",
       "type": "spacing"
     },
     "lg": {
-      "value": 24,
+      "value": "24",
       "type": "spacing"
     },
     "xl": {
-      "value": 32,
+      "value": "32",
       "type": "spacing"
+    },
+    "zzang-gu": {
+      "value": "https://i.pinimg.com/736x/f9/89/2d/f9892db71c169fe5f50addd423d616bc.jpg",
+      "type": "asset"
+    },
+    "divide": {
+      "value": {
+        "color": "#f01",
+        "width": "2px",
+        "style": "dashed"
+      },
+      "type": "border"
     },
     "h1": {
       "value": {
         "fontFamily": "Pretendard Variable",
-        "fontWeight": "Medium",
-        "lineHeight": "1.5rem",
-        "fontSize": "52px"
+        "fontWeight": "Bold",
+        "fontSize": "56px",
+        "lineHeight": "1.5rem"
       },
       "type": "typography"
     }
