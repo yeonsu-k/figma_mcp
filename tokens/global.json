@@ -119,7 +119,7 @@
       "value": "https://i.pinimg.com/736x/f9/89/2d/f9892db71c169fe5f50addd423d616bc.jpg",
       "type": "asset"
     },
-    "divide": {
+    "red-dashed": {
       "value": {
         "color": "#f01",
         "width": "2px",
@@ -132,7 +132,16 @@
         "fontFamily": "Pretendard Variable",
         "fontWeight": "Bold",
         "fontSize": "56px",
-        "lineHeight": "5rem"
+        "lineHeight": "3rem"
+      },
+      "type": "typography"
+    },
+    "h2": {
+      "value": {
+        "fontFamily": "Pretendard Variable",
+        "fontWeight": "Light",
+        "fontSize": "12px",
+        "lineHeight": "2rem"
       },
       "type": "typography"
     }
