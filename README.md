@@ -1,16 +1,35 @@
-## 🎨 디자인 토큰 워크플로우
+# Figma MCP - Tokens Studio + TailwindCSS 디자인 시스템
 
-### Tokens Studio + TailwindCSS 파이프라인
+> Tokens Studio for Figma 플러그인과 TailwindCSS v4를 연동한 디자인 시스템 프로젝트
 
-이 프로젝트는 Figma의 Tokens Studio 플러그인에서 생성된 디자인 토큰을 TailwindCSS와 통합하는 자동화된 워크플로우를 갖추고 있습니다.
+## 🎨 라이브 데모
 
-1. **디자인 토큰 생성**: Figma에서 Tokens Studio 플러그인으로 디자인 토큰을 생성
-2. **토큰 변환**: token-transformer를 사용하여 토큰을 TailwindCSS 설정으로 변환
-3. **CSS 생성**: 디자인 토큰을 기반으로 CSS 변수 생성
-4. **TailwindCSS 통합**: 생성된 테마 설정을 TailwindCSS와 통합
+**[Design Tokens Showcase](https://yeonsu-k.github.io/figma_mcp/)** - 모든 토큰을 시각적으로 확인할 수 있는 쇼케이스 페이지
+- 색상 팔레트 및 단일 색상 
+- 간격(Spacing) 토큰 박스 시각화
+- 폰트(Font Family) 토큰 미리보기
+- 에셋(Asset) 토큰 이미지 미리보기
+- 테두리(Border) 토큰 스타일 미리보기
+- 타이포그래피(Typography) 토큰 복합 스타일 미리보기
+- 클릭하여 토큰 값 복사 기능
 
-### 토큰 빌드 및 워치 명령어
+## 📚 가이드 문서
 
+### 🎨 디자이너용 가이드
+- **[Tokens Studio 플러그인 설정 가이드](./docs/TOKENS_STUDIO_SETUP_GUIDE.md)** - Figma 플러그인 사용법과 토큰 생성 방법
+
+### 🤝 협업 가이드  
+- **[디자인 시스템 협업 가이드](./docs/DESIGN_SYSTEM_GUIDE.md)** - 디자이너-개발자 간 협업 원칙과 워크플로우
+
+## 🚀 빠른 시작
+
+### 토큰 관리 워크플로우
+1. **Figma에서 토큰 생성**: Tokens Studio 플러그인으로 디자인 토큰 정의
+2. **JSON 파일 저장**: `tokens/global.json`에 토큰 저장
+3. **토큰 빌드**: 개발용 CSS 변수로 변환
+4. **TailwindCSS 사용**: 프로젝트에서 토큰 기반 클래스 활용
+
+### 개발 명령어
 ```bash
 # 디자인 토큰 빌드
 npm run tokens:build
@@ -18,197 +37,131 @@ npm run tokens:build
 # 토큰 변경사항 감지 및 자동 빌드
 npm run tokens:watch
 
-# 생성된 파일 정리
-npm run tokens:clean
+# 개발 서버 실행
+npm run dev
+
+# 배포용 빌드
+npm run deploy:build
 ```
 
-### 생성되는 파일
+## 📁 토큰 파일 구조
 
-- `assets/css/design-tokens.css`: CSS 변수로 변환된 디자인 토큰
-- `tailwind.theme.js`: TailwindCSS 테마 설정
-- `public/api/tokens.json`: API용 토큰 데이터
+```
+tokens/
+├── global.json              # Tokens Studio 원본 파일
+└── transformed.json         # 변환된 토큰 (자동 생성)
 
-# MCP 테스트 대시보드
+assets/css/
+└── design-tokens.css        # TailwindCSS v4 호환 CSS 변수 (자동 생성)
 
-**MCP 테스트 대시보드**는 사이버 보안 관리를 위한 모던한 관리자 대시보드입니다. Nuxt.js 3과 Vue 3를 기반으로 구축된 반응형 웹 애플리케이션입니다.
+public/api/
+└── tokens.json              # API용 토큰 데이터 (자동 생성)
+```
 
-![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
-![Nuxt.js](https://img.shields.io/badge/Nuxt.js-00DC82?style=for-the-badge&logo=nuxt.js&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+## 🎯 현재 등록된 토큰 타입
+
+현재 프로젝트에 등록된 토큰은 `tokens/global.json` 파일에서 확인할 수 있으며, index.vue 페이지에서 시각적으로 확인 가능합니다.
+
+### 지원되는 토큰 타입
+
+#### 🎨 색상 토큰 (Color)
+- **팔레트**: 단계별 색상 시스템 (예: spring-100, spring-500)
+- **단일 색상**: 브랜드 기본 색상 (예: primary, secondary)
+- **시각화**: 색상 칩과 함께 Hex 코드 및 TailwindCSS 클래스명 표시
+
+#### 📏 간격 토큰 (Spacing)
+- **용도**: 패딩, 마진, 간격 통일화
+- **시각화**: 박스 모델을 통한 실제 크기 미리보기
+- **예시**: xs(4px), sm(8px), md(16px), lg(24px), xl(32px)
+
+#### 🔤 폰트 토큰 (Font Families)
+- **용도**: 브랜드 폰트 및 시스템 폰트 정의
+- **시각화**: 실제 텍스트 샘플로 폰트 미리보기
+- **다국어 지원**: 영문, 한글, 숫자 샘플
+
+#### 🖼️ 에셋 토큰 (Asset)
+- **용도**: 이미지, 아이콘 등의 URL 관리
+- **시각화**: 실제 이미지 미리보기 (로드 실패 시 fallback)
+- **클릭 복사**: 이미지 URL 클립보드 복사
+
+#### 🔲 테두리 토큰 (Border)
+- **용도**: 테두리 스타일 통일화 (두께, 스타일, 색상)
+- **시각화**: 실제 border 스타일이 적용된 박스
+- **복합 속성**: width, style, color를 하나의 토큰으로 관리
+
+#### ✍️ 타이포그래피 토큰 (Typography)
+- **용도**: 완성된 텍스트 스타일 조합
+- **포함 속성**: fontFamily, fontSize, fontWeight, lineHeight
+- **시각화**: 실제 텍스트에 스타일이 적용된 미리보기
+
+### 사용 예시
+```html
+<!-- 색상 토큰 사용 -->
+<div class="bg-color-{token-name} text-color-{token-name}">
+  브랜드 색상 적용
+</div>
+
+<!-- 스페이싱 토큰 사용 -->
+<div class="p-spacing-{size} m-spacing-{size}">
+  일관된 간격 적용
+</div>
+
+<!-- 폰트 토큰 사용 -->
+<p class="font-{font-name}">기본 폰트 적용</p>
+```
 
 ## 🛠️ 기술 스택
 
-### Frontend Framework
-- **Nuxt.js 3.8.0**: Universal Vue.js Framework
-- **Vue.js 3**: Progressive JavaScript Framework
-- **TypeScript 5.3.3**: 타입 안전성과 개발 경험 향상
+- **TailwindCSS v4**: CSS 프레임워크
+- **Tokens Studio**: Figma 디자인 토큰 플러그인
+- **Style Dictionary**: 토큰 변환 엔진
+- **Nuxt.js 3**: 웹 프레임워크
+- **Vue.js 3**: UI 프레임워크
 
-### 상태 관리 & 유틸리티
-- **Pinia 2.1.7**: Vue.js 공식 상태 관리 라이브러리
-- **VueUse 10.7.0**: Vue 컴포지션 유틸리티 모음
-- **Vue Toastification**: 알림 메시지 시스템
+## 📋 협업 원칙
 
-### UI & 스타일링
-- **Tailwind CSS 6.8.4**: 유틸리티 우선 CSS 프레임워크
-- **Headless UI**: 접근성 우선 컴포넌트 라이브러리
-- **Heroicons**: 아름다운 SVG 아이콘 세트
-- **Inter Font**: 모던하고 가독성 높은 폰트
+### ✅ 권장사항
+- 브랜드 고유 색상만 토큰으로 관리
+- TailwindCSS 기본 클래스와 중복 피하기
+- 일관된 명명 규칙 적용 (kebab-case)
+- Git을 통한 토큰 파일 공유
 
-### 개발 도구
-- **ESLint**: 코드 품질 관리
-- **Nuxt DevTools**: 개발 생산성 향상
-- **TypeScript Type Checking**: 컴파일 타임 에러 체크
-- **Style Dictionary**: 디자인 토큰 관리
+### ❌ 금지사항
+- TailwindCSS 기본 색상(`red`, `blue`, `green` 등) 중복 등록
+- 하드코딩된 값과 토큰 혼용
+- 불일치하는 명명 규칙 사용
 
-## 📁 프로젝트 구조
+## 🔧 토큰 빌드 프로세스
 
-```
-figma_mcp/
-├── app.vue                    # 루트 컴포넌트
-├── nuxt.config.ts             # Nuxt 설정 파일
-├── package.json               # 프로젝트 의존성
-├── tailwind.config.js         # Tailwind CSS 설정
-├── tsconfig.json              # TypeScript 설정
-│
-├── assets/
-│   └── css/
-│       └── main.css           # 전역 스타일시트
-│
-├── middleware/
-│   └── auth.ts                # 인증 미들웨어
-│
-├── pages/
-│   ├── dashboard.vue          # 대시보드 페이지
-│   └── login.vue              # 로그인 페이지
-│
-├── public/
-│   ├── favicon.ico            # 파비콘
-│   ├── robots.txt             # SEO 설정
-│   └── todo.html              # 임시 페이지
-│
-├── server/
-│   └── tsconfig.json          # 서버 TypeScript 설정
-│
-└── stores/
-    └── auth.ts                # 인증 상태 관리
-```
+1. **token-transformer**: Tokens Studio JSON → Style Dictionary 형식 변환
+2. **Style Dictionary**: 플랫폼별 토큰 파일 생성
+3. **CSS 변수 생성**: TailwindCSS v4 `@theme` 지시어 형식으로 변환
+4. **API 파일 생성**: 정적 토큰 데이터 JSON 파일 생성
 
-## 🚦 시작하기
+## 🚨 문제해결
 
-### 사전 요구사항
-- **Node.js**: >= 18.0.0
-- **npm**: >= 8.0.0
-- **Git**: 최신 버전
-
-### 설치 및 실행
-
-1. **저장소 클론**
+### 토큰이 적용되지 않을 때
 ```bash
-git clone <repository-url>
-cd figma_mcp
-```
+# 1. 토큰 빌드 확인
+npm run tokens:build
 
-2. **의존성 설치**
-```bash
-# npm 사용
-npm install
+# 2. CSS 파일 생성 확인
+ls -la assets/css/design-tokens.css
 
-# pnpm 사용 (권장)
-pnpm install
-
-# yarn 사용
-yarn install
-```
-
-3. **개발 서버 실행**
-```bash
-# npm
+# 3. 개발 서버 재시작
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
 ```
 
-개발 서버가 `http://localhost:3000`에서 실행됩니다.
+### 토큰 네이밍 오류
+- camelCase → kebab-case 자동 변환 확인
+- 특수문자 사용 피하기
+- TailwindCSS 예약어와 중복 확인
 
-## 📱 페이지 구성
+---
 
-### 로그인 페이지 (`/login`)
-- **모던한 UI**: 그라데이션 배경과 블러 효과
-- **반응형 디자인**: 모바일부터 데스크톱까지 완벽 지원
-- **사용자 경험**: 로딩 상태, 에러 메시지, 폼 검증
-- **추가 기능**: 비밀번호 찾기, 에이전트 다운로드
+## 📞 지원
 
-### 대시보드 페이지 (`/dashboard`)
-- **헤더**: 브랜드 로고, 사용자 정보, 로그아웃
-- **통계 카드**: 4개 주요 지표 실시간 표시
-- **차트 영역**: 보안 활동 시각화
-- **활동 로그**: 최근 보안 이벤트 목록
+문제가 발생하거나 기능 요청이 있으시면 이슈를 생성해 주세요.
 
-## 🔧 개발 가이드
-
-### 코드 스타일
-- **TypeScript**: 모든 코드에 타입 정의 적용
-- **ESLint**: Nuxt 공식 ESLint 설정 사용
-- **Composition API**: Vue 3 Composition API 활용
-- **Tailwind CSS**: 유틸리티 클래스 기반 스타일링
-
-### 상태 관리 패턴
-```typescript
-// stores/auth.ts - Pinia 스토어 예시
-export const useAuthStore = defineStore('auth', {
-  state: (): AuthState => ({
-    user: null,
-    token: null,
-    isLoading: false,
-    error: null
-  }),
-  
-  getters: {
-    isAuthenticated: (state): boolean => !!state.token && !!state.user,
-    isAdmin: (state): boolean => state.user?.role === 'admin'
-  },
-  
-  actions: {
-    async login(credentials: LoginCredentials) {
-      // 로그인 로직
-    }
-  }
-})
-```
-
-### 미들웨어 활용
-```typescript
-// middleware/auth.ts - 라우트 보호
-export default defineNuxtRouteMiddleware((to, from) => {
-  const { isAuthenticated } = useAuthStore()
-  
-  if (!isAuthenticated && to.path !== '/login') {
-    return navigateTo('/login')
-  }
-})
-```
-
-## 🚀 배포
-
-### 프로덕션 빌드
-```bash
-# 빌드 생성
-npm run build
-
-# 프로덕션 미리보기
-npm run preview
-```
-
-### 정적 사이트 생성
-```bash
-npm run generate
-```
-
-## 📝 라이선스
-
-이 프로젝트는 MIT 라이선스 하에 있습니다.
+- **Tokens Studio 문서**: [docs.tokens.studio](https://docs.tokens.studio/)
+- **TailwindCSS v4 문서**: [tailwindcss.com](https://tailwindcss.com/docs/theme)
