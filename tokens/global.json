@@ -114,6 +114,18 @@
     "xl": {
       "value": 32,
       "type": "spacing"
+    },
+    "divide": {
+      "value": {
+        "color": "#00a2ff",
+        "width": "2px",
+        "style": "dashed"
+      },
+      "type": "border"
+    },
+    "zzang-gu": {
+      "value": "https://i.pinimg.com/736x/f9/89/2d/f9892db71c169fe5f50addd423d616bc.jpg",
+      "type": "asset"
     }
   },
   "$themes": [],
