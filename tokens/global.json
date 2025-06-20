@@ -115,17 +115,14 @@
       "value": 32,
       "type": "spacing"
     },
-    "divide": {
+    "h1": {
       "value": {
-        "color": "#00a2ff",
-        "width": "2px",
-        "style": "dashed"
+        "fontFamily": "Pretendard Variable",
+        "fontWeight": "Medium",
+        "lineHeight": "1.5rem",
+        "fontSize": "52px"
       },
-      "type": "border"
-    },
-    "zzang-gu": {
-      "value": "https://i.pinimg.com/736x/f9/89/2d/f9892db71c169fe5f50addd423d616bc.jpg",
-      "type": "asset"
+      "type": "typography"
     }
   },
   "$themes": [],
