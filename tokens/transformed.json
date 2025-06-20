@@ -114,6 +114,27 @@
     "value": 32,
     "type": "spacing"
   },
+  "zzang-gu": {
+    "value": "https://i.pinimg.com/736x/f9/89/2d/f9892db71c169fe5f50addd423d616bc.jpg",
+    "type": "asset"
+  },
+  "divide": {
+    "value": {
+      "color": "#f01",
+      "width": "2px",
+      "style": "dashed"
+    },
+    "type": "border"
+  },
+  "h1": {
+    "value": {
+      "fontFamily": "Pretendard Variable",
+      "fontWeight": "Bold",
+      "fontSize": "56px",
+      "lineHeight": "5rem"
+    },
+    "type": "typography"
+  },
   "tokenSetOrder": {
     "0": {
       "value": "global",

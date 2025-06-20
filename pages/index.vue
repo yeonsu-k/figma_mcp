@@ -154,6 +154,82 @@
               </div>
             </div>
 
+            <!-- Asset Tokens (이미지/에셋 토큰 시각화) -->
+            <div v-if="getAssetTokens().length > 0" class="mb-8">
+              <h3 class="text-lg font-medium mb-4">Assets</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div v-for="token in getAssetTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
+                  <!-- 이미지 미리보기 -->
+                  <div class="mb-4 h-32 bg-slate-100 rounded-lg overflow-hidden flex items-center justify-center">
+                    <img 
+                      :src="token.value" 
+                      :alt="token.name"
+                      class="max-w-full max-h-full object-contain"
+                      @error="handleImageError"
+                      @click="copyToClipboard(token.value)"
+                    />
+                  </div>
+                  
+                  <!-- 토큰 정보 -->
+                  <div class="pt-3 border-t border-slate-100">
+                    <p class="text-sm font-medium text-slate-700 capitalize">{{ formatAssetName(token.name) }}</p>
+                    <p class="text-xs font-medium text-green-600">img-{{ token.name.toLowerCase() }}</p>
+                    <p class="text-xs text-slate-500 font-mono truncate" :title="token.value">{{ token.value }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Border Tokens (테두리 토큰 시각화) -->
+            <div v-if="getBorderTokens().length > 0" class="mb-8">
+              <h3 class="text-lg font-medium mb-4">Borders</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div v-for="token in getBorderTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
+                  <!-- 테두리 미리보기 -->
+                  <div class="mb-4 h-20 bg-slate-50 rounded-lg flex items-center justify-center">
+                    <div 
+                      class="w-16 h-12 bg-white rounded"
+                      :style="getBorderStyle(token)"
+                      :title="`${token.name}: ${JSON.stringify(token.value)}`"
+                      @click="copyToClipboard(JSON.stringify(token.value))"
+                    />
+                  </div>
+                  
+                  <!-- 토큰 정보 -->
+                  <div class="pt-3 border-t border-slate-100">
+                    <p class="text-sm font-medium text-slate-700 capitalize">{{ formatBorderName(token.name) }}</p>
+                    <p class="text-xs font-medium text-orange-600">border-{{ token.name.toLowerCase() }}</p>
+                    <p class="text-xs text-slate-500 font-mono">{{ formatBorderValue(token.value) }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Typography Tokens (타이포그래피 토큰 시각화) -->
+            <div v-if="getTypographyTokens().length > 0" class="mb-8">
+              <h3 class="text-lg font-medium mb-4">Typography Styles</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div v-for="token in getTypographyTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
+                  <!-- 타이포그래피 미리보기 -->
+                  <div 
+                    class="mb-4 p-4 bg-slate-50 rounded-lg"
+                    :style="getTypographyStyle(token)"
+                  >
+                    <p class="mb-2">ABC abc 123</p>
+                    <p class="mb-1">가나다 한글 테스트</p>
+                    <p class="text-slate-600">The quick brown fox jumps over the lazy dog</p>
+                  </div>
+                  
+                  <!-- 토큰 정보 -->
+                  <div class="pt-3 border-t border-slate-100">
+                    <p class="text-sm font-medium text-slate-700 capitalize">{{ formatTypographyName(token.name) }}</p>
+                    <p class="text-xs font-medium text-indigo-600">text-{{ token.name.toLowerCase() }}</p>
+                    <p class="text-xs text-slate-500 font-mono">{{ formatTypographyValue(token.value) }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Font Family Tokens (폰트 토큰 시각화) -->
             <div v-if="getFontTokens().length > 0" class="mb-8">
               <h3 class="text-lg font-medium mb-4">Typography</h3>
@@ -255,12 +331,17 @@
               </div>
               <div>
                 <h3 class="font-medium mb-3">현재 상태</h3>
-                <ul class="space-y-2 text-sm">
+                <ul class="space-y-2 text-sm grid grid-cols-1 md:grid-cols-2">
                   <li>색상 팔레트: <span class="font-mono bg-blue-50 px-2 py-1 rounded">{{ Object.keys(colorPalettes).length }}개</span></li>
                   <li>단일 색상: <span class="font-mono bg-green-50 px-2 py-1 rounded">{{ Object.keys(singleColors).length }}개</span></li>
                   <li>총 색상: <span class="font-mono bg-purple-50 px-2 py-1 rounded">{{ getTotalColorsCount() }}개</span></li>
-                  <li>기타 토큰: <span class="font-mono bg-orange-50 px-2 py-1 rounded">{{ Object.keys(otherTokens).length }}개</span></li>
-                  <li>마지막 새로고침: <span class="font-mono bg-slate-50 px-2 py-1 rounded">{{ lastUpdated }}</span></li>
+                  <li>간격 토큰: <span class="font-mono bg-yellow-50 px-2 py-1 rounded">{{ getSpacingTokens().length }}개</span></li>
+                  <li>폰트 토큰: <span class="font-mono bg-violet-50 px-2 py-1 rounded">{{ getFontTokens().length }}개</span></li>
+                  <li>에셋 토큰: <span class="font-mono bg-emerald-50 px-2 py-1 rounded">{{ getAssetTokens().length }}개</span></li>
+                  <li>테두리 토큰: <span class="font-mono bg-orange-50 px-2 py-1 rounded">{{ getBorderTokens().length }}개</span></li>
+                  <li>타이포그래피: <span class="font-mono bg-indigo-50 px-2 py-1 rounded">{{ getTypographyTokens().length }}개</span></li>
+                  <li>기타 토큰: <span class="font-mono bg-slate-50 px-2 py-1 rounded">{{ getOtherNonVisualTokens().length }}개</span></li>
+                  <li class="col-span-2">마지막 새로고침: <span class="font-mono bg-gray-50 px-2 py-1 rounded">{{ lastUpdated }}</span></li>
                 </ul>
               </div>
             </div>
@@ -311,7 +392,7 @@
       class="fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity"
       :class="{ 'opacity-0': !showToast }"
     >
-      색상이 클립보드에 복사되었습니다!
+      값이 클립보드에 복사되었습니다!
     </div>
   </div>
 </template>
@@ -539,15 +620,76 @@ const getFontTokens = () => {
 }
 
 /**
+ * Asset(이미지/에셋) 토큰들을 추출하는 함수
+ * @returns {Array} asset 토큰 배열
+ */
+const getAssetTokens = () => {
+  const assetTokens = []
+  
+  Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
+    if (tokenData.type === 'asset') {
+      assetTokens.push({
+        name: tokenName.replace('global.', ''),
+        value: tokenData.value,
+        type: tokenData.type
+      })
+    }
+  })
+  
+  return assetTokens
+}
+
+/**
+ * Border 토큰들을 추출하는 함수
+ * @returns {Array} border 토큰 배열
+ */
+const getBorderTokens = () => {
+  const borderTokens = []
+  
+  Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
+    if (tokenData.type === 'border') {
+      borderTokens.push({
+        name: tokenName.replace('global.', ''),
+        value: tokenData.value,
+        type: tokenData.type
+      })
+    }
+  })
+  
+  return borderTokens
+}
+
+/**
+ * Typography 토큰들을 추출하는 함수
+ * @returns {Array} typography 토큰 배열
+ */
+const getTypographyTokens = () => {
+  const typographyTokens = []
+  
+  Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
+    if (tokenData.type === 'typography') {
+      typographyTokens.push({
+        name: tokenName.replace('global.', ''),
+        value: tokenData.value,
+        type: tokenData.type
+      })
+    }
+  })
+  
+  return typographyTokens
+}
+
+/**
  * 시각화되지 않는 기타 토큰들을 추출하는 함수
  * @returns {Array} 기타 토큰 배열
  */
 const getOtherNonVisualTokens = () => {
   const otherNonVisualTokens = []
+  const visualizedTypes = ['spacing', 'fontFamilies', 'fontFamily', 'asset', 'border', 'typography']
   
   Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
-    // spacing과 fontFamilies를 제외한 나머지 토큰들
-    if (tokenData.type !== 'spacing' && tokenData.type !== 'fontFamilies' && tokenData.type !== 'fontFamily') {
+    // 이미 시각화된 타입들을 제외한 나머지 토큰들
+    if (!visualizedTypes.includes(tokenData.type)) {
       otherNonVisualTokens.push({
         name: tokenName.replace('global.', ''),
         value: tokenData.value || JSON.stringify(tokenData),
@@ -592,12 +734,119 @@ const formatFontName = (fontName) => {
 }
 
 /**
- * 클립보드에 색상 복사
- * @param {string} colorValue - 복사할 색상값
+ * Asset 이름을 사용자 친화적으로 포매팅
+ * @param {string} assetName - 원본 에셋명
+ * @returns {string} 포매팅된 에셋명
  */
-const copyToClipboard = async (colorValue) => {
+const formatAssetName = (assetName) => {
+  return assetName
+    .replace(/[_-]/g, ' ')
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, str => str.toUpperCase())
+    .trim()
+}
+
+/**
+ * Border 이름을 사용자 친화적으로 포매팅
+ * @param {string} borderName - 원본 보더명
+ * @returns {string} 포매팅된 보더명
+ */
+const formatBorderName = (borderName) => {
+  return borderName
+    .replace(/[_-]/g, ' ')
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, str => str.toUpperCase())
+    .trim()
+}
+
+/**
+ * Typography 이름을 사용자 친화적으로 포매팅
+ * @param {string} typographyName - 원본 타이포그래피명
+ * @returns {string} 포매팅된 타이포그래피명
+ */
+const formatTypographyName = (typographyName) => {
+  return typographyName
+    .replace(/[_-]/g, ' ')
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, str => str.toUpperCase())
+    .trim()
+}
+
+/**
+ * Border 토큰을 CSS border 스타일로 변환
+ * @param {object} token - border 토큰 객체
+ * @returns {object} CSS 스타일 객체
+ */
+const getBorderStyle = (token) => {
+  const borderValue = token.value
+  if (typeof borderValue === 'object') {
+    return {
+      border: `${borderValue.width || '1px'} ${borderValue.style || 'solid'} ${borderValue.color || '#000'}`
+    }
+  }
+  return {
+    border: borderValue
+  }
+}
+
+/**
+ * Typography 토큰을 CSS 스타일로 변환
+ * @param {object} token - typography 토큰 객체
+ * @returns {object} CSS 스타일 객체
+ */
+const getTypographyStyle = (token) => {
+  const typographyValue = token.value
+  if (typeof typographyValue === 'object') {
+    return {
+      fontFamily: typographyValue.fontFamily,
+      fontSize: typographyValue.fontSize,
+      fontWeight: typographyValue.fontWeight,
+      lineHeight: typographyValue.lineHeight
+    }
+  }
+  return {}
+}
+ 
+/**
+ * Border 값을 읽기 쉬운 형태로 포매팅
+ * @param {object|string} borderValue - border 값
+ * @returns {string} 포매팅된 문자열
+ */
+const formatBorderValue = (borderValue) => {
+  if (typeof borderValue === 'object') {
+    return `${borderValue.width} ${borderValue.style} ${borderValue.color}`
+  }
+  return borderValue
+}
+
+/**
+ * Typography 값을 읽기 쉬운 형태로 포매팅
+ * @param {object|string} typographyValue - typography 값
+ * @returns {string} 포매팅된 문자열
+ */
+const formatTypographyValue = (typographyValue) => {
+  if (typeof typographyValue === 'object') {
+    return `${typographyValue.fontSize} / ${typographyValue.lineHeight} ${typographyValue.fontWeight}`
+  }
+  return typographyValue
+}
+
+/**
+ * 이미지 로드 에러 핸들러
+ * @param {Event} event - 이미지 에러 이벤트
+ */
+const handleImageError = (event) => {
+  event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMCAyNkMxOS40NDc3IDI2IDE5IDI1LjU1MjMgMTkgMjVDMTkgMjQuNDQ3NyAxOS40NDc3IDI0IDIwIDI0QzIwLjU1MjMgMjQgMjEgMjQuNDQ3NyAyMSAyNUMyMSAyNS41NTIzIDIwLjU1MjMgMjYgMjAgMjZaIiBmaWxsPSIjOTQ5Njk5Ii8+CjxwYXRoIGQ9Ik0yNiAxNkgyNkwyMC41IDEyTDE1IDE2SDE0VjE0SDE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0SDE1VjE0IiBzdHJva2U9IiM5NDk2OTkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjx0ZXh0IHg9IjUwJSIgeT0iNzAlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzk0OTY5OSIgZm9udC1zaXplPSI4Ij5FUlJPUjwvdGV4dD4KPC9zdmc+'
+  event.target.alt = 'Image load failed'
+}
+
+/**
+ * 클립보드에 값 복사
+ * @param {string} value - 복사할 값
+ */
+const copyToClipboard = async (value) => {
   try {
-    await navigator.clipboard.writeText(colorValue)
+    await navigator.clipboard.writeText(value)
     showToast.value = true
     setTimeout(() => {
       showToast.value = false

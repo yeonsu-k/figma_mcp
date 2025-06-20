@@ -31,3 +31,24 @@
   --spacing-lg: 24;
   --spacing-xl: 32;
 }
+
+@layer base {
+  h1 {
+    font-family: Pretendard Variable;
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 5rem;
+  }
+}
+
+@layer components {
+  .img-zzang-gu {
+    background-image: url('https://i.pinimg.com/736x/f9/89/2d/f9892db71c169fe5f50addd423d616bc.jpg');
+    background-repeat: no-repeat;
+  }
+  .border-divide {
+    border-color: #f01;
+    border-width: 2px;
+    border-style: dashed;
+  }
+}
