@@ -11,43 +11,17 @@
           <div v-if="loadingError" class="text-red-500 text-sm">
             ⚠️ {{ loadingError }}
           </div>
+          <div v-else class="text-green-700 text-sm flex items-center gap-2">
+            <CheckCircleIcon class="size-5 text-green-600" /> Figma Tokens Studio 연결됨
+          </div>
         </div>
       </div>
     </header>
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Status Section -->
-      <section class="mb-8">
-        <div class="card">
-          <div class="card-body">
-            <h2 class="text-xl font-semibold mb-4">🔄 연동 상태</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="flex items-center p-4 bg-green-50 rounded-lg">
-                <CheckCircleIcon class="w-6 h-6 text-green-600 mr-3" />
-                <div>
-                  <p class="font-medium text-green-900">Figma Tokens Studio</p>
-                  <p class="text-sm text-green-700">연결됨</p>
-                </div>
-              </div>
-              <div class="flex items-center p-4 bg-blue-50 rounded-lg">
-                <CodeBracketIcon class="w-6 h-6 text-blue-600 mr-3" />
-                <div>
-                  <p class="font-medium text-blue-900">Style Dictionary</p>
-                  <p class="text-sm text-blue-700">빌드 완료</p>
-                </div>
-              </div>
-              <div class="flex items-center p-4 bg-purple-50 rounded-lg">
-                <SwatchIcon class="w-6 h-6 text-purple-600 mr-3" />
-                <div>
-                  <p class="font-medium text-purple-900">Tailwind CSS v4</p>
-                  <p class="text-sm text-purple-700">활성화됨</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+
+
 
       <!-- Color Palettes Section -->
       <section v-if="Object.keys(colorPalettes).length > 0 || Object.keys(singleColors).length > 0" class="mb-8">
@@ -121,7 +95,6 @@
               
               <!-- 박스 형태 시각화 -->
               <div class="mb-6">
-                <h4 class="text-md font-medium mb-3 text-slate-600">Box Visualization</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-8 gap-6">
                   <div v-for="token in getSpacingTokens()" :key="`box-${token.name}-${token.value}`" class="text-center">
                     <!-- 간격을 padding/margin으로 시각화 -->
@@ -302,78 +275,6 @@
           </div>
         </div>
       </section>
-
-      <!-- Token Information -->
-      <section class="mb-8">
-        <div class="card">
-          <div class="card-body">
-            <div class="flex justify-between items-center mb-6 font-semibold">
-              <h2 class="text-2xl">ℹ️ 토큰 정보</h2>
-              <button 
-                @click="refreshTokens" 
-                :disabled="isRefreshing"
-                class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                <ArrowPathIcon 
-                  :class="['w-4 h-4 mr-2 stroke-2', { 'animate-spin': isRefreshing }]" 
-                />
-                {{ isRefreshing ? '새로고침 중...' : '토큰 새로고침' }}
-              </button>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 class="font-medium mb-3">파일 위치</h3>
-                <ul class="space-y-2 text-sm">
-                  <li><code class="bg-slate-100 px-2 py-1 rounded">tokens/global.json</code> - 원본 토큰</li>
-                  <li><code class="bg-slate-100 px-2 py-1 rounded">assets/css/theme-tokens.css</code> - TailwindCSS v4 테마</li>
-                </ul>
-              </div>
-              <div>
-                <h3 class="font-medium mb-3">현재 상태</h3>
-                <ul class="space-y-2 text-sm grid grid-cols-1 md:grid-cols-2">
-                  <li>색상 팔레트: <span class="font-mono bg-blue-50 px-2 py-1 rounded">{{ Object.keys(colorPalettes).length }}개</span></li>
-                  <li>단일 색상: <span class="font-mono bg-green-50 px-2 py-1 rounded">{{ Object.keys(singleColors).length }}개</span></li>
-                  <li>총 색상: <span class="font-mono bg-purple-50 px-2 py-1 rounded">{{ getTotalColorsCount() }}개</span></li>
-                  <li>간격 토큰: <span class="font-mono bg-yellow-50 px-2 py-1 rounded">{{ getSpacingTokens().length }}개</span></li>
-                  <li>폰트 토큰: <span class="font-mono bg-violet-50 px-2 py-1 rounded">{{ getFontTokens().length }}개</span></li>
-                  <li>에셋 토큰: <span class="font-mono bg-emerald-50 px-2 py-1 rounded">{{ getAssetTokens().length }}개</span></li>
-                  <li>테두리 토큰: <span class="font-mono bg-orange-50 px-2 py-1 rounded">{{ getBorderTokens().length }}개</span></li>
-                  <li>타이포그래피: <span class="font-mono bg-indigo-50 px-2 py-1 rounded">{{ getTypographyTokens().length }}개</span></li>
-                  <li>기타 토큰: <span class="font-mono bg-slate-50 px-2 py-1 rounded">{{ getOtherNonVisualTokens().length }}개</span></li>
-                  <li class="col-span-2">마지막 새로고침: <span class="font-mono bg-gray-50 px-2 py-1 rounded">{{ lastUpdated }}</span></li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="mt-6 pt-6 border-t">
-              <h3 class="font-medium mb-3">워크플로우</h3>
-              <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-                <div class="text-center p-3 bg-blue-50 rounded-lg">
-                  <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">1</div>
-                  <p class="text-xs font-medium">Figma에서 토큰 수정</p>
-                </div>
-                <div class="text-center p-3 bg-green-50 rounded-lg">
-                  <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">2</div>
-                  <p class="text-xs font-medium">Tokens Studio 푸시</p>
-                </div>
-                <div class="text-center p-3 bg-purple-50 rounded-lg">
-                  <div class="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">3</div>
-                  <p class="text-xs font-medium">GitHub Actions 실행</p>
-                </div>
-                <div class="text-center p-3 bg-orange-50 rounded-lg">
-                  <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">4</div>
-                  <p class="text-xs font-medium">Style Dictionary 빌드</p>
-                </div>
-                <div class="text-center p-3 bg-indigo-50 rounded-lg">
-                  <div class="w-8 h-8 bg-indigo-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">5</div>
-                  <p class="text-xs font-medium">웹사이트 자동 업데이트</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
 
     <!-- Footer -->
@@ -398,12 +299,8 @@
 </template>
 
 <script setup>
-import { 
-  ArrowPathIcon, 
-  CheckCircleIcon, 
-  CodeBracketIcon, 
-  SwatchIcon 
-} from '@heroicons/vue/24/outline'
+import {ArrowPathIcon, SwatchIcon} from '@heroicons/vue/24/outline'
+import {CheckCircleIcon} from '@heroicons/vue/20/solid'
 
 // Reactive data
 const lastUpdated = ref(new Date().toLocaleString('ko-KR'))
