@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="bg-white shadow-sm border-b">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center py-6">
+        <div class="flex flex-wrap items-center py-6 sm:justify-between">
           <div>
             <h1 class="text-3xl font-bold text-slate-900">Design Tokens Showcase</h1>
             <p class="text-slate-600 mt-1">Figma Tokens Studio + Style Dictionary 통합 테스트</p>
@@ -19,258 +19,401 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-
-
-      <!-- Color Palettes Section -->
-      <section v-if="Object.keys(colorPalettes).length > 0 || Object.keys(singleColors).length > 0" class="mb-8">
+    <main class="flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 gap-6">
+      <!-- Token Status & Information Combined -->
+      <section>
         <div class="card">
           <div class="card-body">
-            <h2 class="text-2xl font-semibold mb-6">🎨 Color Palettes</h2>
-            
-            <!-- Single Colors (단일 색상을 먼저 표시) -->
-            <div v-if="Object.keys(singleColors).length > 0" class="mb-8">
-              <h3 class="text-lg font-medium mb-4">Single Colors</h3>
-              <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2">
-                <div v-for="(colorData, colorName) in singleColors" :key="`single-${colorName}`" class="text-center">
-                  <div 
-                    class="w-full h-16 md:h-20 rounded-lg mb-2 shadow-sm cursor-pointer hover:scale-105 transition-transform"
-                    :style="getSingleColorStyle(colorName)"
-                    :title="`${colorName}: ${colorData.value}`"
-                    @click="copyToClipboard(colorData.value)"
-                  />
-                  <p class="text-xs font-medium text-slate-700 capitalize">{{ formatColorGroupName(colorName) }}</p>
-                  <p class="text-xs font-medium text-slate-700">bg-{{ colorName.toLowerCase() }}</p>
-                  <p class="text-xs text-slate-500 font-mono">{{ colorData.value }}</p>
-                </div>
+            <!-- Always Visible Header with Refresh Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+              <div class="flex items-center space-x-3">
+                <h2 class="text-xl font-semibold text-slate-800">🎯 토큰 관리</h2>
+                <span class="text-sm text-slate-600">
+                  마지막 새로고침: <span class="font-mono bg-gray-50 px-2 py-1 rounded">{{ lastUpdated }}</span>
+                </span>
               </div>
+              <button 
+                @click="refreshTokens" 
+                :disabled="isRefreshing"
+                class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <ArrowPathIcon 
+                  :class="['w-4 h-4 mr-2 stroke-2', { 'animate-spin': isRefreshing }]" 
+                />
+                {{ isRefreshing ? '새로고침 중...' : '토큰 새로고침' }}
+              </button>
             </div>
 
-            <!-- Dynamic Color Palettes (색상 팔레트) -->
-            <div v-for="(colorGroup, groupName) in colorPalettes" :key="`palette-${groupName}`" class="mb-8">
-              <h3 class="text-lg font-medium mb-4">{{ formatColorGroupName(groupName) }}</h3>
-              <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2">
-                <div v-for="(colorData, shadeName) in colorGroup" :key="`${groupName}-${shadeName}`" class="text-center">
-                  <div 
-                    class="w-full h-16 md:h-20 rounded-lg mb-2 shadow-sm cursor-pointer hover:scale-105 transition-transform"
-                    :style="getColorStyle(groupName, shadeName)"
-                    :title="`${groupName}-${shadeName}: ${colorData.value}`"
-                    @click="copyToClipboard(colorData.value)"
-                  />
-                  <p class="text-xs font-medium text-slate-700">{{ shadeName }}</p>
-                  <p class="text-xs font-medium text-slate-700">bg-{{ groupName.toLowerCase() }}-{{ shadeName }}</p>
-                  <p class="text-xs text-slate-500 font-mono">{{ colorData.value }}</p>
-                </div>
-              </div>
+            <!-- Token Summary (Always Visible) -->
+            <div class="flex items-center space-x-2 text-sm text-slate-600 mb-4">
+              <span class="bg-blue-50 px-2 py-1 rounded font-mono">{{ getTotalColorsCount() }}개 색상</span>
+              <span class="bg-green-50 px-2 py-1 rounded font-mono">{{ getSpacingTokens().length }}개 간격</span>
+              <span class="bg-purple-50 px-2 py-1 rounded font-mono">{{ getTypographyTokens().length + getFontTokens().length }}개 타이포그래피</span>
+              <span class="bg-orange-50 px-2 py-1 rounded font-mono">{{ getAssetTokens().length + getBorderTokens().length + getOtherNonVisualTokens().length }}개 기타</span>
             </div>
 
-            <!-- Test Color -->
-            <!-- <div class="mb-8">
-              <h3 class="text-lg font-medium mb-4">Test Color</h3>
-              <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2">
-                <div class="text-center">
-                  <div 
-                    class="w-full h-16 md:h-20 rounded-lg mb-2 shadow-sm cursor-pointer hover:scale-105 transition-transform bg-shiraz-500"
-                  />
-                  <p class="text-xs font-medium text-slate-700">500</p>
-                  <p class="text-xs font-medium text-slate-700">bg-shiraz-500</p>
-                  <p class="text-xs text-slate-500 font-mono">#eb4859</p>
+            <!-- Token Information Accordion -->
+            <div>
+              <!-- Accordion Header -->
+              <div 
+                class="cursor-pointer select-none border border-slate-200/80 p-4 transition-colors shaodw-sm"
+                :class="{ 'rounded-lg': !isTokenInfoExpanded, 'rounded-t-lg': isTokenInfoExpanded, }"
+                @click="isTokenInfoExpanded = !isTokenInfoExpanded"
+              >
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center space-x-2">
+                    <h3 class="text-lg font-medium text-slate-700">ℹ️ 상세 정보</h3>
+                    <span class="text-xs text-slate-500 leading-none">파일 위치, 통계, 워크플로우</span>
+                  </div>
+                  <div class="transition-transform duration-200" :class="{ 'rotate-180': isTokenInfoExpanded }">
+                    <ChevronDownIcon class="size-4 text-slate-800" />
+                  </div>
                 </div>
               </div>
-            </div> -->
-          </div>
-        </div>
-      </section>
- 
-      <!-- Other Tokens Section -->
-      <section v-if="Object.keys(otherTokens).length > 0" class="mb-8">
-        <div class="card">
-          <div class="card-body">
-            <h2 class="text-2xl font-semibold mb-6">📋 Other Tokens</h2>
-            
-            <!-- Spacing Tokens (간격 토큰 시각화) -->
-            <div v-if="getSpacingTokens().length > 0" class="mb-8">
-              <h3 class="text-lg font-medium mb-4">Spacing</h3>
               
-              <!-- 박스 형태 시각화 -->
-              <div class="mb-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-8 gap-6">
-                  <div v-for="token in getSpacingTokens()" :key="`box-${token.name}-${token.value}`" class="text-center">
-                    <!-- 간격을 padding/margin으로 시각화 -->
-                    <div class="flex flex-col items-center space-y-3 h-full">
-                      <div class="flex-1 flex items-center justify-center">
-                        <!-- 외부 박스 (margin 효과) -->
-                        <div 
-                          class="relative bg-blue-50 border-2 border-dashed border-blue-300 rounded-lg"
-                          :style="{ padding: token.value }"
-                          :title="`${token.name}: ${token.value}`"
-                          @click="copyToClipboard(token.value)"
-                        >
-                          <!-- 내부 박스 (실제 spacing) -->
-                          <div 
-                            class="bg-blue-500 rounded-sm flex items-center justify-center size-4"       
-                            :title="`${token.name}: ${token.value}`"
-                          />
-                        </div>
+              <!-- Accordion Content -->
+              <div 
+                class="overflow-hidden transition-all duration-300 ease-in-out px-4 border border-slate-200/80 rounded-b-lg border-t-0"
+                :class="isTokenInfoExpanded ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'"
+              >
+                <div class="py-4 mt-2">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 class="font-medium mb-3 text-slate-700">파일 위치</h4>
+                      <ul class="space-y-2 text-sm">
+                        <li><code class="bg-slate-100 px-2 py-1 rounded">tokens/global.json</code> - 원본 토큰</li>
+                        <li><code class="bg-slate-100 px-2 py-1 rounded">assets/css/theme-tokens.css</code> - TailwindCSS v4 테마</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 class="font-medium mb-3 text-slate-700">상세 통계</h4>
+                      <ul class="space-y-2 text-sm grid grid-cols-1 md:grid-cols-2">
+                        <li>색상 그룹: <span class="font-mono bg-blue-50 px-2 py-1 rounded">{{ Object.keys(colorPalettes).length }}개</span></li>
+                        <li>단일 색상: <span class="font-mono bg-green-50 px-2 py-1 rounded">{{ Object.keys(singleColors).length }}개</span></li>
+                        <li>간격 토큰: <span class="font-mono bg-yellow-50 px-2 py-1 rounded">{{ getSpacingTokens().length }}개</span></li>
+                        <li>폰트 토큰: <span class="font-mono bg-violet-50 px-2 py-1 rounded">{{ getFontTokens().length }}개</span></li>
+                        <li>에셋 토큰: <span class="font-mono bg-emerald-50 px-2 py-1 rounded">{{ getAssetTokens().length }}개</span></li>
+                        <li>테두리 토큰: <span class="font-mono bg-orange-50 px-2 py-1 rounded">{{ getBorderTokens().length }}개</span></li>
+                        <li>타이포그래피: <span class="font-mono bg-indigo-50 px-2 py-1 rounded">{{ getTypographyTokens().length }}개</span></li>
+                        <li>기타 토큰: <span class="font-mono bg-slate-50 px-2 py-1 rounded">{{ getOtherNonVisualTokens().length }}개</span></li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="mt-3 pt-3 border-t border-slate-100">
+                    <h4 class="font-medium mb-3 text-slate-700">워크플로우</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                      <div class="text-center p-3 bg-blue-50 rounded-lg">
+                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">1</div>
+                        <p class="text-xs font-medium">Figma에서 토큰 수정</p>
                       </div>
-                      
-                      <!-- 토큰 정보 -->
-                      <div>
-                        <p class="text-sm font-medium text-slate-700">{{ token.name }}</p>
-                        <p class="text-xs font-medium text-blue-600">{{ getSpacingClass(token.name) }}</p>
-                        <p class="text-xs text-slate-500 font-mono">{{ token.value }}</p>
+                      <div class="text-center p-3 bg-green-50 rounded-lg">
+                        <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">2</div>
+                        <p class="text-xs font-medium">Tokens Studio 푸시</p>
+                      </div>
+                      <div class="text-center p-3 bg-purple-50 rounded-lg">
+                        <div class="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">3</div>
+                        <p class="text-xs font-medium">GitHub Actions 실행</p>
+                      </div>
+                      <div class="text-center p-3 bg-orange-50 rounded-lg">
+                        <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">4</div>
+                        <p class="text-xs font-medium">Style Dictionary 빌드</p>
+                      </div>
+                      <div class="text-center p-3 bg-indigo-50 rounded-lg">
+                        <div class="w-8 h-8 bg-indigo-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">5</div>
+                        <p class="text-xs font-medium">웹사이트 자동 업데이트</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <!-- Asset Tokens (이미지/에셋 토큰 시각화) -->
-            <div v-if="getAssetTokens().length > 0" class="mb-8">
-              <h3 class="text-lg font-medium mb-4">Assets</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <div v-for="token in getAssetTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
-                  <!-- 이미지 미리보기 -->
-                  <div class="mb-4 h-32 bg-slate-100 rounded-lg overflow-hidden flex items-center justify-center">
-                    <img 
-                      :src="token.value" 
-                      :alt="token.name"
-                      class="max-w-full max-h-full object-contain"
-                      @error="handleImageError"
-                      @click="copyToClipboard(token.value)"
-                    />
-                  </div>
-                  
-                  <!-- 토큰 정보 -->
-                  <div class="pt-3 border-t border-slate-100">
-                    <p class="text-sm font-medium text-slate-700 capitalize">{{ formatAssetName(token.name) }}</p>
-                    <p class="text-xs font-medium text-green-600">img-{{ token.name.toLowerCase() }}</p>
-                    <p class="text-xs text-slate-500 font-mono truncate" :title="token.value">{{ token.value }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Border Tokens (테두리 토큰 시각화) -->
-            <div v-if="getBorderTokens().length > 0" class="mb-8">
-              <h3 class="text-lg font-medium mb-4">Borders</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <div v-for="token in getBorderTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
-                  <!-- 테두리 미리보기 -->
-                  <div class="mb-4 h-20 bg-slate-50 rounded-lg flex items-center justify-center">
-                    <div 
-                      class="w-16 h-12 bg-white rounded"
-                      :style="getBorderStyle(token)"
-                      :title="`${token.name}: ${JSON.stringify(token.value)}`"
-                      @click="copyToClipboard(JSON.stringify(token.value))"
-                    />
-                  </div>
-                  
-                  <!-- 토큰 정보 -->
-                  <div class="pt-3 border-t border-slate-100">
-                    <p class="text-sm font-medium text-slate-700 capitalize">{{ formatBorderName(token.name) }}</p>
-                    <p class="text-xs font-medium text-orange-600">border-{{ token.name.toLowerCase() }}</p>
-                    <p class="text-xs text-slate-500 font-mono">{{ formatBorderValue(token.value) }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Typography Tokens (타이포그래피 토큰 시각화) -->
-            <div v-if="getTypographyTokens().length > 0" class="mb-8">
-              <h3 class="text-lg font-medium mb-4">Typography Styles</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div v-for="token in getTypographyTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
-                  <!-- 타이포그래피 미리보기 -->
-                  <div 
-                    class="mb-4 p-4 bg-slate-50 rounded-lg"
-                    :style="getTypographyStyle(token)"
-                  >
-                    <p class="mb-2">ABC abc 123</p>
-                    <p class="mb-1">가나다 한글 테스트</p>
-                    <p class="text-slate-600">The quick brown fox jumps over the lazy dog</p>
-                  </div>
-                  
-                  <!-- 토큰 정보 -->
-                  <div class="pt-3 border-t border-slate-100">
-                    <p class="text-sm font-medium text-slate-700 capitalize">{{ formatTypographyName(token.name) }}</p>
-                    <p class="text-xs font-medium text-indigo-600">text-{{ token.name.toLowerCase() }}</p>
-                    <p class="text-xs text-slate-500 font-mono">{{ formatTypographyValue(token.value) }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Font Family Tokens (폰트 토큰 시각화) -->
-            <div v-if="getFontTokens().length > 0" class="mb-8">
-              <h3 class="text-lg font-medium mb-4">Typography</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="p-4 border border-slate-200 rounded-lg font-mono">
-                  <div class="mb-4">
-                    <p class="text-2xl font-normal mb-2">ABC abc 123</p>
-                    <p class="text-lg font-medium mb-1">가나다 한글 테스트</p>
-                    <p class="text-sm text-slate-600">The quick brown fox jumps</p>
-                  </div>
-                  <div class="pt-3 border-t border-slate-100">
-                    <p class="text-sm font-medium text-slate-700 capitalize">Space Mono</p>
-                    <p class="text-xs font-medium text-violet-600">font-mono</p>
-                    <p class="text-xs text-slate-500 font-mono">Space Mono Variable</p>
-                  </div>
-                </div>
-
-                <div v-for="token in getFontTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
-                  <!-- 폰트 미리보기 -->
-                  <div 
-                    class="mb-4"
-                    :style="{ fontFamily: token.value }"
-                  >
-                    <p class="text-2xl font-normal mb-2">ABC abc 123</p>
-                    <p class="text-lg font-medium mb-1">가나다 한글 테스트</p>
-                    <p class="text-sm text-slate-600">The quick brown fox jumps</p>
-                  </div>
-                  
-                  <!-- 토큰 정보 -->
-                  <div class="pt-3 border-t border-slate-100">
-                    <p class="text-sm font-medium text-slate-700 capitalize">{{ formatFontName(token.name) }}</p>
-                    <p class="text-xs font-medium text-violet-600">{{ getFontClass(token.name) }}</p>
-                    <p class="text-xs text-slate-500 font-mono">{{ token.value }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 기타 토큰들 (기존 방식 유지) -->
-            <div v-if="getOtherNonVisualTokens().length > 0">
-              <h3 class="text-lg font-medium mb-4">Other Properties</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div v-for="token in getOtherNonVisualTokens()" :key="token.name" 
-                     class="p-4 bg-slate-50 rounded-lg border">
-                  <p class="text-sm font-medium text-slate-700 mb-1">{{ token.name }}</p>
-                  <p class="text-xs text-slate-500 font-mono wrap-anywhere">{{ token.value }}</p>
-                  <p class="text-xs text-blue-600 mt-1">{{ token.type }}</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
-
-      <!-- Fallback for empty tokens -->
-      <section v-if="Object.keys(colorPalettes).length === 0 && Object.keys(singleColors).length === 0" class="mb-8">
+      
+      <!-- Token Categories & Content Combined -->
+      <section>
         <div class="card">
-          <div class="card-body text-center py-12">
-            <div class="text-slate-400 mb-4">
-              <SwatchIcon class="w-16 h-16 mx-auto" />
+          <div class="card-body">
+            <!-- Categories Header -->
+            <div class="mb-8">
+              <h2 class="text-2xl font-semibold mb-6">🎯 Design Tokens</h2>
+              <div class="flex flex-wrap gap-3 mb-6">
+                <button 
+                  v-for="keyword in availableKeywords"
+                  :key="keyword.id"
+                  @click="activeCategory = keyword.id"
+                  :class="[
+                    'category-tab px-4 py-2 rounded-full border-2 font-medium transition-all duration-200 gap-2',
+                    activeCategory === keyword.id 
+                      ? 'bg-blue-500/90 text-white border-blue-500/90 shadow-lg' 
+                      : 'bg-white text-slate-700 border-slate-300 hover:border-blue-300 hover:bg-blue-50'
+                  ]"
+                >
+                  <span>{{ keyword.icon }}</span> {{ keyword.label }}
+                  <span class="text-xs opacity-75">({{ keyword.count }})</span>
+                </button>
+              </div>
             </div>
-            <h3 class="text-lg font-medium text-slate-700 mb-2">토큰을 로드할 수 없습니다</h3>
-            <p class="text-slate-500 mb-4">
-              디자인 토큰을 빌드하거나 새로고침해주세요.
-            </p>
-            <div class="space-y-2 text-sm text-slate-600">
-              <p><code class="bg-slate-100 px-2 py-1 rounded">npm run tokens:build</code></p>
-              <p>또는 아래 새로고침 버튼을 클릭하세요.</p>
+
+            <!-- Content Area -->
+            <div class="min-h-[400px] transition-all duration-300 ease-in-out">
+              <!-- Colors Content -->
+              <div v-if="activeCategory === 'colors' && (Object.keys(colorPalettes).length > 0 || Object.keys(singleColors).length > 0)" 
+                   class="animate-fade-in">
+                <div class="flex items-center mb-6">
+                  <span class="text-3xl mr-3">🎨</span>
+                  <h3 class="text-xl font-semibold text-slate-800">Color Palettes</h3>
+                </div>
+                
+                <!-- Single Colors (단일 색상을 먼저 표시) -->
+                <div v-if="Object.keys(singleColors).length > 0" class="mb-8">
+                  <h4 class="text-lg font-medium mb-4">Single Colors</h4>
+                  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2">
+                    <div v-for="(colorData, colorName) in singleColors" :key="`single-${colorName}`" class="text-center">
+                      <div 
+                        class="w-full h-16 md:h-20 rounded-lg mb-2 shadow-sm cursor-pointer hover:scale-105 transition-transform"
+                        :style="getSingleColorStyle(colorName)"
+                        :title="`${colorName}: ${colorData.value}`"
+                        @click="copyToClipboard(colorData.value)"
+                      />
+                      <p class="text-xs font-medium text-slate-700 capitalize">{{ formatColorGroupName(colorName) }}</p>
+                      <p class="text-xs font-medium text-slate-700">bg-{{ colorName.toLowerCase() }}</p>
+                      <p class="text-xs text-slate-500 font-mono">{{ colorData.value }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dynamic Color Palettes (색상 팔레트) -->
+                <div v-for="(colorGroup, groupName) in colorPalettes" :key="`palette-${groupName}`" class="mb-8">
+                  <h4 class="text-lg font-medium mb-4">{{ formatColorGroupName(groupName) }}</h4>
+                  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2">
+                    <div v-for="(colorData, shadeName) in colorGroup" :key="`${groupName}-${shadeName}`" class="text-center">
+                      <div 
+                        class="w-full h-16 md:h-20 rounded-lg mb-2 shadow-sm cursor-pointer hover:scale-105 transition-transform"
+                        :style="getColorStyle(groupName, shadeName)"
+                        :title="`${groupName}-${shadeName}: ${colorData.value}`"
+                        @click="copyToClipboard(colorData.value)"
+                      />
+                      <p class="text-xs font-medium text-slate-700">{{ shadeName }}</p>
+                      <p class="text-xs font-medium text-slate-700">bg-{{ groupName.toLowerCase() }}-{{ shadeName }}</p>
+                      <p class="text-xs text-slate-500 font-mono">{{ colorData.value }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Spacing Content -->
+              <div v-if="activeCategory === 'spacing' && getSpacingTokens().length > 0" 
+                   class="animate-fade-in">
+                <div class="flex items-center mb-6">
+                  <span class="text-3xl mr-3">📏</span>
+                  <h3 class="text-xl font-semibold text-slate-800">Spacing Tokens</h3>
+                </div>
+                
+                <!-- 박스 형태 시각화 -->
+                <div class="mb-6">
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-8 gap-6">
+                    <div v-for="token in getSpacingTokens()" :key="`box-${token.name}-${token.value}`" class="text-center">
+                      <!-- 간격을 padding/margin으로 시각화 -->
+                      <div class="flex flex-col items-center space-y-3 h-full">
+                        <div class="flex-1 flex items-center justify-center">
+                          <!-- 외부 박스 (margin 효과) -->
+                          <div 
+                            class="relative bg-blue-50 border-2 border-dashed border-blue-300 rounded-lg cursor-pointer hover:scale-105 transition-transform"
+                            :style="{ padding: token.value }"
+                            :title="`${token.name}: ${token.value}`"
+                            @click="copyToClipboard(token.value)"
+                          >
+                            <!-- 내부 박스 (실제 spacing) -->
+                            <div 
+                              class="bg-blue-500 rounded-sm flex items-center justify-center size-4"       
+                              :title="`${token.name}: ${token.value}`"
+                            />
+                          </div>
+                        </div>
+                        
+                        <!-- 토큰 정보 -->
+                        <div>
+                          <p class="text-sm font-medium text-slate-700">{{ token.name }}</p>
+                          <p class="text-xs font-medium text-blue-600">{{ getSpacingClass(token.name) }}</p>
+                          <p class="text-xs text-slate-500 font-mono">{{ token.value }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Assets Content -->
+              <div v-if="activeCategory === 'assets' && getAssetTokens().length > 0" 
+                   class="animate-fade-in">
+                <div class="flex items-center mb-6">
+                  <span class="text-3xl mr-3">🖼️</span>
+                  <h3 class="text-xl font-semibold text-slate-800">Asset Tokens</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  <div v-for="token in getAssetTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
+                    <!-- 이미지 미리보기 -->
+                    <div class="mb-4 h-32 bg-slate-100 rounded-lg overflow-hidden flex items-center justify-center">
+                      <img 
+                        :src="token.value" 
+                        :alt="token.name"
+                        class="max-w-full max-h-full object-contain cursor-pointer hover:scale-105 transition-transform"
+                        @error="handleImageError"
+                        @click="copyToClipboard(token.value)"
+                      />
+                    </div>
+                    
+                    <!-- 토큰 정보 -->
+                    <div class="pt-3 border-t border-slate-100">
+                      <p class="text-sm font-medium text-slate-700 capitalize">{{ formatAssetName(token.name) }}</p>
+                      <p class="text-xs font-medium text-green-600">img-{{ token.name.toLowerCase() }}</p>
+                      <p class="text-xs text-slate-500 font-mono truncate" :title="token.value">{{ token.value }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Borders Content -->
+              <div v-if="activeCategory === 'borders' && getBorderTokens().length > 0" 
+                   class="animate-fade-in">
+                <div class="flex items-center mb-6">
+                  <span class="text-3xl mr-3">🔲</span>
+                  <h3 class="text-xl font-semibold text-slate-800">Border Tokens</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  <div v-for="token in getBorderTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
+                    <!-- 테두리 미리보기 -->
+                    <div class="mb-4 h-20 bg-slate-50 rounded-lg flex items-center justify-center">
+                      <div 
+                        class="w-16 h-12 bg-white rounded cursor-pointer hover:scale-105 transition-transform"
+                        :style="getBorderStyle(token)"
+                        :title="`${token.name}: ${JSON.stringify(token.value)}`"
+                        @click="copyToClipboard(JSON.stringify(token.value))"
+                      />
+                    </div>
+                    
+                    <!-- 토큰 정보 -->
+                    <div class="pt-3 border-t border-slate-100">
+                      <p class="text-sm font-medium text-slate-700 capitalize">{{ formatBorderName(token.name) }}</p>
+                      <p class="text-xs font-medium text-orange-600">border-{{ token.name.toLowerCase() }}</p>
+                      <p class="text-xs text-slate-500 font-mono">{{ formatBorderValue(token.value) }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Typography Content -->
+              <div v-if="activeCategory === 'typography' && (getTypographyTokens().length > 0 || getFontTokens().length > 0)" 
+                   class="animate-fade-in">
+                <div class="flex items-center mb-6">
+                  <span class="text-3xl mr-3">✏️</span>
+                  <h3 class="text-xl font-semibold text-slate-800">Typography Tokens</h3>
+                </div>
+                
+                <!-- Typography Styles -->
+                <div v-if="getTypographyTokens().length > 0" class="mb-8">
+                  <h4 class="text-lg font-medium mb-4">Typography Styles</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div v-for="token in getTypographyTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
+                      <!-- 타이포그래피 미리보기 -->
+                      <div 
+                        class="mb-4 p-4 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors"
+                        :style="getTypographyStyle(token)"
+                        @click="copyToClipboard(JSON.stringify(token.value))"
+                      >
+                        <p class="mb-2">ABC abc 123</p>
+                        <p class="mb-1">가나다 한글 테스트</p>
+                        <p class="text-slate-600">The quick brown fox jumps over the lazy dog</p>
+                      </div>
+                      
+                      <!-- 토큰 정보 -->
+                      <div class="pt-3 border-t border-slate-100">
+                        <p class="text-sm font-medium text-slate-700 capitalize">{{ formatTypographyName(token.name) }}</p>
+                        <p class="text-xs font-medium text-indigo-600">text-{{ token.name.toLowerCase() }}</p>
+                        <p class="text-xs text-slate-500 font-mono">{{ formatTypographyValue(token.value) }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Font Families -->
+                <div v-if="getFontTokens().length > 0">
+                  <h4 class="text-lg font-medium mb-4">Font Families</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="p-4 border border-slate-200 rounded-lg font-mono">
+                      <div class="mb-4">
+                        <p class="text-2xl font-normal mb-2">ABC abc 123</p>
+                        <p class="text-lg font-medium mb-1">가나다 한글 테스트</p>
+                        <p class="text-sm text-slate-600">The quick brown fox jumps</p>
+                      </div>
+                      <div class="pt-3 border-t border-slate-100">
+                        <p class="text-sm font-medium text-slate-700 capitalize">Space Mono</p>
+                        <p class="text-xs font-medium text-violet-600">font-mono</p>
+                        <p class="text-xs text-slate-500 font-mono">Space Mono Variable</p>
+                      </div>
+                    </div>
+
+                    <div v-for="token in getFontTokens()" :key="token.name" class="p-4 border border-slate-200 rounded-lg">
+                      <!-- 폰트 미리보기 -->
+                      <div 
+                        class="mb-4 cursor-pointer hover:bg-slate-50 transition-colors p-2 rounded"
+                        :style="{ fontFamily: token.value }"
+                        @click="copyToClipboard(token.value)"
+                      >
+                        <p class="text-2xl font-normal mb-2">ABC abc 123</p>
+                        <p class="text-lg font-medium mb-1">가나다 한글 테스트</p>
+                        <p class="text-sm text-slate-600">The quick brown fox jumps</p>
+                      </div>
+                      
+                      <!-- 토큰 정보 -->
+                      <div class="pt-3 border-t border-slate-100">
+                        <p class="text-sm font-medium text-slate-700 capitalize">{{ formatFontName(token.name) }}</p>
+                        <p class="text-xs font-medium text-violet-600">{{ getFontClass(token.name) }}</p>
+                        <p class="text-xs text-slate-500 font-mono">{{ token.value }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Other Tokens Content -->
+              <div v-if="activeCategory === 'other' && getOtherNonVisualTokens().length > 0" 
+                   class="animate-fade-in">
+                <div class="flex items-center mb-6">
+                  <span class="text-3xl mr-3">📋</span>
+                  <h3 class="text-xl font-semibold text-slate-800">Other Properties</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div v-for="token in getOtherNonVisualTokens()" :key="token.name" 
+                       class="p-4 bg-slate-50 rounded-lg border cursor-pointer hover:bg-slate-100 transition-colors"
+                       @click="copyToClipboard(token.value)">
+                    <p class="text-sm font-medium text-slate-700 mb-1">{{ token.name }}</p>
+                    <p class="text-xs text-slate-500 font-mono wrap-anywhere">{{ token.value }}</p>
+                    <p class="text-xs text-blue-600 mt-1">{{ token.type }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div v-if="availableKeywords.length === 0" class="text-center py-12">
+                <div class="text-slate-400 mb-4">
+                  <SwatchIcon class="w-16 h-16 mx-auto" />
+                </div>
+                <h3 class="text-lg font-medium text-slate-700 mb-2">토큰을 로드할 수 없습니다</h3>
+                <p class="text-slate-500 mb-4">
+                  디자인 토큰을 빌드하거나 새로고침해주세요.
+                </p>
+                <div class="space-y-2 text-sm text-slate-600">
+                  <p><code class="bg-slate-100 px-2 py-1 rounded">npm run tokens:build</code></p>
+                  <p>또는 아래 새로고침 버튼을 클릭하세요.</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -299,7 +442,7 @@
 </template>
 
 <script setup>
-import {ArrowPathIcon, SwatchIcon} from '@heroicons/vue/24/outline'
+import {ArrowPathIcon, SwatchIcon, ChevronDownIcon} from '@heroicons/vue/24/outline'
 import {CheckCircleIcon} from '@heroicons/vue/20/solid'
 
 // Reactive data
@@ -311,6 +454,56 @@ const statistics = ref({})
 const isRefreshing = ref(false)
 const loadingError = ref('')
 const showToast = ref(false)
+const activeCategory = ref('colors') // 기본 활성 카테고리
+const isTokenInfoExpanded = ref(false) // 토큰 정보 아코디언 상태
+
+/**
+ * 사용 가능한 키워드 목록을 계산하는 computed 속성
+ * @returns {Array} 키워드 배열
+ */
+const availableKeywords = computed(() => {
+  const keywords = [
+    {
+      id: 'colors',
+      label: 'Colors',
+      icon: '🎨',
+      count: getTotalColorsCount()
+    },
+    {
+      id: 'spacing',
+      label: 'Spacing',
+      icon: '📏',
+      count: getSpacingTokens().length
+    },
+    {
+      id: 'typography',
+      label: 'Typography',
+      icon: '✏️',
+      count: getTypographyTokens().length + getFontTokens().length
+    },
+    {
+      id: 'assets',
+      label: 'Assets',
+      icon: '🖼️',
+      count: getAssetTokens().length
+    },
+    {
+      id: 'borders',
+      label: 'Borders',
+      icon: '🔲',
+      count: getBorderTokens().length
+    },
+    {
+      id: 'other',
+      label: 'Other',
+      icon: '📋',
+      count: getOtherNonVisualTokens().length
+    }
+  ]
+  
+  // 토큰이 있는 카테고리만 필터링
+  return keywords.filter(keyword => keyword.count > 0)
+})
 
 /**
  * 토큰을 동적으로 로드하는 함수
@@ -775,6 +968,13 @@ const copyToClipboard = async (value) => {
 onMounted(async () => {
   // 토큰 로드
   await loadTokens()
+  
+  // 첫 번째 사용 가능한 카테고리로 기본 설정
+  nextTick(() => {
+    if (availableKeywords.value.length > 0) {
+      activeCategory.value = availableKeywords.value[0].id
+    }
+  })
 })
 
 // Head metadata
@@ -788,4 +988,30 @@ useHead({
 
 <style scoped>
 /* 컴포넌트별 스타일은 main.css의 전역 클래스 사용 */
+
+/* 페이드 인 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* 카테고리 탭 호버 효과 개선 */
+.category-tab {
+  transition: all 0.2s ease-in-out;
+}
+
+.category-tab:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 </style>
