@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 
 interface User {
   id: string
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
         if (response.success) {
           this.token = response.token
           this.user = response.user
-          
+
           // Store token in cookie for persistence
           const tokenCookie = useCookie('auth-token', {
             default: () => null,
@@ -101,7 +101,7 @@ export const useAuthStore = defineStore('auth', {
 
     async refreshToken() {
       const tokenCookie = useCookie('auth-token')
-      
+
       if (!tokenCookie.value) {
         return false
       }
@@ -130,13 +130,13 @@ export const useAuthStore = defineStore('auth', {
 
     async initAuth() {
       const tokenCookie = useCookie('auth-token')
-      
+
       if (tokenCookie.value) {
         this.token = tokenCookie.value
-        
+
         // Try to refresh token and get user info
         const refreshed = await this.refreshToken()
-        
+
         if (!refreshed) {
           // Token is invalid, clear everything
           this.token = null

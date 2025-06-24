@@ -4,15 +4,15 @@
 
 @theme {
   --color-spring-100: #ffbfc0;
-  --color-spring-200: #FFDCDC;
-  --color-spring-300: #FFF2EB;
-  --color-spring-400: #FFE8CD;
-  --color-spring-500: #FFD6BA; /** FFD6BA */
-  --color-ocene-100: #3674B5;
-  --color-ocene-200: #578FCA;
+  --color-spring-200: #ffdcdc;
+  --color-spring-300: #fff2eb;
+  --color-spring-400: #ffe8cd;
+  --color-spring-500: #ffd6ba; /** FFD6BA */
+  --color-ocene-100: #3674b5;
+  --color-ocene-200: #578fca;
   --color-ocene-300: #abdcff;
-  --color-ocene-400: #DAE0E4;
-  --color-ocene-500: #CCC1B8;
+  --color-ocene-400: #dae0e4;
+  --color-ocene-500: #ccc1b8;
   --color-shiraz-50: #fef2f2;
   --color-shiraz-100: #fee5e5;
   --color-shiraz-200: #fccfd2;

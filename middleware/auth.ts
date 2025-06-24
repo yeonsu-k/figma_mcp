@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  const { isAuthenticated } = useAuthStore()
+  const {isAuthenticated} = useAuthStore()
 
   // If user is not authenticated and trying to access protected route
   if (!isAuthenticated && to.path !== '/login') {

@@ -14,10 +14,10 @@ jobs:
         with:
           node-version: '20'
       - run: npm install
-      
+
       - name: Validate JSON
         run: |
           find tokens -name "*.json" -exec node -c "JSON.parse(require('fs').readFileSync('{}', 'utf8'))" \;
-          
+
       - name: Test build
         run: npm run tokens:build

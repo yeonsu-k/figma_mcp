@@ -1,5 +1,5 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
-@import "tailwindcss";
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+@import 'tailwindcss';
 
 /* Design Tokens import */
 @import './design-tokens.css';
@@ -38,7 +38,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 rounded-md;
+    @apply rounded-md bg-slate-300;
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -55,20 +55,20 @@
 @layer components {
   /* Button variants */
   .btn-primary {
-    @apply bg-cyber-800 hover:bg-cyber-700 text-white font-medium py-2.5 px-4 rounded-md transition-colors duration-200 focus:ring-2 focus:ring-cyber-500 focus:ring-offset-2;
+    @apply bg-cyber-800 hover:bg-cyber-700 focus:ring-cyber-500 rounded-md px-4 py-2.5 font-medium text-white transition-colors duration-200 focus:ring-2 focus:ring-offset-2;
   }
 
   .btn-secondary {
-    @apply border border-cyber-600 text-cyber-600 hover:bg-cyber-50 font-medium py-2.5 px-4 rounded-md transition-colors duration-200 focus:ring-2 focus:ring-cyber-500 focus:ring-offset-2;
+    @apply border-cyber-600 text-cyber-600 hover:bg-cyber-50 focus:ring-cyber-500 rounded-md border px-4 py-2.5 font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2;
   }
 
   .btn-outline {
-    @apply border border-slate-300 text-slate-700 hover:bg-slate-50 font-medium py-2.5 px-4 rounded-md transition-colors duration-200 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2;
+    @apply rounded-md border border-slate-300 px-4 py-2.5 font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2;
   }
 
   /* Input styles */
   .input-field {
-    @apply w-full px-4 py-3 border border-slate-300 rounded-md text-base placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyber-500 focus:border-transparent transition-colors duration-200;
+    @apply focus:ring-cyber-500 w-full rounded-md border border-slate-300 px-4 py-3 text-base placeholder-slate-400 transition-colors duration-200 focus:border-transparent focus:ring-2 focus:outline-none;
   }
 
   .input-error {
@@ -81,12 +81,12 @@
   }
 
   .form-label {
-    @apply block text-slate-600 text-sm font-medium tracking-tight;
+    @apply block text-sm font-medium tracking-tight text-slate-600;
   }
 
   /* Card styles */
   .card {
-    @apply bg-white rounded-lg border border-slate-200;
+    @apply rounded-lg border border-slate-200 bg-white;
   }
 
   .card-body {
@@ -95,11 +95,11 @@
 
   /* Loading states */
   .loading {
-    @apply opacity-70 pointer-events-none;
+    @apply pointer-events-none opacity-70;
   }
 
   .spinner {
-    @apply animate-spin inline-block w-4 h-4 border-2 border-current border-r-transparent rounded-full;
+    @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent;
   }
 
   /* Text utilities */
@@ -117,7 +117,7 @@
   }
 
   .bg-cyber-pattern {
-    background-image: 
+    background-image:
       radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
       radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
   }
@@ -217,7 +217,7 @@
   .no-print {
     display: none !important;
   }
-  
+
   .print-only {
     display: block !important;
   }

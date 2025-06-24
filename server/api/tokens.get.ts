@@ -1,7 +1,7 @@
-import { readFileSync } from 'fs'
-import { resolve } from 'path'
+import {readFileSync} from 'fs'
+import {resolve} from 'path'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     // tokens/global.json 파일 읽기
     const tokensPath = resolve(process.cwd(), 'tokens/global.json')
@@ -10,8 +10,8 @@ export default defineEventHandler(async (event) => {
 
     // 색상 토큰 분석 및 구조화 - 완전 동적 처리
     const analyzeTokens = (data: any) => {
-      const colorPalettes: Record<string, Record<string, { value: string; type: string }>> = {}
-      const singleColors: Record<string, { value: string; type: string }> = {}
+      const colorPalettes: Record<string, Record<string, {value: string; type: string}>> = {}
+      const singleColors: Record<string, {value: string; type: string}> = {}
       const otherTokens: Record<string, any> = {}
 
       // 숫자인지 확인하는 헬퍼 함수 (팔레트 shade 감지용)
@@ -23,9 +23,7 @@ export default defineEventHandler(async (event) => {
       const isPalette = (obj: any): boolean => {
         const keys = Object.keys(obj)
         // 모든 키가 숫자이고, 모든 값이 색상 토큰인 경우 팔레트로 판단
-        return keys.length > 1 && 
-               keys.every(key => isNumericShade(key)) && 
-               keys.every(key => obj[key]?.type === 'color' && obj[key]?.value)
+        return keys.length > 1 && keys.every(key => isNumericShade(key)) && keys.every(key => obj[key]?.type === 'color' && obj[key]?.value)
       }
 
       const processTokens = (obj: any, path: string[] = []) => {
@@ -37,7 +35,7 @@ export default defineEventHandler(async (event) => {
                 // 팔레트 색상 (예: global.slate.50, global.emerald.200)
                 const groupName = path[1]
                 const shadeName = key
-                
+
                 if (!colorPalettes[groupName]) {
                   colorPalettes[groupName] = {}
                 }
@@ -97,10 +95,9 @@ export default defineEventHandler(async (event) => {
     const statistics = {
       totalColorPalettes: Object.keys(analyzedTokens.colorPalettes).length,
       totalSingleColors: Object.keys(analyzedTokens.singleColors).length,
-      totalColors: Object.values(analyzedTokens.colorPalettes).reduce(
-        (total, palette) => total + Object.keys(palette).length, 
-        0
-      ) + Object.keys(analyzedTokens.singleColors).length,
+      totalColors:
+        Object.values(analyzedTokens.colorPalettes).reduce((total, palette) => total + Object.keys(palette).length, 0) +
+        Object.keys(analyzedTokens.singleColors).length,
       totalOtherTokens: Object.keys(analyzedTokens.otherTokens).length,
       lastModified: new Date().toISOString()
     }
@@ -119,7 +116,7 @@ export default defineEventHandler(async (event) => {
     }
   } catch (error) {
     console.error('토큰 API 오류:', error)
-    
+
     return {
       success: false,
       error: {

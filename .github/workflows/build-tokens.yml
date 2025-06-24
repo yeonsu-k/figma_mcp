@@ -25,12 +25,12 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
-          
+
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
+
       - name: 🔍 Check trigger
         run: |
           echo "=== Build Design Tokens Triggered ==="
@@ -41,18 +41,18 @@ jobs:
             echo "Changed files:"
             git diff --name-only HEAD~1 HEAD | grep "tokens/" || echo "No token files changed"
           fi
-          
+
       - name: 📥 Install dependencies
         run: |
           echo "Installing dependencies..."
           npm install
-          
+
       - name: 🎨 Build design tokens
         run: |
           echo "Building design tokens from tokens/global.json..."
           npm run tokens:build
           echo "✅ Token build completed"
-        
+
       - name: 🔍 Check generated files
         run: |
           echo "=== Generated files check ==="
@@ -66,7 +66,7 @@ jobs:
           head -5 assets/css/theme-tokens.css || echo "❌ File not found"
           echo "--- tokens.json (preview) ---"
           head -20 public/api/tokens.json || echo "❌ File not found"
-        
+
       - name: ✅ Check for changes
         id: changes
         run: |
@@ -79,30 +79,30 @@ jobs:
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "ℹ️  No changes detected"
           fi
-          
+
       - name: 📝 Commit and push changes
         if: steps.changes.outputs.changed == 'true'
         run: |
           echo "Configuring git..."
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          
+
           echo "Committing generated token files..."
           git commit -m "🎨 Auto-update design tokens
 
           Generated from tokens/global.json via Style Dictionary
-          
+
           Files updated:
           - assets/css/design-tokens.css
           - assets/css/theme-tokens.css  
           - composables/useDesignTokens.ts
           - public/api/tokens.json (GitHub Pages API)
-          
+
           [skip ci]" || exit 1
-          
+
           echo "Pushing changes..."
           git push
-          
+
       - name: 🚀 Trigger deployment
         if: steps.changes.outputs.changed == 'true'
         run: |

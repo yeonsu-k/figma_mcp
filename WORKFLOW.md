@@ -5,10 +5,12 @@
 ## 🎨 Design Tokens 워크플로우
 
 ### 1. Figma에서 토큰 생성
+
 - Figma에서 **Tokens Studio** 플러그인 사용
 - GitHub 연동으로 `tokens/` 폴더에 JSON 파일 저장
 
 ### 2. 자동 빌드 프로세스
+
 ```mermaid
 graph LR
     A[Figma Tokens Studio] --> B[GitHub Repository]
@@ -23,6 +25,7 @@ graph LR
 ```
 
 ### 3. 생성되는 파일들
+
 - `assets/css/design-tokens.css` - CSS 변수
 - `assets/css/theme-tokens.css` - Tailwind v4 @theme 설정
 - `composables/useDesignTokens.ts` - TypeScript 인터페이스
@@ -32,11 +35,13 @@ graph LR
 ### 📋 워크플로우 목록
 
 1. **Build Design Tokens** (`.github/workflows/build-tokens.yml`)
+
    - 토큰 변경 시 자동 실행
    - Style Dictionary로 CSS/TS 파일 생성
    - 자동 커밋 및 푸시
 
 2. **Validate Design Tokens** (`.github/workflows/validate-tokens.yml`)
+
    - PR 생성 시 토큰 검증
    - JSON 문법 확인
    - 필수 속성 검증
@@ -87,11 +92,13 @@ npm run build
 ## 🎯 사용 방법
 
 ### 1. Figma에서 토큰 수정
+
 1. Figma에서 Tokens Studio 플러그인 열기
 2. 토큰 값 수정
 3. "Push to GitHub" 클릭
 
 ### 2. 자동 프로세스
+
 1. GitHub Actions가 자동으로 실행
 2. Style Dictionary가 CSS/TS 파일 생성
 3. 변경사항 자동 커밋
@@ -100,6 +107,7 @@ npm run build
 ### 3. 코드에서 토큰 사용
 
 #### CSS에서 사용
+
 ```css
 .my-component {
   color: var(--colors-primary-500);
@@ -108,6 +116,7 @@ npm run build
 ```
 
 #### Tailwind 클래스로 사용
+
 ```html
 <div class="bg-primary-500 p-md">
   <!-- Tailwind v4 theme에서 자동 생성된 클래스 -->
@@ -115,8 +124,9 @@ npm run build
 ```
 
 #### TypeScript에서 사용
+
 ```typescript
-import { tokens } from '~/composables/useDesignTokens'
+import {tokens} from '~/composables/useDesignTokens'
 
 const primaryColor = tokens['colors-primary-500']
 ```
@@ -124,15 +134,19 @@ const primaryColor = tokens['colors-primary-500']
 ## ⚙️ 설정 파일
 
 ### Style Dictionary 설정
+
 `style-dictionary.config.js`에서 출력 형식 설정:
+
 - CSS Variables 형식
 - Tailwind v4 @theme 형식
 - TypeScript 인터페이스 형식
 
 ### Tailwind CSS v4 설정
+
 `assets/css/main.css`에서 테마 설정:
+
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 @import './design-tokens.css';
 @import './theme-tokens.css';
 
@@ -144,6 +158,7 @@ const primaryColor = tokens['colors-primary-500']
 ## 🔧 트러블슈팅
 
 ### 토큰 빌드 오류
+
 ```bash
 # 토큰 파일 구문 확인
 node -c "JSON.parse(require('fs').readFileSync('tokens/global.json', 'utf8'))"
@@ -154,6 +169,7 @@ npm run tokens:build
 ```
 
 ### GitHub Actions 권한 오류
+
 1. Repository Settings → Actions → General
 2. "Workflow permissions"를 "Read and write permissions"로 설정
 

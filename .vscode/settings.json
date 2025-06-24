@@ -6,7 +6,7 @@
     "**/dist/**": true,
     "**/.output/**": true
   },
-  
+
   // Copilot 즉시 컨텍스트 갱신
   "github.copilot.enable": {
     "*": true,
@@ -18,10 +18,9 @@
   // 에디터 즉시 새로고침
   "editor.experimental.asyncTokenization": true,
   "workbench.editor.revealIfOpen": true,
-  
+
   // TypeScript/JavaScript 파일 즉시 분석
   "typescript.preferences.includePackageJsonAutoImports": "auto",
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  
+  "javascript.updateImportsOnFileMove.enabled": "always"
 }

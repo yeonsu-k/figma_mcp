@@ -4,7 +4,7 @@ on:
   push:
     branches: [figma_style]
   workflow_run:
-    workflows: ["Build Design Tokens"]
+    workflows: ['Build Design Tokens']
     types: [completed]
     branches: [figma_style]
   workflow_dispatch:
@@ -15,7 +15,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: false
 
 jobs:
@@ -25,21 +25,21 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
-        
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
+
       - run: npm install
-      
+
       - name: Build design tokens
         run: npm run tokens:build
-        
+
       - name: Verify tokens were built
         run: |
           if [ ! -f "assets/css/design-tokens.css" ]; then
@@ -55,16 +55,16 @@ jobs:
           ls -la public/
           echo "Listing public/api directory:"
           ls -la public/api/ || echo "public/api directory not found"
-      
+
       - name: Generate static site
         run: npm run generate
-        
+
       - uses: actions/configure-pages@v4
-        
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: '.output/public'
-          
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
