@@ -43,7 +43,7 @@ Figma 디자이너와 개발자 간의 일관성을 위해 다음 규칙을 따�
 #### Color 토큰
 
 ```
-브랜드명-용도-강도
+컬러명-용도-강도
 └── spring-100, spring-500
 └── brand-primary, brand-secondary
 └── semantic-error, semantic-success
@@ -59,9 +59,25 @@ Figma 디자이너와 개발자 간의 일관성을 위해 다음 규칙을 따�
 #### Typography 토큰
 
 ```
-폰트패밀리-변형
+폰트이름 또는 조합형 토큰
 └── Pretendard (폰트패밀리)
 └── heading-xl, body-sm (조합형 토큰)
+```
+
+#### Border Radius 토큰
+
+```
+용도 또는 크기명
+└── sm (4px), md (8px), lg (12px)
+└── full (완전한 원형)
+```
+
+#### Opacity 토큰
+
+```
+용도 또는 값
+└── opacity-disabled (0.4), opacity-hover (0.8)
+└── opacity-50 (0.5), opacity-80 (0.8)
 ```
 
 ## 🎨 토큰 타입별 가이드
@@ -110,10 +126,29 @@ Figma 디자이너와 개발자 간의 일관성을 위해 다음 규칙을 따�
 - **시각화**: 실제 텍스트에 전체 스타일 적용
 - **복합 속성**: `{ fontFamily, fontSize, fontWeight, lineHeight }`
 
+### Border Radius (모서리 둥글기)
+
+- **Figma 설정**: Tokens Studio → Border Radius 섹션
+- **TailwindCSS 출력**: `radius-{token-name}` (커스텀 사용)
+- **사용법**: CSS에서 `border-radius: var(--radius-{token-name})`
+- **시각화**: 실제 border radius가 적용된 그라데이션 박스
+- **권장 값**: 0px (각진), 4px (미세한), 8px (기본), 12px (큰), 9999px (원형)
+
+### Opacity (투명도)
+
+- **Figma 설정**: Tokens Studio → Opacity 섹션
+- **TailwindCSS 출력**: `opacity-{token-name}` (커스텀 사용)
+- **사용법**: CSS에서 `opacity: var(--opacity-{token-name})`
+- **시각화**: 체크 패턴 배경 위에 투명도가 적용된 컬러 박스
+- **권장 값**: 0 (투명), 0.1 (미세한), 0.4 (비활성화), 0.5 (중간), 0.8 (호버), 1 (불투명)
+- **제한 사항**: % 사용 피하기, 소수점 값 사용
+
 ### 기타 토큰 (Other)
 
-- **대상**: Font Sizes, Line Heights, Letter Spacing, Border Radius, Box Shadow, Opacity 등
-- **시각화**: 상위 타입에 포함되지 않는 모든 토큰들을 텍스트로 표시
+- **대상**: Font Sizes, Line Heights, Letter Spacing, Box Shadow, Z-Index 등
+- **제외 항목**: Border Radius, Opacity (별도 섹션으로 분리)
+- **시각화**: 시각적 미리보기가 어려운 토큰들을 텍스트 형태로 표시
+- **사용법**: 각 토큰 타입에 따라 적절한 CSS 속성에 적용
 
 ## 🔄 워크플로우
 

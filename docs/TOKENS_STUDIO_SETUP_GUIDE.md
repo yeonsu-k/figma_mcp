@@ -1,8 +1,22 @@
 # Tokens Studio for Figma 플러그인 설정 가이드
 
-> Figma 디자이너를 위한 Tokens Studio 플러그인 무료 버전 활용 가이드
+> Figma 디자이너를 위한 Tokens Studio 플러그인 무료 버#### 시스템 폰트 등록
 
-## 🚀 초기 설정
+```
+1. "Font Family" 섹션 선택
+2. 토큰명: Pretendard
+3. 값: "Pretendard Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
+```
+
+#### 웹폰트 등록
+
+```
+1. 토큰명: Brand-font
+2. 값: "Custom Font Name", fallback-font
+3. CSS에서 @font-face 별도 정의 필요
+```
+
+### 7. Typography (조합형) 설정기 설정
 
 ### 1. 플러그인 설치
 
@@ -93,19 +107,86 @@
 3. CSS에서 @font-face 별도 정의 필요
 ```
 
-### 4. Border Radius (모서리) 설정
+### 4. Border Radius (모서리 둥글기) 설정
 
 #### 기본 라운드 값
 
 ```
-- radius-none: 0
-- radius-sm: 4
-- radius-md: 8
-- radius-lg: 12
-- radius-full: 9999 (완전한 원형)
+1. "Border Radius" 섹션 선택
+2. 모서리 둥글기 토큰 생성:
+   - radius-none: 0    (각진 모서리)
+   - radius-sm: 4      (미세한 둥글기)
+   - radius-md: 8      (기본 둥글기)
+   - radius-lg: 12     (큰 둥글기)
+   - radius-xl: 16     (매우 큰 둥글기)
+   - radius-2xl: 24    (매우 큰 둥글기)
+   - radius-3xl: 32    (극도로 큰 둥글기)
+   - radius-full: 9999 (완전한 원형/타원)
 ```
 
-### 5. Typography (조합형) 설정
+#### 컴포넌트별 Border Radius
+
+```
+component/
+├── button-radius: 8     (버튼 모서리)
+├── card-radius: 12      (카드 모서리)
+├── input-radius: 6      (입력 필드)
+├── avatar-radius: 9999  (프로필 이미지)
+└── badge-radius: 4      (뱃지/태그)
+```
+
+#### 활용 예시
+
+- **버튼**: `radius-md` (8px) - 친근하면서 모던한 느낌
+- **카드**: `radius-lg` (12px) - 부드럽고 세련된 외관
+- **이미지**: `radius-full` - 원형 프로필 이미지
+- **입력 필드**: `radius-sm` (4px) - 깔끔하고 정돈된 느낌
+
+### 5. Opacity (투명도) 설정
+
+#### 기본 투명도 스케일
+
+```
+1. "Opacity" 섹션 선택
+2. 투명도 토큰 생성:
+   - opacity-0: 0      (완전 투명)
+   - opacity-5: 0.05   (거의 투명)
+   - opacity-10: 0.1   (매우 흐림)
+   - opacity-20: 0.2   (흐림)
+   - opacity-25: 0.25  (1/4 불투명)
+   - opacity-30: 0.3   (흐림)
+   - opacity-40: 0.4   (중간 흐림)
+   - opacity-50: 0.5   (반투명)
+   - opacity-60: 0.6   (중간 불투명)
+   - opacity-70: 0.7   (불투명)
+   - opacity-75: 0.75  (3/4 불투명)
+   - opacity-80: 0.8   (거의 불투명)
+   - opacity-90: 0.9   (매우 불투명)
+   - opacity-95: 0.95  (거의 완전 불투명)
+   - opacity-100: 1    (완전 불투명)
+```
+
+#### 시맨틱 투명도 토큰
+
+```
+semantic/
+├── overlay-light: 0.1    (밝은 오버레이)
+├── overlay-medium: 0.5   (중간 오버레이)
+├── overlay-dark: 0.8     (어두운 오버레이)
+├── disabled: 0.4         (비활성화 상태)
+├── hover: 0.8            (호버 상태)
+└── focus: 0.9            (포커스 상태)
+```
+
+#### 활용 예시
+
+- **오버레이**: `opacity-50` - 모달 배경, 드롭다운 뒤 영역
+- **비활성화**: `opacity-40` - 클릭할 수 없는 버튼이나 요소
+- **호버 효과**: `opacity-80` - 마우스 올렸을 때 살짝 투명하게
+- **로딩 상태**: `opacity-60` - 데이터 로딩 중인 콘텐츠
+- **워터마크**: `opacity-10` - 배경에 보이는 로고나 텍스트
+
+### 6. Font Family (폰트) 설정
 
 #### Heading 스타일
 
@@ -229,6 +310,61 @@ weight/
 └── bold: 700
 ```
 
+### 4. Border Radius 시스템 설계
+
+#### 크기별 Border Radius
+
+```
+radius/
+├── none: 0
+├── xs: 2
+├── sm: 4
+├── md: 8
+├── lg: 12
+├── xl: 16
+├── 2xl: 24
+└── full: 9999
+```
+
+#### 컴포넌트별 Border Radius 적용
+
+```
+component/
+├── button: 8
+├── card: 12
+├── input: 6
+├── badge: 12
+├── avatar: 9999
+├── modal: 16
+└── tooltip: 4
+```
+
+### 5. Opacity 시스템 설계
+
+#### 기능별 Opacity 토큰
+
+```
+opacity/
+├── subtle: 0.05
+├── soft: 0.1
+├── light: 0.2
+├── medium: 0.5
+├── strong: 0.8
+└── solid: 1
+```
+
+#### 상태별 Opacity 적용
+
+```
+state/
+├── disabled: 0.4
+├── loading: 0.6
+├── hover: 0.8
+├── focus: 0.9
+├── overlay: 0.5
+└── watermark: 0.1
+```
+
 ## 🔧 고급 활용 팁
 
 ### 1. 토큰 참조 (References)
@@ -302,16 +438,16 @@ spacing-1, spacing-2, spacing-3, ... spacing-100
 xs, sm, md, lg, xl (5-7개 수준)
 ```
 
-### 4. 하드코딩된 값 혼용
+### 4. 토큰 이름의 의미 불명확
 
-**문제**: 토큰과 하드코딩 값을 섞어서 사용
+**문제**: 용도를 알 수 없는 추상적 이름 사용
 
 ```
-❌ 혼재 사용:
-<div class="p-4 bg-color-brand-primary">  // 4는 하드코딩
+❌ 불명확한 이름:
+opacity-weird, radius-special, color-thing
 
-✅ 토큰 일관 사용:
-<div class="p-spacing-sm bg-color-brand-primary">
+✅ 명확한 이름:
+opacity-disabled, radius-button, color-error
 ```
 
 ## 🔗 추가 리소스
@@ -326,6 +462,12 @@ xs, sm, md, lg, xl (5-7개 수준)
 - [Coolors.co](https://coolors.co/) - 색상 팔레트 생성
 - [Type Scale](https://type-scale.com/) - 타이포그래피 스케일 계산
 - [Modular Scale](https://www.modularscale.com/) - 수학적 스케일 계산
+
+### 디자인 시스템 참고 자료
+
+- [Material Design](https://material.io/design/shape/shape-as-expression.html) - Border radius 가이드라인
+- [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/) - 투명도 사용 원칙
+- [Atlassian Design System](https://atlassian.design/) - 토큰 네이밍 컨벤션
 
 ---
 
