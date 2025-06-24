@@ -116,7 +116,7 @@
       "type": "spacing"
     },
     "zzang-gu": {
-      "value": "https://i.pinimg.com/736x/f9/89/2d/f9892db71c169fe5f50addd423d616bc.jpg",
+      "value": "https://i.pinimg.com/736x/6a/63/45/6a6345c18d55bdcf22e13144eb7be394.jpg",
       "type": "asset"
     },
     "red-dashed": {
@@ -144,6 +144,62 @@
         "lineHeight": "2rem"
       },
       "type": "typography"
+    },
+    "card-80": {
+      "value": "0.8",
+      "type": "opacity"
+    },
+    "card-60": {
+      "value": "0.6",
+      "type": "opacity"
+    },
+    "card-20": {
+      "value": "20%",
+      "type": "opacity"
+    },
+    "card-10": {
+      "value": "10%",
+      "type": "opacity"
+    },
+    "card-40": {
+      "value": "40%",
+      "type": "opacity"
+    },
+    "rabbit": {
+      "value": "https://i.pinimg.com/736x/48/11/58/4811581ba45ee04a0bb90ee15bcf8054.jpg",
+      "type": "asset"
+    },
+    "gorapaduck": {
+      "value": "https://i.pinimg.com/736x/97/16/4d/97164d4a5a6f8db2530995f3fff1a7c0.jpg",
+      "type": "asset"
+    },
+    "ddeung-Ie": {
+      "value": "https://i.pinimg.com/736x/3c/14/c7/3c14c793e58d9d1955bb7a9c6cf81ae0.jpg",
+      "type": "asset"
+    },
+    "box-xs": {
+      "value": "2px",
+      "type": "borderRadius"
+    },
+    "box-sm": {
+      "value": "4px",
+      "type": "borderRadius"
+    },
+    "box-md": {
+      "value": "6px",
+      "type": "borderRadius"
+    },
+    "box-lg": {
+      "value": "8px",
+      "type": "borderRadius"
+    },
+    "box-xl": {
+      "value": "12px",
+      "type": "borderRadius"
+    },
+    "box-full": {
+      "value": "100%",
+      "type": "borderRadius"
     }
   },
   "$themes": [],
