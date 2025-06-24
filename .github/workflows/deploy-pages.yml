@@ -1,8 +1,6 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [figma_style]
   workflow_run:
     workflows: ['Build Design Tokens']
     types: [completed]

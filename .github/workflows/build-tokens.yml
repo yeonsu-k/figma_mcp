@@ -2,7 +2,6 @@ name: Build Design Tokens
 
 on:
   push:
-    paths: ['tokens/**']
     branches: [main, figma_style]
   workflow_dispatch:
     inputs:
@@ -70,10 +69,21 @@ jobs:
       - name: ✅ Check for changes
         id: changes
         run: |
-          git add assets/css/ composables/ public/api/ || true
-          if [ -n "$(git status --porcelain)" ]; then
+          echo "=== Checking for token file changes ==="
+          git add assets/css/ composables/ public/api/ tokens/transformed.json || true
+
+          # Check both staged and unstaged changes
+          STAGED_CHANGES=$(git diff --cached --name-only)
+          UNSTAGED_CHANGES=$(git diff --name-only)
+
+          echo "Staged changes:"
+          echo "$STAGED_CHANGES"
+          echo "Unstaged changes:"
+          echo "$UNSTAGED_CHANGES"
+
+          if [ -n "$STAGED_CHANGES" ] || [ -n "$UNSTAGED_CHANGES" ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
-            echo "✅ Token changes detected:"
+            echo "✅ Token changes detected"
             git status --porcelain
           else
             echo "changed=false" >> $GITHUB_OUTPUT
@@ -85,7 +95,14 @@ jobs:
         run: |
           echo "Configuring git..."
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config --local user.name "github-actions[bot]"          echo "Adding generated token files to staging..."
+          git add assets/css/ composables/ public/api/ tokens/transformed.json || true
+          
+          echo "Checking staged files..."
+          git diff --cached --name-only
+          
+          echo "Current git status:"
+          git status --porcelain
 
           echo "Committing generated token files..."
           git commit -m "🎨 Auto-update design tokens
