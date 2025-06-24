@@ -19,7 +19,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'default',
-    validator: value => ['default', 'colors', 'spacing', 'cards'].includes(value)
+    validator: value => ['default', 'colors', 'visual', 'cards'].includes(value)
   },
   /**
    * 커스텀 그리드 클래스 (variant를 오버라이드)
@@ -40,7 +40,7 @@ const gridClasses = computed(() => {
   const variants = {
     default: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
     colors: 'grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11',
-    spacing: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-8',
+    visual: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
     cards: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
   }
 

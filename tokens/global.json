@@ -153,16 +153,16 @@
       "value": "0.6",
       "type": "opacity"
     },
+    "card-40": {
+      "value": "0.4",
+      "type": "opacity"
+    },
     "card-20": {
-      "value": "20%",
+      "value": "0.2",
       "type": "opacity"
     },
     "card-10": {
-      "value": "10%",
-      "type": "opacity"
-    },
-    "card-40": {
-      "value": "40%",
+      "value": "0.1",
       "type": "opacity"
     },
     "rabbit": {
@@ -178,23 +178,23 @@
       "type": "asset"
     },
     "box-xs": {
-      "value": "2px",
-      "type": "borderRadius"
-    },
-    "box-sm": {
       "value": "4px",
       "type": "borderRadius"
     },
-    "box-md": {
-      "value": "6px",
-      "type": "borderRadius"
-    },
-    "box-lg": {
+    "box-sm": {
       "value": "8px",
       "type": "borderRadius"
     },
-    "box-xl": {
+    "box-md": {
       "value": "12px",
+      "type": "borderRadius"
+    },
+    "box-lg": {
+      "value": "16px",
+      "type": "borderRadius"
+    },
+    "box-xl": {
+      "value": "20px",
       "type": "borderRadius"
     },
     "box-full": {

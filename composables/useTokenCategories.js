@@ -25,6 +25,8 @@ export const useTokenCategories = () => {
    * @param {Array} options.fontTokens - 폰트 토큰
    * @param {Array} options.assetTokens - 에셋 토큰
    * @param {Array} options.borderTokens - 테두리 토큰
+   * @param {Array} options.opacityTokens - 투명도 토큰
+   * @param {Array} options.borderRadiusTokens - 모서리 둥글기 토큰
    * @param {Array} options.otherTokens - 기타 토큰
    * @returns {Array} 키워드 배열
    */
@@ -36,6 +38,8 @@ export const useTokenCategories = () => {
     fontTokens = [],
     assetTokens = [],
     borderTokens = [],
+    opacityTokens = [],
+    borderRadiusTokens = [],
     otherTokens = []
   } = {}) => {
     const keywords = [
@@ -68,6 +72,18 @@ export const useTokenCategories = () => {
         label: 'Borders',
         icon: '🔲',
         count: borderTokens.length
+      },
+      {
+        id: 'opacity',
+        label: 'Opacity',
+        icon: '🌫️',
+        count: opacityTokens.length
+      },
+      {
+        id: 'borderRadius',
+        label: 'Border Radius',
+        icon: '📐',
+        count: borderRadiusTokens.length
       },
       {
         id: 'other',

@@ -140,13 +140,55 @@ export const useTokenExtractors = () => {
   }
 
   /**
+   * Opacity 토큰들을 추출하는 함수
+   * @param {Object} otherTokens - 기타 토큰 객체
+   * @returns {Array} opacity 토큰 배열
+   */
+  const getOpacityTokens = (otherTokens = {}) => {
+    const opacityTokens = []
+
+    Object.entries(otherTokens).forEach(([tokenName, tokenData]) => {
+      if (tokenData.type === 'opacity') {
+        opacityTokens.push({
+          name: removeTokenSetPrefix(tokenName),
+          value: tokenData.value,
+          type: tokenData.type
+        })
+      }
+    })
+
+    return opacityTokens
+  }
+
+  /**
+   * Border Radius 토큰들을 추출하는 함수
+   * @param {Object} otherTokens - 기타 토큰 객체
+   * @returns {Array} border radius 토큰 배열
+   */
+  const getBorderRadiusTokens = (otherTokens = {}) => {
+    const borderRadiusTokens = []
+
+    Object.entries(otherTokens).forEach(([tokenName, tokenData]) => {
+      if (tokenData.type === 'borderRadius') {
+        borderRadiusTokens.push({
+          name: removeTokenSetPrefix(tokenName),
+          value: tokenData.value,
+          type: tokenData.type
+        })
+      }
+    })
+
+    return borderRadiusTokens
+  }
+
+  /**
    * 시각화되지 않는 기타 토큰들을 추출하는 함수
    * @param {Object} otherTokens - 기타 토큰 객체
    * @returns {Array} 기타 토큰 배열
    */
   const getOtherNonVisualTokens = (otherTokens = {}) => {
     const otherNonVisualTokens = []
-    const visualizedTypes = ['spacing', 'fontFamilies', 'fontFamily', 'asset', 'border', 'typography']
+    const visualizedTypes = ['spacing', 'fontFamilies', 'fontFamily', 'asset', 'border', 'typography', 'opacity', 'borderRadius']
 
     Object.entries(otherTokens).forEach(([tokenName, tokenData]) => {
       // 이미 시각화된 타입들을 제외한 나머지 토큰들
@@ -173,6 +215,8 @@ export const useTokenExtractors = () => {
     getAssetTokens,
     getBorderTokens,
     getTypographyTokens,
+    getOpacityTokens,
+    getBorderRadiusTokens,
     getOtherNonVisualTokens
   }
 }

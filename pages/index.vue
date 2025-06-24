@@ -123,7 +123,7 @@
                   :class="[
                     'category-tab gap-2 rounded-full border-2 px-4 py-2 font-medium transition-all duration-200',
                     activeCategory === keyword.id
-                      ? 'border-blue-500/90 bg-blue-500/90 text-white shadow-lg'
+                      ? 'border-blue-500/90 bg-blue-600/90 text-white shadow-lg'
                       : 'border-slate-300 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50'
                   ]"
                 >
@@ -169,6 +169,20 @@
                 v-if="activeCategory === 'typography' && (getTypographyTokens(otherTokens).length > 0 || getFontTokens(otherTokens).length > 0)"
                 :typography-tokens="getTypographyTokens(otherTokens)"
                 :font-tokens="getFontTokens(otherTokens)"
+                @copy-to-clipboard="handleCopyToClipboard"
+              />
+
+              <!-- Opacity Content -->
+              <OpacityTokensView
+                v-if="activeCategory === 'opacity' && getOpacityTokens(otherTokens).length > 0"
+                :opacity-tokens="getOpacityTokens(otherTokens)"
+                @copy-to-clipboard="handleCopyToClipboard"
+              />
+
+              <!-- Border Radius Content -->
+              <BorderRadiusTokensView
+                v-if="activeCategory === 'borderRadius' && getBorderRadiusTokens(otherTokens).length > 0"
+                :border-radius-tokens="getBorderRadiusTokens(otherTokens)"
                 @copy-to-clipboard="handleCopyToClipboard"
               />
 
@@ -228,6 +242,8 @@ import SpacingTokensView from '~/components/tokens/SpacingTokensView.vue'
 import AssetsTokensView from '~/components/tokens/AssetsTokensView.vue'
 import BorderTokensView from '~/components/tokens/BorderTokensView.vue'
 import TypographyTokensView from '~/components/tokens/TypographyTokensView.vue'
+import OpacityTokensView from '~/components/tokens/OpacityTokensView.vue'
+import BorderRadiusTokensView from '~/components/tokens/BorderRadiusTokensView.vue'
 import OtherTokensView from '~/components/tokens/OtherTokensView.vue'
 
 // Composables import
@@ -239,7 +255,16 @@ import {useClipboard} from '~/composables/useClipboard'
 // Initialize composables
 const {lastUpdated, colorPalettes, singleColors, otherTokens, isRefreshing, loadingError, loadTokens, refreshTokens} = useTokens()
 
-const {getSpacingTokens, getFontTokens, getAssetTokens, getBorderTokens, getTypographyTokens, getOtherNonVisualTokens} = useTokenExtractors()
+const {
+  getSpacingTokens,
+  getFontTokens,
+  getAssetTokens,
+  getBorderTokens,
+  getTypographyTokens,
+  getOpacityTokens,
+  getBorderRadiusTokens,
+  getOtherNonVisualTokens
+} = useTokenExtractors()
 
 const {generateAvailableKeywords, getDefaultCategory} = useTokenCategories()
 
@@ -272,6 +297,8 @@ const availableKeywords = computed(() => {
   const fontTokens = getFontTokens(otherTokens.value)
   const assetTokens = getAssetTokens(otherTokens.value)
   const borderTokens = getBorderTokens(otherTokens.value)
+  const opacityTokens = getOpacityTokens(otherTokens.value)
+  const borderRadiusTokens = getBorderRadiusTokens(otherTokens.value)
   const otherNonVisualTokens = getOtherNonVisualTokens(otherTokens.value)
 
   return generateAvailableKeywords({
@@ -282,6 +309,8 @@ const availableKeywords = computed(() => {
     fontTokens,
     assetTokens,
     borderTokens,
+    opacityTokens,
+    borderRadiusTokens,
     otherTokens: otherNonVisualTokens
   })
 })

@@ -4,7 +4,7 @@
 
     <!-- 박스 형태 시각화 -->
     <div class="mb-6">
-      <TokenGrid variant="spacing">
+      <TokenGrid variant="visual">
         <div v-for="token in spacingTokens" :key="`box-${token.name}-${token.value}`" class="text-center">
           <!-- 간격을 padding/margin으로 시각화 -->
           <div class="flex h-full flex-col items-center space-y-3">

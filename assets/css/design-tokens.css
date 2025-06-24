@@ -4,15 +4,15 @@
 
 @theme {
   --color-spring-100: #ffbfc0;
-  --color-spring-200: #ffdcdc;
-  --color-spring-300: #fff2eb;
-  --color-spring-400: #ffe8cd;
-  --color-spring-500: #ffd6ba; /** FFD6BA */
-  --color-ocene-100: #3674b5;
-  --color-ocene-200: #578fca;
+  --color-spring-200: #FFDCDC;
+  --color-spring-300: #FFF2EB;
+  --color-spring-400: #FFE8CD;
+  --color-spring-500: #FFD6BA; /** FFD6BA */
+  --color-ocene-100: #3674B5;
+  --color-ocene-200: #578FCA;
   --color-ocene-300: #abdcff;
-  --color-ocene-400: #dae0e4;
-  --color-ocene-500: #ccc1b8;
+  --color-ocene-400: #DAE0E4;
+  --color-ocene-500: #CCC1B8;
   --color-shiraz-50: #fef2f2;
   --color-shiraz-100: #fee5e5;
   --color-shiraz-200: #fccfd2;
@@ -30,25 +30,54 @@
   --spacing-md: 16;
   --spacing-lg: 24;
   --spacing-xl: 32;
+  --opacity-card-80: 0.8;
+  --opacity-card-60: 0.6;
+  --opacity-card-40: 0.4;
+  --opacity-card-20: 0.2;
+  --opacity-card-10: 0.1;
+  --radius-box-xs: 4px;
+  --radius-box-sm: 8px;
+  --radius-box-md: 12px;
+  --radius-box-lg: 16px;
+  --radius-box-xl: 20px;
+  --radius-box-full: 100%;
 }
 
 @layer base {
   h1 {
     font-family: Pretendard Variable;
     font-weight: 700;
-    font-size: 56px;
-    line-height: 5rem;
+    font-size: 24px;
+    line-height: 1.2rem;
+  }
+  h2 {
+    font-family: Pretendard Variable;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 2rem;
   }
 }
 
 @layer components {
   .img-zzang-gu {
-    background-image: url('https://i.pinimg.com/736x/f9/89/2d/f9892db71c169fe5f50addd423d616bc.jpg');
+    background-image: url('https://i.pinimg.com/736x/6a/63/45/6a6345c18d55bdcf22e13144eb7be394.jpg');
     background-repeat: no-repeat;
   }
-  .border-divide {
+  .border-red-dashed {
     border-color: #f01;
     border-width: 2px;
     border-style: dashed;
+  }
+  .img-rabbit {
+    background-image: url('https://i.pinimg.com/736x/48/11/58/4811581ba45ee04a0bb90ee15bcf8054.jpg');
+    background-repeat: no-repeat;
+  }
+  .img-gorapaduck {
+    background-image: url('https://i.pinimg.com/736x/97/16/4d/97164d4a5a6f8db2530995f3fff1a7c0.jpg');
+    background-repeat: no-repeat;
+  }
+  .img-ddeung--ie {
+    background-image: url('https://i.pinimg.com/736x/3c/14/c7/3c14c793e58d9d1955bb7a9c6cf81ae0.jpg');
+    background-repeat: no-repeat;
   }
 }
