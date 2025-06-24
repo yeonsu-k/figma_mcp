@@ -13,11 +13,11 @@
               <div
                 class="relative cursor-pointer rounded-lg border-2 border-dashed border-blue-300 bg-blue-50 transition-transform hover:scale-105"
                 :style="{padding: token.value}"
-                :title="`${token.name}: ${token.value}`"
-                @click="copyToClipboard(token.value)"
+                :title="`${token.name}: ${token.originalValue || token.value}`"
+                @click="copyToClipboard(token.originalValue || token.value, token.name)"
               >
                 <!-- 내부 박스 (실제 spacing) -->
-                <div class="flex size-4 items-center justify-center rounded-sm bg-blue-500" :title="`${token.name}: ${token.value}`" />
+                <div class="flex size-4 items-center justify-center rounded-sm bg-blue-500" :title="`${token.name}: ${token.originalValue || token.value}`" />
               </div>
             </div>
 
@@ -25,7 +25,7 @@
             <div>
               <p class="text-sm font-medium text-slate-700">{{ token.name }}</p>
               <p class="text-xs font-medium text-blue-600">{{ getSpacingClass(token.name) }}</p>
-              <p class="font-mono text-xs text-slate-500">{{ token.value }}</p>
+              <p class="font-mono text-xs text-slate-500">{{ token.originalValue || token.value }}</p>
             </div>
           </div>
         </div>
@@ -64,8 +64,9 @@ const getSpacingClass = tokenName => {
 /**
  * 클립보드에 값을 복사하는 함수
  * @param {string} value - 복사할 값
+ * @param {string} tokenName - 토큰 이름 (선택적)
  */
-const copyToClipboard = value => {
-  emit('copy-to-clipboard', value)
+const copyToClipboard = (value, tokenName = '') => {
+  emit('copy-to-clipboard', value, tokenName)
 }
 </script>

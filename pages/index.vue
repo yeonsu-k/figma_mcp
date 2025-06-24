@@ -38,16 +38,6 @@
               </button>
             </div>
 
-            <!-- Token Summary (Always Visible) -->
-            <div class="mb-4 flex items-center space-x-2 text-sm text-slate-600">
-              <span class="rounded bg-blue-50 px-2 py-1 font-mono">{{ getTotalColorsCount() }}개 색상</span>
-              <span class="rounded bg-green-50 px-2 py-1 font-mono">{{ getSpacingTokens().length }}개 간격</span>
-              <span class="rounded bg-purple-50 px-2 py-1 font-mono">{{ getTypographyTokens().length + getFontTokens().length }}개 타이포그래피</span>
-              <span class="rounded bg-orange-50 px-2 py-1 font-mono"
-                >{{ getAssetTokens().length + getBorderTokens().length + getOtherNonVisualTokens().length }}개 기타</span
-              >
-            </div>
-
             <!-- Token Information Accordion -->
             <div>
               <!-- Accordion Header -->
@@ -59,7 +49,7 @@
                 <div class="flex items-center justify-between">
                   <div class="flex items-center space-x-2">
                     <h3 class="text-lg font-medium text-slate-700">ℹ️ 상세 정보</h3>
-                    <span class="text-xs leading-none text-slate-500">파일 위치, 통계, 워크플로우</span>
+                    <span class="text-xs leading-none text-slate-500">파일 위치, 워크플로우</span>
                   </div>
                   <div class="transition-transform duration-200" :class="{'rotate-180': isTokenInfoExpanded}">
                     <ChevronDownIcon class="size-4 text-slate-800" />
@@ -82,59 +72,33 @@
                       </ul>
                     </div>
                     <div>
-                      <h4 class="mb-3 font-medium text-slate-700">상세 통계</h4>
-                      <ul class="grid grid-cols-1 space-y-2 text-sm md:grid-cols-2">
+                      <h4 class="mb-3 font-medium text-slate-700">워크플로우</h4>
+                      <ol class="space-y-2 text-sm">
                         <li>
-                          색상 그룹: <span class="rounded bg-blue-50 px-2 py-1 font-mono">{{ Object.keys(colorPalettes).length }}개</span>
+                          <span class="flex items-center">
+                            <span class="mr-2 flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-xs">1</span>
+                            Figma에서 Tokens Studio 플러그인으로 토큰 정의
+                          </span>
                         </li>
                         <li>
-                          단일 색상: <span class="rounded bg-green-50 px-2 py-1 font-mono">{{ Object.keys(singleColors).length }}개</span>
+                          <span class="flex items-center">
+                            <span class="mr-2 flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-xs">2</span>
+                            GitHub에 push 시 GitHub Actions 실행
+                          </span>
                         </li>
                         <li>
-                          간격 토큰: <span class="rounded bg-yellow-50 px-2 py-1 font-mono">{{ getSpacingTokens().length }}개</span>
+                          <span class="flex items-center">
+                            <span class="mr-2 flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-xs">3</span>
+                            Style Dictionary로 CSS 변수 및 Tailwind 테마 생성
+                          </span>
                         </li>
                         <li>
-                          폰트 토큰: <span class="rounded bg-violet-50 px-2 py-1 font-mono">{{ getFontTokens().length }}개</span>
+                          <span class="flex items-center">
+                            <span class="mr-2 flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-xs">4</span>
+                            웹사이트에서 토큰 확인 및 복사
+                          </span>
                         </li>
-                        <li>
-                          에셋 토큰: <span class="rounded bg-emerald-50 px-2 py-1 font-mono">{{ getAssetTokens().length }}개</span>
-                        </li>
-                        <li>
-                          테두리 토큰: <span class="rounded bg-orange-50 px-2 py-1 font-mono">{{ getBorderTokens().length }}개</span>
-                        </li>
-                        <li>
-                          타이포그래피: <span class="rounded bg-indigo-50 px-2 py-1 font-mono">{{ getTypographyTokens().length }}개</span>
-                        </li>
-                        <li>
-                          기타 토큰: <span class="rounded bg-slate-50 px-2 py-1 font-mono">{{ getOtherNonVisualTokens().length }}개</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div class="mt-3 border-t border-slate-100 pt-3">
-                    <h4 class="mb-3 font-medium text-slate-700">워크플로우</h4>
-                    <div class="grid grid-cols-1 gap-3 md:grid-cols-5">
-                      <div class="rounded-lg bg-blue-50 p-3 text-center">
-                        <div class="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-sm font-bold text-white">1</div>
-                        <p class="text-xs font-medium">Figma에서 토큰 수정</p>
-                      </div>
-                      <div class="rounded-lg bg-green-50 p-3 text-center">
-                        <div class="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm font-bold text-white">2</div>
-                        <p class="text-xs font-medium">Tokens Studio 푸시</p>
-                      </div>
-                      <div class="rounded-lg bg-purple-50 p-3 text-center">
-                        <div class="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-purple-500 text-sm font-bold text-white">3</div>
-                        <p class="text-xs font-medium">GitHub Actions 실행</p>
-                      </div>
-                      <div class="rounded-lg bg-orange-50 p-3 text-center">
-                        <div class="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white">4</div>
-                        <p class="text-xs font-medium">Style Dictionary 빌드</p>
-                      </div>
-                      <div class="rounded-lg bg-indigo-50 p-3 text-center">
-                        <div class="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-sm font-bold text-white">5</div>
-                        <p class="text-xs font-medium">웹사이트 자동 업데이트</p>
-                      </div>
+                      </ol>
                     </div>
                   </div>
                 </div>
@@ -144,7 +108,7 @@
         </div>
       </section>
 
-      <!-- Token Categories & Content Combined -->
+      <!-- Token Categories & Display -->
       <section>
         <div class="card">
           <div class="card-body">
@@ -176,43 +140,43 @@
                 v-if="activeCategory === 'colors' && (Object.keys(colorPalettes).length > 0 || Object.keys(singleColors).length > 0)"
                 :color-palettes="colorPalettes"
                 :single-colors="singleColors"
-                @copy-to-clipboard="copyToClipboard"
+                @copy-to-clipboard="handleCopyToClipboard"
               />
 
               <!-- Spacing Content -->
               <SpacingTokensView
-                v-if="activeCategory === 'spacing' && getSpacingTokens().length > 0"
-                :spacing-tokens="getSpacingTokens()"
-                @copy-to-clipboard="copyToClipboard"
+                v-if="activeCategory === 'spacing' && getSpacingTokens(otherTokens).length > 0"
+                :spacing-tokens="getSpacingTokens(otherTokens)"
+                @copy-to-clipboard="handleCopyToClipboard"
               />
 
               <!-- Assets Content -->
               <AssetsTokensView
-                v-if="activeCategory === 'assets' && getAssetTokens().length > 0"
-                :asset-tokens="getAssetTokens()"
-                @copy-to-clipboard="copyToClipboard"
+                v-if="activeCategory === 'assets' && getAssetTokens(otherTokens).length > 0"
+                :asset-tokens="getAssetTokens(otherTokens)"
+                @copy-to-clipboard="handleCopyToClipboard"
               />
 
               <!-- Borders Content -->
               <BorderTokensView
-                v-if="activeCategory === 'borders' && getBorderTokens().length > 0"
-                :border-tokens="getBorderTokens()"
-                @copy-to-clipboard="copyToClipboard"
+                v-if="activeCategory === 'borders' && getBorderTokens(otherTokens).length > 0"
+                :border-tokens="getBorderTokens(otherTokens)"
+                @copy-to-clipboard="handleCopyToClipboard"
               />
 
               <!-- Typography Content -->
               <TypographyTokensView
-                v-if="activeCategory === 'typography' && (getTypographyTokens().length > 0 || getFontTokens().length > 0)"
-                :typography-tokens="getTypographyTokens()"
-                :font-tokens="getFontTokens()"
-                @copy-to-clipboard="copyToClipboard"
+                v-if="activeCategory === 'typography' && (getTypographyTokens(otherTokens).length > 0 || getFontTokens(otherTokens).length > 0)"
+                :typography-tokens="getTypographyTokens(otherTokens)"
+                :font-tokens="getFontTokens(otherTokens)"
+                @copy-to-clipboard="handleCopyToClipboard"
               />
 
               <!-- Other Tokens Content -->
               <OtherTokensView
-                v-if="activeCategory === 'other' && getOtherNonVisualTokens().length > 0"
-                :other-tokens="getOtherNonVisualTokens()"
-                @copy-to-clipboard="copyToClipboard"
+                v-if="activeCategory === 'other' && getOtherNonVisualTokens(otherTokens).length > 0"
+                :other-tokens="getOtherNonVisualTokens(otherTokens)"
+                @copy-to-clipboard="handleCopyToClipboard"
               />
 
               <!-- Empty State -->
@@ -246,10 +210,10 @@
     <!-- Toast notification -->
     <div
       v-if="showToast"
-      class="fixed right-4 bottom-4 rounded-lg bg-green-600 px-4 py-2 text-white shadow-lg transition-opacity"
-      :class="{'opacity-0': !showToast}"
+      class="fixed right-4 bottom-4 rounded-lg px-4 py-2 text-white shadow-lg transition-opacity"
+      :class="[{'opacity-0': !showToast}, toastType === 'success' ? 'bg-green-600' : 'bg-red-600']"
     >
-      값이 클립보드에 복사되었습니다!
+      {{ toastMessage || '값이 클립보드에 복사되었습니다!' }}
     </div>
   </div>
 </template>
@@ -266,324 +230,61 @@ import BorderTokensView from '~/components/tokens/BorderTokensView.vue'
 import TypographyTokensView from '~/components/tokens/TypographyTokensView.vue'
 import OtherTokensView from '~/components/tokens/OtherTokensView.vue'
 
-// Reactive data
-const lastUpdated = ref(new Date().toLocaleString('ko-KR'))
-const colorPalettes = ref({})
-const singleColors = ref({})
-const otherTokens = ref({})
-const statistics = ref({})
-const isRefreshing = ref(false)
-const loadingError = ref('')
-const showToast = ref(false)
+// Composables import
+import {useTokens} from '~/composables/useTokens'
+import {useTokenExtractors} from '~/composables/useTokenExtractors'
+import {useTokenCategories} from '~/composables/useTokenCategories'
+import {useClipboard} from '~/composables/useClipboard'
+
+// Initialize composables
+const {lastUpdated, colorPalettes, singleColors, otherTokens, isRefreshing, loadingError, loadTokens, refreshTokens} = useTokens()
+
+const {getSpacingTokens, getFontTokens, getAssetTokens, getBorderTokens, getTypographyTokens, getOtherNonVisualTokens} = useTokenExtractors()
+
+const {generateAvailableKeywords, getDefaultCategory} = useTokenCategories()
+
+const {copyToClipboard, copyTokenValue, showToast, toastMessage, toastType} = useClipboard()
+
+// Local reactive state
 const activeCategory = ref('colors') // 기본 활성 카테고리
 const isTokenInfoExpanded = ref(false) // 토큰 정보 아코디언 상태
+
+/**
+ * 클립보드 복사를 처리하는 통합 함수
+ * @param {string} value - 복사할 값
+ * @param {string} tokenName - 토큰 이름 (선택적)
+ */
+const handleCopyToClipboard = (value, tokenName = '') => {
+  if (tokenName) {
+    copyTokenValue(value, tokenName)
+  } else {
+    copyToClipboard(value)
+  }
+}
 
 /**
  * 사용 가능한 키워드 목록을 계산하는 computed 속성
  * @returns {Array} 키워드 배열
  */
 const availableKeywords = computed(() => {
-  const keywords = [
-    {
-      id: 'colors',
-      label: 'Colors',
-      icon: '🎨',
-      count: getTotalColorsCount()
-    },
-    {
-      id: 'spacing',
-      label: 'Spacing',
-      icon: '📏',
-      count: getSpacingTokens().length
-    },
-    {
-      id: 'typography',
-      label: 'Typography',
-      icon: '✏️',
-      count: getTypographyTokens().length + getFontTokens().length
-    },
-    {
-      id: 'assets',
-      label: 'Assets',
-      icon: '🖼️',
-      count: getAssetTokens().length
-    },
-    {
-      id: 'borders',
-      label: 'Borders',
-      icon: '🔲',
-      count: getBorderTokens().length
-    },
-    {
-      id: 'other',
-      label: 'Other',
-      icon: '📋',
-      count: getOtherNonVisualTokens().length
-    }
-  ]
+  const spacingTokens = getSpacingTokens(otherTokens.value)
+  const typographyTokens = getTypographyTokens(otherTokens.value)
+  const fontTokens = getFontTokens(otherTokens.value)
+  const assetTokens = getAssetTokens(otherTokens.value)
+  const borderTokens = getBorderTokens(otherTokens.value)
+  const otherNonVisualTokens = getOtherNonVisualTokens(otherTokens.value)
 
-  // 토큰이 있는 카테고리만 필터링
-  return keywords.filter(keyword => keyword.count > 0)
+  return generateAvailableKeywords({
+    colorPalettes: colorPalettes.value,
+    singleColors: singleColors.value,
+    spacingTokens,
+    typographyTokens,
+    fontTokens,
+    assetTokens,
+    borderTokens,
+    otherTokens: otherNonVisualTokens
+  })
 })
-
-/**
- * 토큰을 동적으로 로드하는 함수
- * GitHub Pages 호환성을 위해 정적 JSON 파일 사용
- * @returns {Promise<void>}
- */
-const loadTokens = async () => {
-  try {
-    loadingError.value = ''
-
-    // 우선 API 엔드포인트 시도 (로컬 개발용)
-    let response
-    try {
-      response = await $fetch('/api/tokens', {method: 'GET'})
-      console.log('📡 API 엔드포인트에서 토큰 로드 성공')
-    } catch (apiError) {
-      console.log('📄 API 엔드포인트 실패, 정적 파일 사용 중...')
-
-      // API 실패 시 정적 JSON 파일 사용 (GitHub Pages용)
-      const {$config} = useNuxtApp()
-      const baseURL = $config.public.baseURL || '/figma_mcp'
-      const staticResponse = await fetch(`${baseURL}/api/tokens.json`)
-      if (!staticResponse.ok) {
-        throw new Error(`정적 파일 로드 실패: ${staticResponse.status}`)
-      }
-      response = await staticResponse.json()
-      console.log('📄 정적 JSON 파일에서 토큰 로드 성공')
-    }
-
-    if (response.success && response.data) {
-      // 색상 팔레트 (slate, sky 등)
-      const {single, ...palettes} = response.data.colors
-      colorPalettes.value = palettes
-
-      // 단일 색상 (black, white, primary, secondary)
-      singleColors.value = single || {}
-
-      // 기타 토큰들
-      otherTokens.value = response.data.other || {}
-
-      // 통계
-      statistics.value = response.data.statistics || {}
-
-      console.log('🎨 토큰 로드 완료:', {
-        팔레트: Object.keys(colorPalettes.value).length,
-        단일색상: Object.keys(singleColors.value).length,
-        기타: Object.keys(otherTokens.value).length,
-        소스: response.data.statistics?.buildTime ? '정적 파일' : 'API 엔드포인트'
-      })
-    } else {
-      throw new Error(response.error?.message || '응답 형식이 올바르지 않습니다')
-    }
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류'
-    loadingError.value = errorMessage
-    console.error('🚨 토큰 로드 실패:', errorMessage)
-
-    // 기본값 설정
-    colorPalettes.value = {
-      slate: {
-        50: {value: '#f8fafc', type: 'color'},
-        500: {value: '#64748b', type: 'color'},
-        900: {value: '#0f172a', type: 'color'}
-      }
-    }
-    singleColors.value = {
-      black: {value: '#000000', type: 'color'},
-      white: {value: '#ffffff', type: 'color'}
-    }
-    otherTokens.value = {}
-    statistics.value = {}
-  }
-}
-
-/**
- * 전체 색상 개수를 계산하는 함수
- * @returns {number} 총 색상 개수
- */
-const getTotalColorsCount = () => {
-  const paletteCount = Object.values(colorPalettes.value).reduce((total, group) => total + Object.keys(group).length, 0)
-  const singleCount = Object.keys(singleColors.value).length
-  return paletteCount + singleCount
-}
-
-/**
- * 토큰을 새로고침하는 함수
- * @returns {Promise<void>}
- */
-const refreshTokens = async () => {
-  isRefreshing.value = true
-  try {
-    await loadTokens()
-    lastUpdated.value = new Date().toLocaleString('ko-KR')
-
-    console.log('토큰 새로고침 완료')
-  } catch (error) {
-    console.error('토큰 새로고침 실패:', error)
-  } finally {
-    isRefreshing.value = false
-  }
-}
-
-/**
- * Token Set prefix를 동적으로 제거하는 함수
- * @param {string} tokenName - 토큰 이름
- * @returns {string} prefix가 제거된 토큰 이름
- */
-const removeTokenSetPrefix = tokenName => {
-  // statistics에서 tokenSetName 가져오기
-  const tokenSetName = statistics.value?.tokenSetName
-  if (tokenSetName && tokenName.startsWith(`${tokenSetName}.`)) {
-    return tokenName.replace(`${tokenSetName}.`, '')
-  }
-  // 하위 호환성을 위해 'global.' prefix도 확인
-  if (tokenName.startsWith('global.')) {
-    return tokenName.replace('global.', '')
-  }
-  return tokenName
-}
-
-/**
- * Spacing 토큰들을 추출하는 함수
- * @returns {Array} spacing 토큰 배열
- */
-const getSpacingTokens = () => {
-  const spacingTokens = []
-
-  Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
-    if (tokenData.type === 'spacing') {
-      spacingTokens.push({
-        name: removeTokenSetPrefix(tokenName),
-        value: `${tokenData.value}px`,
-        type: tokenData.type,
-        rawValue: tokenData.value
-      })
-    }
-  })
-
-  // 크기 순으로 정렬
-  return spacingTokens.sort((a, b) => parseInt(a.rawValue) - parseInt(b.rawValue))
-}
-
-/**
- * Font 토큰들을 추출하는 함수
- * @returns {Array} font 토큰 배열
- */
-const getFontTokens = () => {
-  const fontTokens = []
-
-  Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
-    if (tokenData.type === 'fontFamilies' || tokenData.type === 'fontFamily') {
-      fontTokens.push({
-        name: removeTokenSetPrefix(tokenName),
-        value: tokenData.value,
-        type: tokenData.type
-      })
-    }
-  })
-
-  return fontTokens
-}
-
-/**
- * Asset(이미지/에셋) 토큰들을 추출하는 함수
- * @returns {Array} asset 토큰 배열
- */
-const getAssetTokens = () => {
-  const assetTokens = []
-
-  Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
-    if (tokenData.type === 'asset') {
-      assetTokens.push({
-        name: removeTokenSetPrefix(tokenName),
-        value: tokenData.value,
-        type: tokenData.type
-      })
-    }
-  })
-
-  return assetTokens
-}
-
-/**
- * Border 토큰들을 추출하는 함수
- * @returns {Array} border 토큰 배열
- */
-const getBorderTokens = () => {
-  const borderTokens = []
-
-  Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
-    if (tokenData.type === 'border') {
-      borderTokens.push({
-        name: removeTokenSetPrefix(tokenName),
-        value: tokenData.value,
-        type: tokenData.type
-      })
-    }
-  })
-
-  return borderTokens
-}
-
-/**
- * Typography 토큰들을 추출하는 함수
- * @returns {Array} typography 토큰 배열
- */
-const getTypographyTokens = () => {
-  const typographyTokens = []
-
-  Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
-    if (tokenData.type === 'typography') {
-      typographyTokens.push({
-        name: removeTokenSetPrefix(tokenName),
-        value: tokenData.value,
-        type: tokenData.type
-      })
-    }
-  })
-
-  return typographyTokens
-}
-
-/**
- * 시각화되지 않는 기타 토큰들을 추출하는 함수
- * @returns {Array} 기타 토큰 배열
- */
-const getOtherNonVisualTokens = () => {
-  const otherNonVisualTokens = []
-  const visualizedTypes = ['spacing', 'fontFamilies', 'fontFamily', 'asset', 'border', 'typography']
-
-  Object.entries(otherTokens.value).forEach(([tokenName, tokenData]) => {
-    // 이미 시각화된 타입들을 제외한 나머지 토큰들
-    if (!visualizedTypes.includes(tokenData.type)) {
-      otherNonVisualTokens.push({
-        name: removeTokenSetPrefix(tokenName),
-        value: tokenData.value || JSON.stringify(tokenData),
-        type: tokenData.type || 'unknown'
-      })
-    }
-  })
-
-  return otherNonVisualTokens
-}
-
-/**
- * 클립보드에 값 복사
- * @param {string} value - 복사할 값
- */
-const copyToClipboard = async value => {
-  try {
-    await navigator.clipboard.writeText(value)
-    showToast.value = true
-    setTimeout(() => {
-      showToast.value = false
-    }, 2000)
-  } catch (error) {
-    console.error('클립보드 복사 실패:', error)
-  }
-}
 
 // Lifecycle
 onMounted(async () => {
@@ -592,8 +293,9 @@ onMounted(async () => {
 
   // 첫 번째 사용 가능한 카테고리로 기본 설정
   nextTick(() => {
-    if (availableKeywords.value.length > 0) {
-      activeCategory.value = availableKeywords.value[0].id
+    const defaultCategory = getDefaultCategory(availableKeywords.value)
+    if (defaultCategory) {
+      activeCategory.value = defaultCategory
     }
   })
 })
