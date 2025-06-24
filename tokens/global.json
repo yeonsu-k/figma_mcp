@@ -131,8 +131,8 @@
       "value": {
         "fontFamily": "Pretendard Variable",
         "fontWeight": "Bold",
-        "fontSize": "56px",
-        "lineHeight": "3rem"
+        "fontSize": "24px",
+        "lineHeight": "1.2rem"
       },
       "type": "typography"
     },

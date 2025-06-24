@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "MCP 동기화: Git 상태 새로고침",
+      "type": "shell",
+      "command": "git",
+      "args": ["status", "--porcelain"],
+      "group": "build",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "MCP 동기화: 파일 변경 감지",
+      "type": "shell",
+      "command": "find",
+      "args": [".", "-name", "*.vue", "-o", "-name", "*.js", "-o", "-name", "*.ts", "-o", "-name", "*.json", "-newer", "/tmp/mcp-sync-marker", "-print"],
+      "group": "build",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "MCP 동기화: Copilot 캐시 클리어",
+      "type": "shell",
+      "command": "code",
+      "args": ["--command", "github.copilot.clearCache"],
+      "group": "build",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
