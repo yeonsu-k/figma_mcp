@@ -95,7 +95,9 @@ jobs:
         run: |
           echo "Configuring git..."
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"          echo "Adding generated token files to staging..."
+          git config --local user.name "github-actions[bot]"
+          
+          echo "Adding generated token files to staging..."
           git add assets/css/ composables/ public/api/ tokens/transformed.json || true
           
           echo "Checking staged files..."
