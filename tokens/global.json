@@ -1,102 +1,51 @@
 {
-  "Colors": {
-    "rustynail": {
-      "50": {
-        "value": "#fdfbe9",
-        "type": "color"
-      },
+  "global": {
+    "spring": {
       "100": {
-        "value": "#faf5c7",
+        "value": "#ffbfc0",
         "type": "color"
       },
       "200": {
-        "value": "#f6e892",
+        "value": "#FFDCDC",
         "type": "color"
       },
       "300": {
-        "value": "#f1d453",
+        "value": "#FFF2EB",
         "type": "color"
       },
       "400": {
-        "value": "#ebbe24",
+        "value": "#FFE8CD",
         "type": "color"
       },
       "500": {
-        "value": "#dba617",
-        "type": "color"
-      },
-      "600": {
-        "value": "#bd8111",
-        "type": "color"
-      },
-      "700": {
-        "value": "#975d11",
-        "type": "color"
-      },
-      "800": {
-        "value": "#7d4b16",
-        "type": "color"
-      },
-      "900": {
-        "value": "#6b3d18",
-        "type": "color"
-      },
-      "950": {
-        "value": "#3e200a",
-        "type": "color"
-      },
-      "Number": {
-        "value": 0,
-        "type": "number"
+        "value": "#FFD6BA",
+        "type": "color",
+        "description": "FFD6BA"
       }
     },
-    "bluedianne": {
-      "50": {
-        "value": "#edfefe",
-        "type": "color"
-      },
+    "ocene": {
       "100": {
-        "value": "#d2f9fb",
+        "value": "#3674B5",
         "type": "color"
       },
       "200": {
-        "value": "#abf2f6",
+        "value": "#578FCA",
         "type": "color"
       },
       "300": {
-        "value": "#72e7ee",
+        "value": "#abdcff",
         "type": "color"
       },
       "400": {
-        "value": "#31d2df",
+        "value": "#DAE0E4",
         "type": "color"
       },
       "500": {
-        "value": "#15b5c5",
-        "type": "color"
-      },
-      "600": {
-        "value": "#1492a6",
-        "type": "color"
-      },
-      "700": {
-        "value": "#177687",
-        "type": "color"
-      },
-      "800": {
-        "value": "#1c5f6e",
-        "type": "color"
-      },
-      "900": {
-        "value": "#1c4f5d",
-        "type": "color"
-      },
-      "950": {
-        "value": "#0e3b48",
+        "value": "#CCC1B8",
         "type": "color"
       }
     },
-    "shiraz": {
+    "Shiraz": {
       "50": {
         "value": "#fef2f2",
         "type": "color"
@@ -141,35 +90,120 @@
         "value": "#480917",
         "type": "color"
       }
-    }
-  },
-  "spacing": {
+    },
+    "Pretendard": {
+      "value": "Pretendard Variable",
+      "type": "fontFamilies"
+    },
     "xs": {
-      "value": 4,
-      "type": "number"
+      "value": "4",
+      "type": "spacing"
     },
     "sm": {
-      "value": 8,
-      "type": "number"
+      "value": "8",
+      "type": "spacing"
     },
     "md": {
-      "value": 16,
-      "type": "number"
+      "value": "16",
+      "type": "spacing"
     },
     "lg": {
-      "value": 24,
-      "type": "number"
+      "value": "24",
+      "type": "spacing"
     },
     "xl": {
-      "value": 32,
-      "type": "number"
+      "value": "32",
+      "type": "spacing"
+    },
+    "zzang-gu": {
+      "value": "https://i.pinimg.com/736x/6a/63/45/6a6345c18d55bdcf22e13144eb7be394.jpg",
+      "type": "asset"
+    },
+    "red-dashed": {
+      "value": {
+        "color": "#f01",
+        "width": "2px",
+        "style": "dashed"
+      },
+      "type": "border"
+    },
+    "h1": {
+      "value": {
+        "fontFamily": "Pretendard Variable",
+        "fontWeight": "Bold",
+        "fontSize": "24px",
+        "lineHeight": "1.2rem"
+      },
+      "type": "typography"
+    },
+    "h2": {
+      "value": {
+        "fontFamily": "Pretendard Variable",
+        "fontWeight": "Light",
+        "fontSize": "12px",
+        "lineHeight": "2rem"
+      },
+      "type": "typography"
+    },
+    "card-80": {
+      "value": "0.8",
+      "type": "opacity"
+    },
+    "card-60": {
+      "value": "0.6",
+      "type": "opacity"
+    },
+    "card-40": {
+      "value": "0.4",
+      "type": "opacity"
+    },
+    "card-20": {
+      "value": "0.2",
+      "type": "opacity"
+    },
+    "card-10": {
+      "value": "0.1",
+      "type": "opacity"
+    },
+    "rabbit": {
+      "value": "https://i.pinimg.com/736x/48/11/58/4811581ba45ee04a0bb90ee15bcf8054.jpg",
+      "type": "asset"
+    },
+    "gorapaduck": {
+      "value": "https://i.pinimg.com/736x/97/16/4d/97164d4a5a6f8db2530995f3fff1a7c0.jpg",
+      "type": "asset"
+    },
+    "ddeung-Ie": {
+      "value": "https://i.pinimg.com/736x/3c/14/c7/3c14c793e58d9d1955bb7a9c6cf81ae0.jpg",
+      "type": "asset"
+    },
+    "box-xs": {
+      "value": "4px",
+      "type": "borderRadius"
+    },
+    "box-sm": {
+      "value": "8px",
+      "type": "borderRadius"
+    },
+    "box-md": {
+      "value": "12px",
+      "type": "borderRadius"
+    },
+    "box-lg": {
+      "value": "16px",
+      "type": "borderRadius"
+    },
+    "box-xl": {
+      "value": "20px",
+      "type": "borderRadius"
+    },
+    "box-full": {
+      "value": "100%",
+      "type": "borderRadius"
     }
   },
   "$themes": [],
   "$metadata": {
-    "tokenSetOrder": [
-      "Colors",
-      "spacing"
-    ]
+    "tokenSetOrder": ["global"]
   }
 }
