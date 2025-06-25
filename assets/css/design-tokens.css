@@ -3,34 +3,16 @@
  */
 
 @theme {
-  --xs: 4;
-  --sm: 8;
-  --md: 16;
-  --lg: 24;
-  --xl: 32;
-  --color-rustynail-50: #fdfbe9;
-  --color-rustynail-100: #faf5c7;
-  --color-rustynail-200: #f6e892;
-  --color-rustynail-300: #f1d453;
-  --color-rustynail-400: #ebbe24;
-  --color-rustynail-500: #dba617;
-  --color-rustynail-600: #bd8111;
-  --color-rustynail-700: #975d11;
-  --color-rustynail-800: #7d4b16;
-  --color-rustynail-900: #6b3d18;
-  --color-rustynail-950: #3e200a;
-  --rustynail-number: 0;
-  --color-bluedianne-50: #edfefe;
-  --color-bluedianne-100: #d2f9fb;
-  --color-bluedianne-200: #abf2f6;
-  --color-bluedianne-300: #72e7ee;
-  --color-bluedianne-400: #31d2df;
-  --color-bluedianne-500: #15b5c5;
-  --color-bluedianne-600: #1492a6;
-  --color-bluedianne-700: #177687;
-  --color-bluedianne-800: #1c5f6e;
-  --color-bluedianne-900: #1c4f5d;
-  --color-bluedianne-950: #0e3b48;
+  --color-spring-100: #ffbfc0;
+  --color-spring-200: #FFDCDC;
+  --color-spring-300: #FFF2EB;
+  --color-spring-400: #FFE8CD;
+  --color-spring-500: #FFD6BA; /** FFD6BA */
+  --color-ocene-100: #3674B5;
+  --color-ocene-200: #578FCA;
+  --color-ocene-300: #abdcff;
+  --color-ocene-400: #DAE0E4;
+  --color-ocene-500: #CCC1B8;
   --color-shiraz-50: #fef2f2;
   --color-shiraz-100: #fee5e5;
   --color-shiraz-200: #fccfd2;
@@ -42,5 +24,60 @@
   --color-shiraz-800: #9e1a36;
   --color-shiraz-900: #821932;
   --color-shiraz-950: #480917;
+  --font-pretendard: Pretendard Variable;
+  --spacing-xs: 4;
+  --spacing-sm: 8;
+  --spacing-md: 16;
+  --spacing-lg: 24;
+  --spacing-xl: 32;
+  --opacity-card-80: 0.8;
+  --opacity-card-60: 0.6;
+  --opacity-card-40: 0.4;
+  --opacity-card-20: 0.2;
+  --opacity-card-10: 0.1;
+  --radius-box-xs: 4px;
+  --radius-box-sm: 8px;
+  --radius-box-md: 12px;
+  --radius-box-lg: 16px;
+  --radius-box-xl: 20px;
+  --radius-box-full: 100%;
 }
 
+@layer base {
+  h1 {
+    font-family: Pretendard Variable;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.2rem;
+  }
+  h2 {
+    font-family: Pretendard Variable;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 2rem;
+  }
+}
+
+@layer components {
+  .img-zzang-gu {
+    background-image: url('https://i.pinimg.com/736x/6a/63/45/6a6345c18d55bdcf22e13144eb7be394.jpg');
+    background-repeat: no-repeat;
+  }
+  .border-red-dashed {
+    border-color: #f01;
+    border-width: 2px;
+    border-style: dashed;
+  }
+  .img-rabbit {
+    background-image: url('https://i.pinimg.com/736x/48/11/58/4811581ba45ee04a0bb90ee15bcf8054.jpg');
+    background-repeat: no-repeat;
+  }
+  .img-gorapaduck {
+    background-image: url('https://i.pinimg.com/736x/97/16/4d/97164d4a5a6f8db2530995f3fff1a7c0.jpg');
+    background-repeat: no-repeat;
+  }
+  .img-ddeung--ie {
+    background-image: url('https://i.pinimg.com/736x/3c/14/c7/3c14c793e58d9d1955bb7a9c6cf81ae0.jpg');
+    background-repeat: no-repeat;
+  }
+}
